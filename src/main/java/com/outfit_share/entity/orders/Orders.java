@@ -3,7 +3,8 @@ package com.outfit_share.entity.orders;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.entity.users.Users;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,15 +32,15 @@ public class Orders {
 
 	@Column(name = "status")
 	private Integer status;
-
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE")
+	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE",timezone = "GMT+8")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "orderDate")
 	private Date orderDate;
 	
 	@ManyToOne
 	@JoinColumn(name="user_id")
-	private  Users users;
+	private  UserDetail userDetail;
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "orders")
 	private List<OrdersDetails> ordersDetails;

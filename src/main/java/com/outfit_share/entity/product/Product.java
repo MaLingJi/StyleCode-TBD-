@@ -3,6 +3,8 @@ package com.outfit_share.entity.product;
 
 import java.util.List;
 
+import com.outfit_share.entity.orders.OrdersDetails;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,4 +59,7 @@ public class Product {
 	
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "product")
 	private List<Pimages> pimages;
+	
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "product")
+	private List<OrdersDetails> ordersDetails;
 }
