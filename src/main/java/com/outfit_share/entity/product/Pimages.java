@@ -24,9 +24,13 @@ public class Pimages {
 	@Column(name = "image_id" )
 	private Integer imageId;
 	
+	@Column(name = "image_name")
+	private String imageName;
+	
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
+	
 	
 	@Column(name = "img_url")
 	private String imgUrl;
