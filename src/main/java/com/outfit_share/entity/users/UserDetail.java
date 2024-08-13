@@ -6,6 +6,11 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
+import com.outfit_share.entity.posts.Comments;
+
+import com.outfit_share.entity.posts.Posts;
+import com.outfit_share.entity.product.Orders;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
