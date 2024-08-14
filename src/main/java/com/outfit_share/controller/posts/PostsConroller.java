@@ -1,4 +1,4 @@
-package com.outfit_share.controller.post;
+package com.outfit_share.controller.posts;
 
 import java.util.Date;
 import java.util.List;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.outfit_share.entity.post.Posts;
-import com.outfit_share.entity.post.Users;
-import com.outfit_share.service.post.PostsService;
-import com.outfit_share.service.post.UsersService;
+import com.outfit_share.entity.posts.Posts;
+import com.outfit_share.entity.posts.Users;
+import com.outfit_share.service.posts.PostsService;
+import com.outfit_share.service.posts.UsersService;
 
 @Controller
 public class PostsConroller {
@@ -44,8 +44,9 @@ public class PostsConroller {
 						Model model) {
 		
 //		Integer userIdInt = Integer.valueOf(userId); // 轉換為 Integer
+//		System.out.println("userId: " + userId);
 		Users user = usersService.findUsersById(userId);
-		if (user == null) {
+		if (userId == null) {
 	        model.addAttribute("錯誤", "未找到用戶");
 	        return "posts/addPosts";
 	    }
@@ -58,7 +59,7 @@ public class PostsConroller {
 		posts.setCreatedAt(createdat);
 		posts.setDeletedAt(null);//尚未刪除
 		
-		postsService.savePosts(posts);
+		postsService.createPosts(posts);
 		
 		model.addAttribute("OK","新增成功");
 		return "posts/addPosts";
@@ -75,14 +76,43 @@ public class PostsConroller {
 	@GetMapping("/posts/update")
 	public String updatePosts(@RequestParam Integer id,Model model) {
 		Posts posts = postsService.findPostsById(id);
-		
+		 if (posts == null) {
+	            model.addAttribute("錯誤", "未找到貼文");
+	            return "posts/list";
+	        }
 		model.addAttribute("posts",posts);
 		return "posts/upPosts";
 	}
 	
 	@PostMapping("/posts/updatePoasts")
-	public String updatePoastspage(@ModelAttribute Posts posts) {
-		postsService.savePosts(posts);
-		return "posts/list";
+	public String updatePoastspage(@ModelAttribute Posts posts,Model model) {
+		Posts existingPost = postsService.findPostsById(posts.getPostId());
+		
+		if (existingPost != null) {
+			model.addAttribute("錯誤", "未找到貼文");
+			return "posts/list";
+		}
+		 // 更新貼文資料
+        existingPost.setContentText(posts.getContentText());
+        existingPost.setContentType(posts.getContentType());
+        existingPost.setPostTitle(posts.getPostTitle());
+        existingPost.setDeletedAt(posts.getDeletedAt()); // 可選：設定刪除時間
+        
+        postsService.createPosts(existingPost);
+        
+        return "redirect:/posts/list";
 	}
+	
+	@PostMapping("/posts/delete")
+    public String deletePost(@RequestParam Integer id, Model model) {
+        Posts post = postsService.findPostsById(id);
+        if (post == null) {
+            model.addAttribute("錯誤", "未找到貼文");
+            return "posts/list";
+        }
+        
+        postsService.deletePostsById(id);
+        
+        return "redirect:/posts/list";
+    }
 }

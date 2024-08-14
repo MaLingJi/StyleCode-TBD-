@@ -1,4 +1,4 @@
-package com.outfit_share.service.post;
+package com.outfit_share.service.posts;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.outfit_share.entity.post.Posts;
-import com.outfit_share.repository.post.PostsRepository;
+import com.outfit_share.entity.posts.Posts;
+import com.outfit_share.repository.posts.PostsRepository;
 
 @Service
 public class PostsService {
@@ -16,7 +16,7 @@ public class PostsService {
 	@Autowired
 	private PostsRepository postsRepo;
 	
-	public Posts savePosts(Posts posts) {
+	public Posts createPosts(Posts posts) {
 		return postsRepo.save(posts);
 	}
 	

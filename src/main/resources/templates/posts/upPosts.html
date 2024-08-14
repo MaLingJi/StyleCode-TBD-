@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>編輯文章內容</title>
+</head>
+<body>
+<!-- <div th:replace="~{layout/navbar}"></div> -->
+<h1>編輯文章內容</h1>
+
+
+<form th:action="@{/posts/updatePost}" th:object="${posts}" method="post">
+
+<input th:field="*{id}" type="hidden" />
+
+文章型態: <input th:field="*{contenttype}" type="text" required />
+<br>
+文章標題: <input th:field="*{posttitle}" type="text" required />
+<br>
+文章內容: <textarea th:field="*{contenttext}" required></textarea>
+<br>
+
+<input type="submit" value="送出" />
+
+</form>
+</body>
+</html>

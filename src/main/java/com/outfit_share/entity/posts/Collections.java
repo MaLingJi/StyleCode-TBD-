@@ -1,4 +1,4 @@
-package com.outfit_share.entity.post;
+package com.outfit_share.entity.posts;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

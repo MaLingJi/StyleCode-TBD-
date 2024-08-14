@@ -1,4 +1,4 @@
-package com.outfit_share.entity.post;
+package com.outfit_share.entity.posts;
 
 import java.util.List;
 
