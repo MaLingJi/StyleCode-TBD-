@@ -1,4 +1,4 @@
-package com.outfit_share.entity.posts;
+package com.outfit_share.entity.post;
 
 import org.springframework.stereotype.Component;
 
@@ -12,38 +12,38 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "collections")
+@Table(name = "likes")
 @Component
-public class Collections {
+public class Likes {
 
     @EmbeddedId
-    private CollectionsId collectionsId;
+    private LikesId likesId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("postId")
-    private Posts posts;
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")
     private UserDetail userDetail;
 
-    public Collections() {
+    public Likes() {
     }
 
-    public CollectionsId getCollectionsId() {
-        return collectionsId;
+    public LikesId getLikesId() {
+        return likesId;
     }
 
-    public void setCollectionsId(CollectionsId collectionsId) {
-        this.collectionsId = collectionsId;
+    public void setLikesId(LikesId likesId) {
+        this.likesId = likesId;
     }
 
-    public Posts getPosts() {
-        return posts;
+    public Post getPosts() {
+        return post;
     }
 
-    public void setPosts(Posts posts) {
-        this.posts = posts;
+    public void setPosts(Post post) {
+        this.post = post;
     }
 
     public UserDetail getUserDetail() {
