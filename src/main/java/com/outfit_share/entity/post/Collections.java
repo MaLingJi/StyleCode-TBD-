@@ -1,4 +1,4 @@
-package com.outfit_share.entity.posts;
+package com.outfit_share.entity.post;
 
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ public class Collections {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("postId")
-    private Posts posts;
+    private Post posts;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")
@@ -38,11 +38,11 @@ public class Collections {
         this.collectionsId = collectionsId;
     }
 
-    public Posts getPosts() {
+    public Post getPosts() {
         return posts;
     }
 
-    public void setPosts(Posts posts) {
+    public void setPosts(Post posts) {
         this.posts = posts;
     }
 

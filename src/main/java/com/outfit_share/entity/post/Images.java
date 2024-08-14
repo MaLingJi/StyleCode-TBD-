@@ -1,4 +1,4 @@
-package com.outfit_share.entity.posts;
+package com.outfit_share.entity.post;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +18,7 @@ public class Images {
 	private int imageId;
 
 	@JoinColumn(name = "post_id")
-	private Posts posts;
+	private Post posts;
 
 	@Column(name = "img_url")
 	private String imgUrl;
@@ -26,7 +26,7 @@ public class Images {
 	public Images() {
 	}
 
-	public Images(int imageId, Posts posts, String imgUrl) {
+	public Images(int imageId, Post posts, String imgUrl) {
 		this.imageId = imageId;
 		this.posts = posts;
 		this.imgUrl = imgUrl;
@@ -45,11 +45,11 @@ public class Images {
 		this.imageId = imageId;
 	}
 
-	public Posts getPostId() {
+	public Post getPostId() {
 		return posts;
 	}
 
-	public void setPostId(Posts posts) {
+	public void setPostId(Post posts) {
 		this.posts = posts;
 	}
 

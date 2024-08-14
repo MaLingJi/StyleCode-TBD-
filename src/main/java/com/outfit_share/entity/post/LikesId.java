@@ -1,4 +1,4 @@
-package com.outfit_share.entity.posts;
+package com.outfit_share.entity.post;
 
 import java.io.Serializable;
 

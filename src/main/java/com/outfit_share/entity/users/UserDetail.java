@@ -6,9 +6,8 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
-import com.outfit_share.entity.posts.Comment;
-
-import com.outfit_share.entity.posts.Posts;
+import com.outfit_share.entity.post.Comment;
+import com.outfit_share.entity.post.Post;
 import com.outfit_share.entity.product.Orders;
 
 import jakarta.persistence.CascadeType;
@@ -78,7 +77,7 @@ public class UserDetail {
     private List<Notifications> notifications;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail")
-    private List<Posts> posts;
+    private List<Post> posts;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail")
     private List<Comment> comment;
@@ -102,7 +101,7 @@ public class UserDetail {
 
     public UserDetail(String userName, String realName, String address, String phone, Date createdTime,
             Date updatedTime, String userPhoto, Integer discountPoints, String permissions, Users users,
-            List<CreditCards> creditCards, List<Notifications> notifications, List<Posts> posts,
+            List<CreditCards> creditCards, List<Notifications> notifications, List<Post> posts,
             List<Comment> comments
     // , List<Orders> orders
     ) {
@@ -125,7 +124,7 @@ public class UserDetail {
 
     public UserDetail(Integer id, String userName, String realName, String address, String phone, Date createdTime,
             Date updatedTime, String userPhoto, Integer discountPoints, String permissions, Users users,
-            List<CreditCards> creditCards, List<Notifications> notifications, List<Posts> posts,
+            List<CreditCards> creditCards, List<Notifications> notifications, List<Post> posts,
             List<Comment> comments
     // List<Orders> orders
     ) {
@@ -251,11 +250,11 @@ public class UserDetail {
         this.notifications = notifications;
     }
 
-    public List<Posts> getPosts() {
+    public List<Post> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Posts> posts) {
+    public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
 

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.outfit_share.entity.posts.Posts;
-import com.outfit_share.service.posts.PostsService;
+import com.outfit_share.entity.post.Post;
+import com.outfit_share.service.post.PostService;
 import com.outfit_share.service.users.UsersService;
 
 @Controller

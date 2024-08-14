@@ -1,26 +1,30 @@
-package com.outfit_share.entity.posts;
+package com.outfit_share.entity.post;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.outfit_share.entity.users.UserDetail;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name = "posts")
-public class Posts {
+@Table(name = "post")
+public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +34,9 @@ public class Posts {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserDetail userDetail;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "posts")    
+    private List<Comment> comment;
 
     @Column(name = "content_type")
     private String contentType;
@@ -61,10 +68,10 @@ public class Posts {
         }
     }
 
-    public Posts() {
+    public Post() {
     }
 
-    public Posts(int postId, String contentType, String postTitle, String contentText, Date createdAt,
+    public Post(int postId, String contentType, String postTitle, String contentText, Date createdAt,
             Date deletedAt) {
         this.postId = postId;
         this.contentType = contentType;
@@ -74,7 +81,7 @@ public class Posts {
         this.deletedAt = deletedAt;
     }
 
-    public Posts(int postId, UserDetail userDetail, String contentType, String postTitle, String contentText,
+    public Post(int postId, UserDetail userDetail, String contentType, String postTitle, String contentText,
             int shareId,
             Date createdAt, Date deletedAt) {
         this.postId = postId;

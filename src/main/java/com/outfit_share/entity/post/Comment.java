@@ -1,4 +1,4 @@
-package com.outfit_share.entity.posts;
+package com.outfit_share.entity.post;
 
 import java.util.Date;
 
@@ -26,8 +26,9 @@ public class Comment {
 	@Column(name = "comments_id")
 	private Integer commentsId;
 
+	@ManyToOne
 	@JoinColumn(name = "post_id")
-	private Posts posts;
+	private Post posts;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -44,14 +45,14 @@ public class Comment {
 	public Comment() {
 	}
 
-	public Comment(Posts posts, UserDetail userDetail, String comment, Date createdAt) {
+	public Comment(Post posts, UserDetail userDetail, String comment, Date createdAt) {
 		this.posts = posts;
 		this.userDetail = userDetail;
 		this.comment = comment;
 		this.createdAt = createdAt;
 	}
 
-	public Comment(Integer commentsId, Posts posts, UserDetail userDetail, String comment, Date createdAt) {
+	public Comment(Integer commentsId, Post posts, UserDetail userDetail, String comment, Date createdAt) {
 		this.commentsId = commentsId;
 		this.posts = posts;
 		this.userDetail = userDetail;
@@ -67,11 +68,11 @@ public class Comment {
 		this.commentsId = commentsId;
 	}
 
-	public Posts getPosts() {
+	public Post getPosts() {
 		return posts;
 	}
 
-	public void setPosts(Posts posts) {
+	public void setPosts(Post posts) {
 		this.posts = posts;
 	}
 
