@@ -4,12 +4,15 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.outfit_share.entity.users.UserDetail;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -21,69 +24,71 @@ public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "comments_id")
-	private int commentsId;
-	
+	private Integer commentsId;
+
 	@JoinColumn(name = "post_id")
-	private int postId;
-	
+	private Posts posts;
+
+	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private int userId;
-	
+	private UserDetail userDetail;
+
 	@Column(name = "comment")
-	private String comMent;
-	
+	private String comment;
+
 	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss EEEE")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at")
 	private Date createdAt;
-	
+
 	public Comment() {
 	}
 
-	public Comment(int commentsId, int postId, int userId, String comMent, Date createdAt) {
-		this.commentsId = commentsId;
-		this.postId = postId;
-		this.userId = userId;
-		this.comMent = comMent;
+	public Comment(Posts posts, UserDetail userDetail, String comment, Date createdAt) {
+		this.posts = posts;
+		this.userDetail = userDetail;
+		this.comment = comment;
 		this.createdAt = createdAt;
 	}
 
-	public Comment(int commentsId, String comMent, Date createdAt) {
+	public Comment(Integer commentsId, Posts posts, UserDetail userDetail, String comment, Date createdAt) {
 		this.commentsId = commentsId;
-		this.comMent = comMent;
+		this.posts = posts;
+		this.userDetail = userDetail;
+		this.comment = comment;
 		this.createdAt = createdAt;
 	}
 
-	public int getCommentsId() {
+	public Integer getCommentsId() {
 		return commentsId;
 	}
 
-	public void setCommentsId(int commentsId) {
+	public void setCommentsId(Integer commentsId) {
 		this.commentsId = commentsId;
 	}
 
-	public int getPostId() {
-		return postId;
+	public Posts getPosts() {
+		return posts;
 	}
 
-	public void setPostId(int postId) {
-		this.postId = postId;
+	public void setPosts(Posts posts) {
+		this.posts = posts;
 	}
 
-	public int getUserId() {
-		return userId;
+	public UserDetail getUserDetail() {
+		return userDetail;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setUserDetail(UserDetail userDetail) {
+		this.userDetail = userDetail;
 	}
 
-	public String getComMent() {
-		return comMent;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setComMent(String comMent) {
-		this.comMent = comMent;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public Date getCreatedAt() {
@@ -93,4 +98,5 @@ public class Comment {
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
+
 }

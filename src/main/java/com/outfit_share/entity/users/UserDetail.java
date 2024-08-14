@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
-import com.outfit_share.entity.posts.Comments;
+import com.outfit_share.entity.posts.Comment;
 
 import com.outfit_share.entity.posts.Posts;
 import com.outfit_share.entity.product.Orders;
@@ -81,10 +81,11 @@ public class UserDetail {
     private List<Posts> posts;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail")
-    private List<Comments> comments;
+    private List<Comment> comment;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail") // 物件的userDetail
-    private List<Orders> orders;
+    // @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy =
+    // "userDetail") // 物件的userDetail
+    // private List<Orders> orders;
 
     @PrePersist
     public void onCreate() {
@@ -102,7 +103,9 @@ public class UserDetail {
     public UserDetail(String userName, String realName, String address, String phone, Date createdTime,
             Date updatedTime, String userPhoto, Integer discountPoints, String permissions, Users users,
             List<CreditCards> creditCards, List<Notifications> notifications, List<Posts> posts,
-            List<Comments> comments, List<Orders> orders) {
+            List<Comment> comments
+    // , List<Orders> orders
+    ) {
         this.userName = userName;
         this.realName = realName;
         this.address = address;
@@ -116,14 +119,16 @@ public class UserDetail {
         this.creditCards = creditCards;
         this.notifications = notifications;
         this.posts = posts;
-        this.comments = comments;
-        this.orders = orders;
+        this.comment = comments;
+        // this.orders = orders;
     }
 
     public UserDetail(Integer id, String userName, String realName, String address, String phone, Date createdTime,
             Date updatedTime, String userPhoto, Integer discountPoints, String permissions, Users users,
             List<CreditCards> creditCards, List<Notifications> notifications, List<Posts> posts,
-            List<Comments> comments, List<Orders> orders) {
+            List<Comment> comments
+    // List<Orders> orders
+    ) {
         this.id = id;
         this.userName = userName;
         this.realName = realName;
@@ -138,8 +143,8 @@ public class UserDetail {
         this.creditCards = creditCards;
         this.notifications = notifications;
         this.posts = posts;
-        this.comments = comments;
-        this.orders = orders;
+        this.comment = comments;
+        // this.orders = orders;
     }
 
     public Integer getId() {
@@ -254,20 +259,20 @@ public class UserDetail {
         this.posts = posts;
     }
 
-    public List<Comments> getComments() {
-        return comments;
+    public List<Comment> getComment() {
+        return comment;
     }
 
-    public void setComments(List<Comments> comments) {
-        this.comments = comments;
+    public void setComment(List<Comment> comment) {
+        this.comment = comment;
     }
 
-    public List<Orders> getOrders() {
-        return orders;
-    }
+    // public List<Orders> getOrders() {
+    // return orders;
+    // }
 
-    public void setOrders(List<Orders> orders) {
-        this.orders = orders;
-    }
+    // public void setOrders(List<Orders> orders) {
+    // this.orders = orders;
+    // }
 
 }

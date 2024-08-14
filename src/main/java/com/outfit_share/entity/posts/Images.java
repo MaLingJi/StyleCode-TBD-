@@ -16,19 +16,19 @@ public class Images {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "image_id")
 	private int imageId;
-	
+
 	@JoinColumn(name = "post_id")
-	private int postId;
-	
+	private Posts posts;
+
 	@Column(name = "img_url")
 	private String imgUrl;
-	
+
 	public Images() {
 	}
 
-	public Images(int imageId, int postId, String imgUrl) {
+	public Images(int imageId, Posts posts, String imgUrl) {
 		this.imageId = imageId;
-		this.postId = postId;
+		this.posts = posts;
 		this.imgUrl = imgUrl;
 	}
 
@@ -45,12 +45,12 @@ public class Images {
 		this.imageId = imageId;
 	}
 
-	public int getPostId() {
-		return postId;
+	public Posts getPostId() {
+		return posts;
 	}
 
-	public void setPostId(int postId) {
-		this.postId = postId;
+	public void setPostId(Posts posts) {
+		this.posts = posts;
 	}
 
 	public String getImgUrl() {
