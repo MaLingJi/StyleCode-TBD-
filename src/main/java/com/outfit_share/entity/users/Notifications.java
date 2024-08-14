@@ -26,9 +26,6 @@ public class Notifications {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // @Column(name = "user_id")
-    // private Integer userId;
-
     @Column(name = "message ")
     private String message;
 

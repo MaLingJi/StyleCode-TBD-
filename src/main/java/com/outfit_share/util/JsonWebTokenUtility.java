@@ -17,7 +17,7 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class JsonWebTokenUtility {
 
-    @Value("$(jwt.token.expire)")
+    @Value("${jwt.token.expire}")
     private long expire;
 
     private byte[] base64EncodedSecret;
