@@ -77,7 +77,7 @@ public class UserDetail {
     private List<Notifications> notifications;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail")
-    private List<Post> posts;
+    private List<Post> post;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail")
     private List<Comment> comment;
@@ -101,7 +101,7 @@ public class UserDetail {
 
     public UserDetail(String userName, String realName, String address, String phone, Date createdTime,
             Date updatedTime, String userPhoto, Integer discountPoints, String permissions, Users users,
-            List<CreditCards> creditCards, List<Notifications> notifications, List<Post> posts,
+            List<CreditCards> creditCards, List<Notifications> notifications, List<Post> post,
             List<Comment> comments
     // , List<Orders> orders
     ) {
@@ -117,14 +117,14 @@ public class UserDetail {
         this.users = users;
         this.creditCards = creditCards;
         this.notifications = notifications;
-        this.posts = posts;
+        this.post = post;
         this.comment = comments;
         // this.orders = orders;
     }
 
     public UserDetail(Integer id, String userName, String realName, String address, String phone, Date createdTime,
             Date updatedTime, String userPhoto, Integer discountPoints, String permissions, Users users,
-            List<CreditCards> creditCards, List<Notifications> notifications, List<Post> posts,
+            List<CreditCards> creditCards, List<Notifications> notifications, List<Post> post,
             List<Comment> comments
     // List<Orders> orders
     ) {
@@ -141,7 +141,7 @@ public class UserDetail {
         this.users = users;
         this.creditCards = creditCards;
         this.notifications = notifications;
-        this.posts = posts;
+        this.post = post;
         this.comment = comments;
         // this.orders = orders;
     }
@@ -251,11 +251,11 @@ public class UserDetail {
     }
 
     public List<Post> getPosts() {
-        return posts;
+        return post;
     }
 
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
+    public void setPosts(List<Post> post) {
+        this.post = post;
     }
 
     public List<Comment> getComment() {

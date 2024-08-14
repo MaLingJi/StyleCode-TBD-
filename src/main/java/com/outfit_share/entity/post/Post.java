@@ -29,14 +29,17 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
-    private int postId;
+    private Integer postId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserDetail userDetail;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "posts")    
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
     private List<Comment> comment;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
+    private List<Images> images;
 
     @Column(name = "content_type")
     private String contentType;
@@ -71,7 +74,7 @@ public class Post {
     public Post() {
     }
 
-    public Post(int postId, String contentType, String postTitle, String contentText, Date createdAt,
+    public Post(Integer postId, String contentType, String postTitle, String contentText, Date createdAt,
             Date deletedAt) {
         this.postId = postId;
         this.contentType = contentType;
@@ -81,7 +84,7 @@ public class Post {
         this.deletedAt = deletedAt;
     }
 
-    public Post(int postId, UserDetail userDetail, String contentType, String postTitle, String contentText,
+    public Post(Integer postId, UserDetail userDetail, String contentType, String postTitle, String contentText,
             int shareId,
             Date createdAt, Date deletedAt) {
         this.postId = postId;
@@ -94,11 +97,11 @@ public class Post {
         this.deletedAt = deletedAt;
     }
 
-    public int getPostId() {
+    public Integer getPostId() {
         return postId;
     }
 
-    public void setPostId(int postId) {
+    public void setPostId(Integer postId) {
         this.postId = postId;
     }
 

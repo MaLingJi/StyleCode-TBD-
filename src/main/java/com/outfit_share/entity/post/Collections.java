@@ -21,7 +21,7 @@ public class Collections {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("postId")
-    private Post posts;
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")
@@ -39,11 +39,11 @@ public class Collections {
     }
 
     public Post getPosts() {
-        return posts;
+        return post;
     }
 
-    public void setPosts(Post posts) {
-        this.posts = posts;
+    public void setPosts(Post post) {
+        this.post = post;
     }
 
     public UserDetail getUserDetail() {

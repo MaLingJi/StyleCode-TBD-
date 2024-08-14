@@ -28,7 +28,7 @@ public class Comment {
 
 	@ManyToOne
 	@JoinColumn(name = "post_id")
-	private Post posts;
+	private Post post;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -37,7 +37,7 @@ public class Comment {
 	@Column(name = "comment")
 	private String comment;
 
-	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss EEEE")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -45,16 +45,16 @@ public class Comment {
 	public Comment() {
 	}
 
-	public Comment(Post posts, UserDetail userDetail, String comment, Date createdAt) {
-		this.posts = posts;
+	public Comment(Post post, UserDetail userDetail, String comment, Date createdAt) {
+		this.post = post;
 		this.userDetail = userDetail;
 		this.comment = comment;
 		this.createdAt = createdAt;
 	}
 
-	public Comment(Integer commentsId, Post posts, UserDetail userDetail, String comment, Date createdAt) {
+	public Comment(Integer commentsId, Post post, UserDetail userDetail, String comment, Date createdAt) {
 		this.commentsId = commentsId;
-		this.posts = posts;
+		this.post = post;
 		this.userDetail = userDetail;
 		this.comment = comment;
 		this.createdAt = createdAt;
@@ -69,11 +69,11 @@ public class Comment {
 	}
 
 	public Post getPosts() {
-		return posts;
+		return post;
 	}
 
-	public void setPosts(Post posts) {
-		this.posts = posts;
+	public void setPosts(Post post) {
+		this.post = post;
 	}
 
 	public UserDetail getUserDetail() {
