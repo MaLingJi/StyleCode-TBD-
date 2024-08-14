@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -55,7 +56,7 @@ public class PimagesSerivce {
 		
 		pimages.setImageName(fileName);
 		pimages.setImgUrl(filePath.toString());
-		pimages.setProduct(product);
+		pimages.setProductId(product);
 		
 		return pimagesRepository.save(pimages);
 		
@@ -79,7 +80,7 @@ public class PimagesSerivce {
 		pimagesRepository.deleteById(id);
 	}
 	
-	
+//	搜尋單張圖片
 	public Pimages findPimagesById(Integer id) {
 		Optional<Pimages> optional = pimagesRepository.findById(id);
 		
@@ -89,4 +90,10 @@ public class PimagesSerivce {
 		
 		return null;
 	}
+	
+//	搜尋該商品的全部圖片
+	public List<Pimages> findAllImagesByProductId(Integer productId) {
+	    return pimagesRepository.findByProductIdProductId(productId);
+	}
+	
 }

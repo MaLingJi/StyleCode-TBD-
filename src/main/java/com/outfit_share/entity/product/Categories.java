@@ -30,6 +30,6 @@ public class Categories {
 	@Column(name ="category_name" ,unique = true)
 	private String categoryName;
 	
-	@OneToMany(cascade =  CascadeType.ALL ,fetch = FetchType.LAZY ,mappedBy = "categories")
+	@OneToMany(cascade =  CascadeType.ALL ,fetch = FetchType.LAZY ,mappedBy = "categoryId")
 	private List<Subcategory> subcategories;
 }
