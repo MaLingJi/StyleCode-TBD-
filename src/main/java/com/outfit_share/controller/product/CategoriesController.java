@@ -7,7 +7,7 @@ import com.outfit_share.entity.product.Categories;
 import com.outfit_share.service.product.CategoriesService;
 
 @RestController
-//@RequestMapping("/api/categories")
+@RequestMapping("/api/categories")
 public class CategoriesController {
 
     @Autowired

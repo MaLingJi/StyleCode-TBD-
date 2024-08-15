@@ -8,6 +8,6 @@ import com.outfit_share.entity.product.Subcategory;
 
 public interface SubcategoryRepository extends JpaRepository<Subcategory, Integer> {
 
-	  List<Subcategory> findByCategoriesCategoryId(Integer categoryId);
+	   List<Subcategory> findByCategoryCategoryId(Integer categoryId);
 	
 }

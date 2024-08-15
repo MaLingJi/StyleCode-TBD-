@@ -34,7 +34,7 @@ public class Subcategory {
 	
 	@ManyToOne
 	@JoinColumn(name = "category_id")
-	private Categories categoryId;
+	private Categories category;
 	
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "subcategoryId")
 	private List<Product> prodcut;

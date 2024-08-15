@@ -9,7 +9,7 @@ import com.outfit_share.entity.product.Subcategory;
 import com.outfit_share.service.product.SubcategoryService;
 
 @RestController
-//@RequestMapping("/api/subcategories")
+@RequestMapping("/api/subcategories")
 public class SubcategoryController {
 
     @Autowired

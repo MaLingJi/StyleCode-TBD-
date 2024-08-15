@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-//@RequestMapping("/api/products/{productId}/images")
+@RequestMapping("/api/products/{productId}/images")
 public class PimagesController {
 
     @Autowired
@@ -20,7 +20,6 @@ public class PimagesController {
 
     // 上傳新圖片
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public Pimages uploadImage(@RequestParam("file") MultipartFile file, @PathVariable Integer productId) throws IOException {
         return pimagesService.savePimages(file, productId);
     }
@@ -33,7 +32,6 @@ public class PimagesController {
 
     // 刪除圖片
     @DeleteMapping("/{imageId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteImage(@PathVariable Integer productId, @PathVariable Integer imageId) {
         pimagesService.deletePimages(imageId);
     }

@@ -9,7 +9,7 @@ import com.outfit_share.entity.product.Product;
 import com.outfit_share.service.product.ProductService;
 
 @RestController
-//@RequestMapping("/api/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     @Autowired

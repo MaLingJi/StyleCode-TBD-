@@ -55,7 +55,7 @@ public class SubcategoryService {
 	
 	// 新增: 通過父分類ID獲取子分類列表
 	public List<Subcategory> findSubcategoriesByCategoryId(Integer categoryId) {
-        return subcategoryRepository.findByCategoriesCategoryId(categoryId);
+        return subcategoryRepository.findByCategoryCategoryId(categoryId);
     }
 	
 }
