@@ -31,7 +31,7 @@ import jakarta.persistence.TemporalType;
 public class UserDetail {
 
     @Id
-    @Column(name = "user_detail_id")
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

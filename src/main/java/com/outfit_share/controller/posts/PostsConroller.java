@@ -54,7 +54,6 @@ public class PostsConroller {
 	 }
 
 	 Post post = new Post();
-	 post.setPostId(userId);
 	 post.setUserDetail(user);
 	 post.setContentType(contenttype);
 	 post.setContentText(contenttext);
