@@ -1,5 +1,6 @@
 package com.outfit_share.service.post;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +18,12 @@ public class PostService {
 	private PostRepository postRepo;
 	
 	public Post createPost(Post post) {
+		post.setCreatedAt(new Date());
 		return postRepo.save(post);
 	}
 	
-	public Post findPostById(Integer id) {
-		Optional<Post> optional = postRepo.findById(id);
+	public Post findPostById(Integer postId) {
+		Optional<Post> optional = postRepo.findById(postId);
 		
 		if(optional.isPresent()) {
 			return optional.get();
@@ -29,8 +31,15 @@ public class PostService {
 		return null;
 	}
 	
-	public void deletePostById(Integer id) {
-		postRepo.deleteById(id);
+	//軟刪除 設置當前時間
+	public Post deletePostById(Integer postId) {
+		Optional<Post> deOptional = postRepo.findById(postId);
+		if(deOptional.isPresent()) {
+			Post post = deOptional.get();
+			post.setDeletedAt(new Date());
+			return postRepo.save(post);
+		}
+		return null;
 	}
 	
 	public List<Post> findAllPost(){
@@ -38,15 +47,15 @@ public class PostService {
 	}
 	
 	@Transactional
-	public Post updatePost(Integer id,String newPost) {
-		Optional<Post> optional = postRepo.findById(id);
+	public Post updatePost(Integer postId,String contentType, String contentText) {
+		Optional<Post> upoptional = postRepo.findById(postId);
 		
-		if(optional.isPresent()) {
-			Post post = optional.get();
-			post.setContentText(newPost);//內容
-			post.setContentType(newPost);//文章型態
-			post.setPostTitle(newPost);//標題
-			return post;
+		if(upoptional.isPresent()) {
+			Post post = upoptional.get();
+			post.setContentText(post.getContentText());//內容
+			post.setPostTitle(post.getPostTitle());//標題是否可變更?
+			post.setContentType(post.getContentType());//文章型態(分享.討論)可切換變更?
+			return postRepo.save(post);
 		}
 		return null;
 	}

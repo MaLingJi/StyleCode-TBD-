@@ -66,54 +66,56 @@ public class PostsConroller {
 	 model.addAttribute("OK", "新增成功");
 	 return "posts/addPosts";
 	 }
+	 
+	 //顯示新增貼文表單(後端可能會用到)
+//	 @GetMapping("/new/posts")
+//	 public String showNewposts(Model model) {
+//		 model.addAttribute("post",new Post());
+//		 return "posts/newPosts";
+//	 }
 
 	 @GetMapping("/posts/list")
 	 public String findAll(Model model) {
-	 List<Post> list = postService.findAllPost();
+	 List<Post> posts = postService.findAllPost();
+	 model.addAttribute("posts", posts);
 
-	 model.addAttribute("posts", list);
 	 return "posts/showPosts";
 	 }
 
 	 @GetMapping("/posts/update")
-	 public String updatePosts(@RequestParam Integer id, Model model) {
-	 Post post = postService.findPostById(id);
+	 public String updatePosts(@RequestParam Integer userId, Model model) {
+	 Post post = postService.findPostById(userId);
 	 if (post == null) {
 	 model.addAttribute("錯誤", "未找到貼文");
+//	 model.addAttribute("userDetail", post.getUserDetail());
 	 return "posts/list";
 	 }
 	 model.addAttribute("posts", post);
 	 return "posts/upPosts";
 	 }
 
-	 @PostMapping("/posts/updatePoasts")
-	 public String updatePoastspage(@ModelAttribute Post post, Model model) {
+	 @PostMapping("/posts/updatePost")
+	 public String updatePosts(@ModelAttribute Post post, Model model) {
 	 Post existingPost = postService.findPostById(post.getPostId());
-
-	 if (existingPost != null) {
+	 
+	 if (existingPost == null) {
 	 model.addAttribute("錯誤", "未找到貼文");
 	 return "posts/list";
 	 }
 	 // 更新貼文資料
 	 existingPost.setContentText(post.getContentText());
-	 existingPost.setContentType(post.getContentType());
 	 existingPost.setPostTitle(post.getPostTitle());
-	 existingPost.setDeletedAt(post.getDeletedAt()); // 可選：設定刪除時間
+//	 existingPost.setContentType(post.getContentType());//能自改討論 分享?
 
 	 postService.createPost(existingPost);
 
 	 return "redirect:/posts/list";
 	 }
 
+	 // 假刪除貼文
 	 @PostMapping("/posts/delete")
-	 public String deletePost(@RequestParam Integer id, Model model) {
-	 Post post = postService.findPostById(id);
-	 if (post == null) {
-	 model.addAttribute("錯誤", "未找到貼文");
-	 return "posts/list";
-	 }
-
-	 postService.deletePostById(id);
+	 public String deletePost(@RequestParam Integer postId) {
+		 postService.deletePostById(postId);
 
 	 return "redirect:/posts/list";
 	 }

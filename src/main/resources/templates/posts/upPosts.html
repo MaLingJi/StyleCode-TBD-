@@ -11,13 +11,14 @@
 
 <form th:action="@{/posts/updatePost}" th:object="${posts}" method="post">
 
-<input th:field="*{id}" type="hidden" />
+<!-- 添加隱藏欄位來包含 userId -->
+<input th:field="*{postId}" type="hidden"  value="1"/>
 
-文章型態: <input th:field="*{contenttype}" type="text" required />
+文章型態: <input th:field="*{contentType}" type="text" required />
 <br>
-文章標題: <input th:field="*{posttitle}" type="text" required />
+文章標題: <input th:field="*{postTitle}" type="text" required />
 <br>
-文章內容: <textarea th:field="*{contenttext}" required></textarea>
+文章內容: <textarea th:field="*{contentText}" required></textarea>
 <br>
 
 <input type="submit" value="送出" />
