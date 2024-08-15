@@ -1,5 +1,6 @@
 package com.outfit_share.service.product;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,4 +52,10 @@ public class SubcategoryService {
 		 
 		 return null;
 	}
+	
+	// 新增: 通過父分類ID獲取子分類列表
+	public List<Subcategory> findSubcategoriesByCategoryId(Integer categoryId) {
+        return subcategoryRepository.findByCategoryCategoryId(categoryId);
+    }
+	
 }

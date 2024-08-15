@@ -31,7 +31,7 @@ public class Pimages {
 	
 	@ManyToOne
 	@JoinColumn(name = "product_id")
-	private Product product;
+	private Product productId;
 	
 	
 	@Column(name = "img_url")

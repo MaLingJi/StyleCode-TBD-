@@ -34,8 +34,8 @@ public class Subcategory {
 	
 	@ManyToOne
 	@JoinColumn(name = "category_id")
-	private Categories categories;
+	private Categories category;
 	
-	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "subcategory")
+	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "subcategoryId")
 	private List<Product> prodcut;
 }

@@ -37,7 +37,7 @@ public class Product {
 	
 	@ManyToOne
 	@JoinColumn(name = "subcategory_id")
-	private Subcategory subcategory;
+	private Subcategory subcategoryId;
 	
 	@Column(name = "price")
 	private Integer price;
@@ -57,7 +57,7 @@ public class Product {
 	@Column(name = "onSale")
 	private Integer onSale;
 	
-	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "product")
+	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "productId")
 	private List<Pimages> pimages;
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "product")
