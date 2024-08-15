@@ -2,6 +2,8 @@ package com.outfit_share.entity.product;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,16 +26,17 @@ public class Pimages {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "image_id" )
-	private Integer imageId;
+	private Integer imageId;//照片ID
 	
 	@Column(name = "image_name")
-	private String imageName;
+	private String imageName;//照片名字
 	
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "product_id")
-	private Product productId;
+	private Product productId;//商品的ID
 	
 	
 	@Column(name = "img_url")
-	private String imgUrl;
+	private String imgUrl;//照片URL
 }

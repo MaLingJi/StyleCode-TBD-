@@ -27,14 +27,14 @@ public class Subcategory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "subcategory_id")
-	private Integer subcategoryId;
+	private Integer subcategoryId;//子分類ID
 	
 	@Column(name = "subcategory_name" ,unique = true)
-	private String subcategoryName;
+	private String subcategoryName;//子分類名稱
 	
 	@ManyToOne
 	@JoinColumn(name = "category_id")
-	private Categories category;
+	private Categories category;//分類ID
 	
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "subcategoryId")
 	private List<Product> prodcut;
