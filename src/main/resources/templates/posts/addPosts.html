@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>新增文章</title>
+</head>
+<body>
+<!-- <div th:replace="~{layout/navbar}"></div> -->
+<h1>新增文章</h1>
+
+<form th:action="@{/posts/addPosts}" method="post">
+    <!-- 暫時放入id做測試 -->
+users: <input type="hidden" name="userId" value="1">
+<br>
+文章型態: <input name="contenttype" type="text" required />
+<br>
+文章標題: <input name="posttitle" type="text" required />
+<br>
+文章內容:	<textarea name="contenttext" required></textarea>
+<br>
+<!-- 建立時間:	<input type="datetime-local" name="createdat" required> -->
+<br>
+<!--     <input type="datetime-local" name="deletedat"> -->
+<input type="submit" value="送出" />
+<!-- <button type="button" th:onclick="|window.location.href='@{ / }'|">取消</button> -->
+</form>
+
+<!-- 顯示後端傳過來的值 -->
+<div th:text="${okMsg}"></div>
+
+</body>
+</html>
