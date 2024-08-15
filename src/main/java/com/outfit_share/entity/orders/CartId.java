@@ -2,6 +2,7 @@ package com.outfit_share.entity.orders;
 
 import java.util.Objects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,6 @@ import lombok.Setter;
 
 public class CartId {
 	private Integer userId;
-
 	private Integer productId;
 
 	@Override

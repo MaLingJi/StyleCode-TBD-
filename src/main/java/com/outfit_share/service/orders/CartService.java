@@ -67,5 +67,10 @@ public class CartService {
 		return result;
 	}
 	
+	@Transactional
+	public void deleteById(Integer userId) {
+		cartRepository.deleteByUsers(userId);
+	}
+	
 	
 }
