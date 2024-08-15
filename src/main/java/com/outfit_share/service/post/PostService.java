@@ -14,14 +14,14 @@ import com.outfit_share.repository.post.PostRepository;
 public class PostService {
 
 	@Autowired
-	private PostRepository postsRepo;
+	private PostRepository postRepo;
 	
-	public Post createPosts(Post posts) {
-		return postsRepo.save(posts);
+	public Post createPost(Post post) {
+		return postRepo.save(post);
 	}
 	
-	public Post findPostsById(Integer id) {
-		Optional<Post> optional = postsRepo.findById(id);
+	public Post findPostById(Integer id) {
+		Optional<Post> optional = postRepo.findById(id);
 		
 		if(optional.isPresent()) {
 			return optional.get();
@@ -29,24 +29,24 @@ public class PostService {
 		return null;
 	}
 	
-	public void deletePostsById(Integer id) {
-		postsRepo.deleteById(id);
+	public void deletePostById(Integer id) {
+		postRepo.deleteById(id);
 	}
 	
-	public List<Post> findAllPosts(){
-		return postsRepo.findAll();
+	public List<Post> findAllPost(){
+		return postRepo.findAll();
 	}
 	
 	@Transactional
-	public Post updatePosts(Integer id,String newPosts) {
-		Optional<Post> optional = postsRepo.findById(id);
+	public Post updatePost(Integer id,String newPost) {
+		Optional<Post> optional = postRepo.findById(id);
 		
 		if(optional.isPresent()) {
-			Post posts = optional.get();
-			posts.setContentText(newPosts);//內容
-			posts.setContentType(newPosts);//文章型態
-			posts.setPostTitle(newPosts);//標題
-			return posts;
+			Post post = optional.get();
+			post.setContentText(newPost);//內容
+			post.setContentType(newPost);//文章型態
+			post.setPostTitle(newPost);//標題
+			return post;
 		}
 		return null;
 	}
