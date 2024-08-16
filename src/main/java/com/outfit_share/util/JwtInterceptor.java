@@ -17,17 +17,17 @@ public class JwtInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        String method = request.getMethod();
-        if (!"OPTIONS".equals(method)) {
+        String method = request.getMethod(); // 獲取HTTP請求方法(GET,POST,PUT,DELETE,OPTIONS...)
+        if (!"OPTIONS".equals(method)) { // 若不是options方法則...
             // 檢查是否有"已登入"(Header)資訊
             String auth = request.getHeader("Authorization");
             JSONObject user = authorizationHeader(auth);
             if (user == null || user.length() == 0) {
                 // 沒有: 阻止使用者呼叫
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.setHeader("Access-Control-Allow-Credentials", "true");
-                response.setHeader("Access-Control-Allow-Origin", "*");
-                response.setHeader("Access-Control-Allow-Headers", "*");
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 設置403狀態碼
+                response.setHeader("Access-Control-Allow-Credentials", "true");// 允許跨域請求
+                response.setHeader("Access-Control-Allow-Origin", "*"); // 指定那些網域可以請求 "*":要改成 "https://example.com"
+                response.setHeader("Access-Control-Allow-Headers", "*"); // 指定實際請求中可以使用那些Header
                 return false;
             } else {
                 // 有
