@@ -3,6 +3,7 @@ package com.outfit_share.entity.product;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +32,7 @@ public class Pimages {
 	@Column(name = "image_name" ,unique = true)
 	private String imageName;//照片名字
 	
-	@JsonBackReference("pimages_product")
+	@JsonManagedReference("pimages_product")
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product productId;//商品的ID
