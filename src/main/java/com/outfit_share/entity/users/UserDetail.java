@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
+import com.outfit_share.entity.orders.Orders;
 import com.outfit_share.entity.post.Comment;
 import com.outfit_share.entity.post.Post;
-import com.outfit_share.entity.product.Orders;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,7 +32,6 @@ public class UserDetail {
 
     @Id
     @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "user_name")
@@ -82,9 +81,8 @@ public class UserDetail {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail")
     private List<Comment> comment;
 
-    // @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy =
-    // "userDetail") // 物件的userDetail
-    // private List<Orders> orders;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail") // 物件的userDetail
+    private List<Orders> orders;
 
     @PrePersist
     public void onCreate() {
@@ -102,9 +100,7 @@ public class UserDetail {
     public UserDetail(String userName, String realName, String address, String phone, Date createdTime,
             Date updatedTime, String userPhoto, Integer discountPoints, String permissions, Users users,
             List<CreditCards> creditCards, List<Notifications> notifications, List<Post> post,
-            List<Comment> comments
-    // , List<Orders> orders
-    ) {
+            List<Comment> comments, List<Orders> orders) {
         this.userName = userName;
         this.realName = realName;
         this.address = address;
@@ -119,15 +115,14 @@ public class UserDetail {
         this.notifications = notifications;
         this.post = post;
         this.comment = comments;
-        // this.orders = orders;
+        this.orders = orders;
     }
 
     public UserDetail(Integer id, String userName, String realName, String address, String phone, Date createdTime,
             Date updatedTime, String userPhoto, Integer discountPoints, String permissions, Users users,
             List<CreditCards> creditCards, List<Notifications> notifications, List<Post> post,
-            List<Comment> comments
-    // List<Orders> orders
-    ) {
+            List<Comment> comments,
+            List<Orders> orders) {
         this.id = id;
         this.userName = userName;
         this.realName = realName;
@@ -143,7 +138,7 @@ public class UserDetail {
         this.notifications = notifications;
         this.post = post;
         this.comment = comments;
-        // this.orders = orders;
+        this.orders = orders;
     }
 
     public Integer getId() {
@@ -266,12 +261,12 @@ public class UserDetail {
         this.comment = comment;
     }
 
-    // public List<Orders> getOrders() {
-    // return orders;
-    // }
+    public List<Orders> getOrders() {
+    return orders;
+    }
 
-    // public void setOrders(List<Orders> orders) {
-    // this.orders = orders;
-    // }
+    public void setOrders(List<Orders> orders) {
+    this.orders = orders;
+    }
 
 }

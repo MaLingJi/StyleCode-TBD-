@@ -39,34 +39,30 @@ public class Orders {
 
 	@Column(name = "status")
 	private Integer status;
-	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE",timezone = "GMT+8")
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE", timezone = "GMT+8")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "orderDate")
 	private Date orderDate;
-	
+
 	@ManyToOne
-	@JoinColumn(name="user_id")
-	private  UserDetail userDetail;
-	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "orders")
+	@JoinColumn(name = "user_id")
+	private UserDetail userDetail;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "orders")
 	private List<OrdersDetails> ordersDetails;
-	
-	
-//	@Column(name = "updateDate")
-//	private Date updateDate;
+
+	// @Column(name = "updateDate")
+	// private Date updateDate;
 
 	@PrePersist
 	public void onCreate() {
 		if (orderDate == null) {
 			orderDate = new Date();
 		}
-		if(status == null) {
+		if (status == null) {
 			this.status = 0;
 		}
 	}
-	
-	
 
 }
-

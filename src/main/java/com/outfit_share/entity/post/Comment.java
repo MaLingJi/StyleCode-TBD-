@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -23,8 +24,8 @@ public class Comment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "comments_id")
-	private Integer commentsId;
+	@Column(name = "comment_id")
+	private Integer commentId;
 
 	@ManyToOne
 	@JoinColumn(name = "post_id")
@@ -42,30 +43,44 @@ public class Comment {
 	@Column(name = "created_at")
 	private Date createdAt;
 
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "deleted_at", nullable = true)
+	private Date deletedAt;
+
+	@PrePersist
+	public void onCreate() {
+		if (createdAt == null) {
+			createdAt = new Date();
+		}
+	}
+
 	public Comment() {
 	}
 
-	public Comment(Post post, UserDetail userDetail, String comment, Date createdAt) {
+	public Comment(Post post, UserDetail userDetail, String comment, Date createdAt, Date deletedAt) {
 		this.post = post;
 		this.userDetail = userDetail;
 		this.comment = comment;
 		this.createdAt = createdAt;
+		this.deletedAt = deletedAt;
 	}
 
-	public Comment(Integer commentsId, Post post, UserDetail userDetail, String comment, Date createdAt) {
-		this.commentsId = commentsId;
+	public Comment(Integer commentId, Post post, UserDetail userDetail, String comment, Date createdAt, Date deletedAt) {
+		this.commentId = commentId;
 		this.post = post;
 		this.userDetail = userDetail;
 		this.comment = comment;
 		this.createdAt = createdAt;
+		this.deletedAt = deletedAt;
 	}
 
-	public Integer getCommentsId() {
-		return commentsId;
+	public Integer getCommentId() {
+		return commentId;
 	}
 
-	public void setCommentsId(Integer commentsId) {
-		this.commentsId = commentsId;
+	public void setCommentId(Integer commentsId) {
+		this.commentId = commentsId;
 	}
 
 	public Post getPosts() {
@@ -100,4 +115,11 @@ public class Comment {
 		this.createdAt = createdAt;
 	}
 
+	public Date getDeleteAt() {
+		return createdAt;
+	}
+
+	public void getDeleteAt(Date deletedAt) {
+		this.deletedAt = deletedAt;
+	}
 }
