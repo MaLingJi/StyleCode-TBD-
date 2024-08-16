@@ -45,6 +45,7 @@ public class JsonWebTokenUtility {
         Date expiredate = new Date(end);// 轉換成Date形式
 
         Password password = Keys.password(charArraySecret);
+        System.out.println(password);
         JwtBuilder builder = Jwts.builder()
                 .subject(data) // JWT內容主體
                 .issuedAt(now) // 建立時間

@@ -32,6 +32,16 @@ public class JwtInterceptor implements HandlerInterceptor {
             } else {
                 // 有
                 // 檢查使用者有無權限
+                String role = user.optString("permissionsauth");
+                String requestURI = request.getRequestURI();
+
+                if (requestURI.startsWith("/admin") && !"Admin".equals(role)) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return false;
+                } else if (requestURI.startsWith("/member") && !"Member".equals(role)) {
+                }
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                return false;
             }
         }
         return true;

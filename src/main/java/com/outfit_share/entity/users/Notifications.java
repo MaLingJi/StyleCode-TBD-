@@ -18,7 +18,6 @@ import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "notifications")
-@Component
 public class Notifications {
 
     @Id

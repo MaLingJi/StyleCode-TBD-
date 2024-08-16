@@ -15,27 +15,20 @@ import com.outfit_share.repository.users.UsersRepository;
 public class UsersService {
 
     @Autowired
-    private UsersRepository uRepo;
-
-    @Autowired
     private PasswordEncoder pwdEncoder;
 
+    @Autowired
+    private UsersRepository uRepo;
+
     public boolean checkEmail(String email) {
-
         Optional<Users> dbUser = uRepo.findByEmail(email);
-
         if (dbUser.isPresent()) {
             return true;
         }
         return false;
     }
 
-    public Users resgister(String useremail, String pwd) {
-
-        // 將密碼加密
-        String encodedPwd = pwdEncoder.encode(pwd);
-
-        Users users = new Users(useremail, encodedPwd);
+    public Users resgister(Users users) {
         return uRepo.save(users);
     }
 

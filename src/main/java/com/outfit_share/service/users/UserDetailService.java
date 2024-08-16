@@ -8,9 +8,6 @@ import org.springframework.stereotype.Service;
 import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.repository.users.UserDetailRepository;
 
-import com.outfit_share.entity.users.UserDetail;
-import com.outfit_share.repository.users.UserDetailRepository;
-
 @Service
 public class UserDetailService {
 
@@ -28,5 +25,9 @@ public class UserDetailService {
             return dbUserDetail;
         }
         return null;
+    }
+
+    public UserDetail saveDetail(UserDetail uDetail) {
+        return udRepo.save(uDetail);
     }
 }

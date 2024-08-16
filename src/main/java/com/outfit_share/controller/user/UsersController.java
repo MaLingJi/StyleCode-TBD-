@@ -2,7 +2,7 @@ package com.outfit_share.controller.user;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,8 +13,6 @@ import com.outfit_share.service.users.UserDetailService;
 import com.outfit_share.service.users.UsersService;
 import com.outfit_share.util.JsonWebTokenUtility;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UsersController {
 
     @Autowired
+    private PasswordEncoder pwdEncoder;
+
+    @Autowired
     private UsersService uService;
 
     @Autowired
@@ -31,6 +32,20 @@ public class UsersController {
 
     @Autowired
     private JsonWebTokenUtility jwtUtil;
+
+    @PostMapping("/register")
+    public String postMethodName(@RequestParam("userEmail") String userEmail, @RequestParam("userPwd") String pwd) {
+
+        Users users = new Users();
+        // 將密碼加密
+        String encodedPwd = pwdEncoder.encode(pwd);
+
+        users.setEmail(userEmail);
+        users.setPwd(encodedPwd);
+        users.setPermissions("Member");
+        uService.resgister(users);
+        return "login";
+    }
 
     @GetMapping("/login")
     public String getMethodName() {
@@ -66,8 +81,8 @@ public class UsersController {
             responseJson.put("message", "登入成功");
 
             JSONObject user = new JSONObject()
-                    .put("userId", dbUser.getId());
-            // .put("permissions", dbUserDetail.getPermissions());
+                    .put("userId", dbUser.getId())
+                    .put("permissions", dbUser.getPermissions());
 
             String token = jwtUtil.createEncryptedToken(user.toString(), null);
             responseJson.put("token", token);
@@ -77,14 +92,6 @@ public class UsersController {
         }
 
         return responseJson.toString();
-    }
-
-    @PostMapping("/register")
-    public String postMethodName(@RequestParam("userEmail") String userEmail, @RequestParam("userPwd") String pwd) {
-
-        uService.resgister(userEmail, pwd);
-
-        return "login";
     }
 
 }
