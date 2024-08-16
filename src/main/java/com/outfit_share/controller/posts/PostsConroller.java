@@ -28,7 +28,7 @@ public class PostsConroller {
 	}
 
 	@GetMapping("/{id}")
-	public Post findPostById(@PathVariable Integer postId) {
+	public Post findPostById(@PathVariable("id") Integer postId) {
 		return postService.findPostById(postId);
 	}
 
@@ -38,12 +38,12 @@ public class PostsConroller {
 	}
 
 	@PutMapping("/{id}")
-	public Post updatePost(@PathVariable Integer postId, @RequestBody Post post) {
+	public Post updatePost(@PathVariable("id") Integer postId, @RequestBody Post post) {
 		return postService.updatePost(postId, post);
 	}
 
 	@DeleteMapping("/{id}")
-	public void deletePost(@PathVariable Integer postId) {
+	public void deletePost(@PathVariable("id") Integer postId) {
 		postService.deletePostById(postId);
 	}
 

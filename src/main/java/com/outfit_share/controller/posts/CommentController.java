@@ -29,7 +29,7 @@ public class CommentController {
 	}
 	
 	@GetMapping("/{id}")
-	public Comment findCommentById(@PathVariable Integer commentId) {
+	public Comment findCommentById(@PathVariable("id") Integer commentId) {
 		return comtService.findCommentById(commentId);
 	}
 	
@@ -39,12 +39,12 @@ public class CommentController {
 	}
 	
 	@PutMapping("/{id}")
-	public Comment updateComment(@PathVariable Integer commentId,@RequestBody Comment comment) {
+	public Comment updateComment(@PathVariable("id") Integer commentId,@RequestBody Comment comment) {
 		return comtService.upComment(commentId, comment);
 	}
 	
 	@DeleteMapping("/{id}")
-	public void deleteComment(@PathVariable Integer commentId) {
+	public void deleteComment(@PathVariable("id") Integer commentId) {
 		comtService.deleteCommentById(commentId);
 	}
 	

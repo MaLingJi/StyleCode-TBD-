@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.outfit_share.entity.post.Comment;
 import com.outfit_share.entity.post.Post;
 import com.outfit_share.entity.product.Orders;
@@ -76,6 +78,7 @@ public class UserDetail {
     private List<Notifications> notifications;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail")
+    @JsonManagedReference
     private List<Post> post;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail")
