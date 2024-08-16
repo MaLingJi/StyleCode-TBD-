@@ -15,7 +15,6 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class ProductService {
 
-	
 	@Autowired
 	ProductRepository productRepository;
 	
@@ -32,7 +31,7 @@ public class ProductService {
 			Product result = optional.get();
 			
 			result.setProductName(product.getProductName());
-			result.setSubcategory(product.getSubcategory());
+			result.setSubcategoryId(product.getSubcategoryId());
 			result.setPrice(product.getPrice());
 			result.setStock(product.getStock());
 			result.setSize(product.getSize());

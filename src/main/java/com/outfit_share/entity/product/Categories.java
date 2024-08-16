@@ -25,11 +25,11 @@ public class Categories {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name ="category_id")
-	private Integer categoryId;
+	private Integer categoryId;//分類ID
 	
 	@Column(name ="category_name" ,unique = true)
-	private String categoryName;
+	private String categoryName;//分類名稱
 	
-	@OneToMany(cascade =  CascadeType.ALL ,fetch = FetchType.LAZY ,mappedBy = "categories")
+	@OneToMany(cascade =  CascadeType.ALL ,fetch = FetchType.LAZY ,mappedBy = "category")
 	private List<Subcategory> subcategories;
 }
