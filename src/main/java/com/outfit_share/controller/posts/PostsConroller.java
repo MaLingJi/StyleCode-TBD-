@@ -48,7 +48,7 @@ public class PostsConroller {
 	 // Integer userIdInt = Integer.valueOf(userId); // 轉換為 Integer
 	 // System.out.println("userId: " + userId);
 	 UserDetail user = userDService.findUserById(userId);
-	 if (user  == null) {
+	 if (user == null) {
 	 model.addAttribute("錯誤", "未找到用戶");
 	 return "posts/addPosts";
 	 }

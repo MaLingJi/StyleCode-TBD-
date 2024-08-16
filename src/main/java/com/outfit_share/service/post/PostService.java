@@ -33,9 +33,9 @@ public class PostService {
 	
 	//軟刪除 設置當前時間
 	public Post deletePostById(Integer postId) {
-		Optional<Post> deOptional = postRepo.findById(postId);
-		if(deOptional.isPresent()) {
-			Post post = deOptional.get();
+		Optional<Post> deoptional = postRepo.findById(postId);
+		if(deoptional.isPresent()) {
+			Post post = deoptional.get();
 			post.setDeletedAt(new Date());
 			return postRepo.save(post);
 		}
