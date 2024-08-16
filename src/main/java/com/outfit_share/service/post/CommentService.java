@@ -22,7 +22,7 @@ public class CommentService {
 		return commentRepo.save(comment);
 	}
 	
-	public Comment findCommentsById(Integer commentId) {
+	public Comment findCommentById(Integer commentId) {
 		Optional<Comment> optional = commentRepo.findById(commentId);
 		
 		if (optional.isPresent()) {
@@ -31,7 +31,7 @@ public class CommentService {
 		return null;
 	}
 	
-	public List<Comment> findAllComment(){
+	public List<Comment> findAllComments(){
 		return commentRepo.findAll();
 	}
 	
@@ -48,14 +48,15 @@ public class CommentService {
 	}
 	
 	@Transactional
-	public Comment upComment(Integer commentId,String newComment) {
+	public Comment upComment(Integer commentId,Comment newComment) {
 		Optional<Comment> upoptional = commentRepo.findById(commentId);
 		
 		if(upoptional.isPresent()) {
 			Comment comment = upoptional.get();
-			comment.setComment(newComment);
-			return comment;
+			comment.setComment(newComment.getComment());
+			return commentRepo.save(comment);
 		}
 		return null;
 	}
+	
 }

@@ -1,64 +1,51 @@
 package com.outfit_share.controller.posts;
 
-import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.outfit_share.entity.post.Comment;
-import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.service.post.CommentService;
-import com.outfit_share.service.users.UserDetailService;
-
 
 @Controller
+@RequestMapping("/comment")
 public class CommentController {
 
 	@Autowired
 	private CommentService comtService;
 	
-	@Autowired
-	private UserDetailService userDService;
-	
-	@GetMapping("/comment/add")
-	public String addComment(Module module) {
-		return "comment/addComment";
+	@PostMapping
+	public Comment addComment(@RequestParam Comment comment) {
+		return comtService.createComment(comment);
 	}
 	
-	@PostMapping("/comment/addCommemt")
-	public String comment(
-							@RequestParam Integer commentId,
-							@RequestParam Integer postId,
-							@RequestParam Integer userId,
-							@RequestParam String comment,
-							@RequestParam(required = false) @DateTimeFormat(iso =
-							DateTimeFormat.ISO.DATE_TIME) Date createdat,
-							@RequestParam(required = false) @DateTimeFormat(iso =
-							DateTimeFormat.ISO.DATE_TIME) Date deletedat,
-							Model model) {
-		
-		UserDetail user = userDService.findUserById(userId);
-		if(user == null) {
-			model.addAttribute("錯誤","未找到使用者");
-			return "comment/addComment";
-		}
-		
-		Comment comt = new Comment();
-		comt.setUserDetail(user);
-		comt.setComment(comment);
-		comt.setCreatedAt(createdat);
-		comt.setDeletedAt(null);// 尚未刪除
-		
-		comtService.createComment(comt);
-		
-		model.addAttribute("OK","新增成功");
-		return "comment/addComment";
+	@GetMapping("/{id}")
+	public Comment findCommentById(@PathVariable Integer commentId) {
+		return comtService.findCommentById(commentId);
 	}
 	
+	@GetMapping
+	public List<Comment> findAllComments(){
+		return comtService.findAllComments();
+	}
+	
+	@PutMapping("/{id}")
+	public Comment updateComment(@PathVariable Integer commentId,@RequestBody Comment comment) {
+		return comtService.upComment(commentId, comment);
+	}
+	
+	@DeleteMapping("/{id}")
+	public void deleteComment(@PathVariable Integer commentId) {
+		comtService.deleteCommentById(commentId);
+	}
 	
 }

@@ -47,16 +47,17 @@ public class PostService {
 	}
 	
 	@Transactional
-	public Post updatePost(Integer postId,String contentType, String contentText) {
+	public Post updatePost(Integer postId,Post newpost) {
 		Optional<Post> upoptional = postRepo.findById(postId);
 		
 		if(upoptional.isPresent()) {
 			Post post = upoptional.get();
-			post.setContentText(post.getContentText());//內容
-			post.setPostTitle(post.getPostTitle());//標題是否可變更?
-			post.setContentType(post.getContentType());//文章型態(分享.討論)可切換變更?
+			post.setContentText(newpost.getContentText());//內容
+//			post.setPostTitle(newpost.getPostTitle());//標題是否可變更?
+//			post.setContentType(newpost.getContentType());//文章型態(分享.討論)可切換變更?
 			return postRepo.save(post);
 		}
 		return null;
 	}
+	
 }
