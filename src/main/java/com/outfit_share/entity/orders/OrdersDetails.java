@@ -1,7 +1,6 @@
-package com.outfit_share.entity.product;
+package com.outfit_share.entity.orders;
 
-import java.util.List;
-
+import com.outfit_share.entity.product.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,22 +17,22 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "pimages")
-public class Pimages {
-
+@Table(name = "ordersDetails")
+public class OrdersDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "image_id" )
-	private Integer imageId;
-	
-	@Column(name = "image_name")
-	private String imageName;
-	
+	@Column(name = "id")
+	private Integer id;
+
+	@Column(name = "quantity")
+	private Integer quantity;
+
+	@ManyToOne
+	@JoinColumn(name = "orders_id")
+	private Orders orders;
+
 	@ManyToOne
 	@JoinColumn(name = "product_id")
-	private Product productId;
-	
-	
-	@Column(name = "img_url")
-	private String imgUrl;
+	private Product product;
+
 }

@@ -3,6 +3,8 @@ package com.outfit_share.entity.product;
 
 import java.util.List;
 
+import com.outfit_share.entity.orders.OrdersDetails;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,7 +37,7 @@ public class Product {
 	
 	@ManyToOne
 	@JoinColumn(name = "subcategory_id")
-	private Subcategory subcategory;
+	private Subcategory subcategoryId;
 	
 	@Column(name = "price")
 	private Integer price;
@@ -55,6 +57,9 @@ public class Product {
 	@Column(name = "onSale")
 	private Integer onSale;
 	
-	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "product")
+	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "productId")
 	private List<Pimages> pimages;
+	
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "product")
+	private List<OrdersDetails> ordersDetails;
 }
