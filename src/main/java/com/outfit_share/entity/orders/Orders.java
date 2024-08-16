@@ -40,6 +40,19 @@ public class Orders {
 	@Column(name = "status")
 	private Integer status;
 	
+	@Column(name = "payment_method")
+	private Integer payment_method;
+	
+	@Column(name = "shipping_address")
+	private String shipping_address;
+	
+	@Column(name = "discount_points")
+	private Integer discount_points;
+	
+	@Column(name = "updated_at")
+	private Date updated_at;
+
+	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE",timezone = "GMT+8")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "orderDate")

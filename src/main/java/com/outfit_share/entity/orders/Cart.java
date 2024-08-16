@@ -1,5 +1,6 @@
 package com.outfit_share.entity.orders;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.outfit_share.entity.product.Product;
 import com.outfit_share.entity.users.Users;
 
@@ -26,13 +27,18 @@ public class Cart {
 	
 	@Column(name = "vol")
 	private Integer vol;
-
+	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("productId")
 	@JoinColumn(name="product_id")
 	private Product product;
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("userId")
 	@JoinColumn(name="users_id")
 	private Users users;
+
+	
+	
 }
