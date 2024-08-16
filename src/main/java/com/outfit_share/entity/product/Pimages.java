@@ -28,10 +28,10 @@ public class Pimages {
 	@Column(name = "image_id" )
 	private Integer imageId;//照片ID
 	
-	@Column(name = "image_name")
+	@Column(name = "image_name" ,unique = true)
 	private String imageName;//照片名字
 	
-	@JsonBackReference
+	@JsonBackReference("pimages_product")
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product productId;//商品的ID

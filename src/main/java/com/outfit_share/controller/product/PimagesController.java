@@ -2,6 +2,7 @@ package com.outfit_share.controller.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,13 +24,21 @@ public class PimagesController {
     public Pimages uploadImage(@RequestParam("file") MultipartFile file, @PathVariable Integer productId) throws IOException {
         return pimagesService.savePimages(file, productId);
     }
+    
+    //上傳多張圖片
+    @PostMapping("/multiple")
+    public List<Pimages> uploadMultipleImages(@RequestParam("file") MultipartFile[] files, @PathVariable Integer productId) throws IOException {
+        return pimagesService.saveMultiplePimages(files, productId);
+    }
 
     // 更新圖片
     @PutMapping("/{imageId}")
-    public Pimages updateImage(@PathVariable Integer productId, @PathVariable Integer imageId, @RequestBody Pimages img) {
-        return pimagesService.updatePimages(imageId, img);
+    public Pimages updateImage(@RequestParam("file") MultipartFile file, 
+                               @PathVariable Integer productId,
+                               @PathVariable Integer imageId) throws IOException {
+        return pimagesService.updatePimages(file, imageId);
     }
-
+    
     // 刪除圖片
     @DeleteMapping("/{imageId}")
     public void deleteImage(@PathVariable Integer productId, @PathVariable Integer imageId) {

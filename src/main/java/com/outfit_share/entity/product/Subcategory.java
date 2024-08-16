@@ -2,6 +2,9 @@ package com.outfit_share.entity.product;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,10 +35,12 @@ public class Subcategory {
 	@Column(name = "subcategory_name" ,unique = true)
 	private String subcategoryName;//子分類名稱
 	
+	@JsonBackReference("subcategory_category")
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Categories category;//分類ID
 	
+	@JsonManagedReference("product_subcategory")
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "subcategoryId")
 	private List<Product> prodcut;
 }

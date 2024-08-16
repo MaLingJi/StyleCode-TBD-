@@ -3,6 +3,7 @@ package com.outfit_share.entity.product;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -35,6 +36,7 @@ public class Product {
 	@Column(name = "product_name" ,unique = true)
 	private String 	productName;//商品名稱
 	
+	@JsonBackReference("product_subcategory")
 	@ManyToOne
 	@JoinColumn(name = "subcategory_id")
 	private Subcategory subcategoryId;//子分類
@@ -57,7 +59,7 @@ public class Product {
 	@Column(name = "onSale")
 	private Integer onSale;//商品狀態(1上架or0下架)(
 	
-	@JsonManagedReference
+	@JsonManagedReference("pimages_product")
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "productId")
 	private List<Pimages> pimages;
 }

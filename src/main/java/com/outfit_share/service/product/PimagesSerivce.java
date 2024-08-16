@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -61,19 +62,37 @@ public class PimagesSerivce {
 		return pimagesRepository.save(pimages);
 		
 	}
+	
+//  上傳多個圖片
+    public List<Pimages> saveMultiplePimages(MultipartFile[] files, Integer productId) throws IOException {
+        List<Pimages> savedImages = new ArrayList<>();
+        for (MultipartFile file : files) {
+            savedImages.add(savePimages(file, productId));
+        }
+        return savedImages;
+    }
+	   
 //	修改圖片
-	public Pimages updatePimages(Integer id, Pimages img) {
-		Optional<Pimages> optional = pimagesRepository.findById(id);
-		
-		if(optional.isPresent()) {
-			Pimages result = optional.get();
-			result.setImgUrl(img.getImgUrl());
-			
-			return result;
-		}
-		
-		return null;
-	}
+    public Pimages updatePimages(MultipartFile file, Integer imageId) throws IOException {
+        Optional<Pimages> optional = pimagesRepository.findById(imageId);
+        
+        if (optional.isPresent()) {
+            Pimages result = optional.get();
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
+            
+            Path uploadPath = Paths.get(uploadDir);
+            Path filePath = uploadPath.resolve(uniqueFileName);
+            file.transferTo(filePath.toFile());
+            
+            result.setImageName(fileName);
+            result.setImgUrl(filePath.toString());
+            
+            return pimagesRepository.save(result);
+        }
+        
+        return null;
+    }
 	
 //	刪除圖片
 	public void deletePimages (Integer id) {

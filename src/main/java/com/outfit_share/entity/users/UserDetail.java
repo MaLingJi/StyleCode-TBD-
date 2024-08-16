@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import com.outfit_share.entity.post.Comment;
 import com.outfit_share.entity.post.Post;
-import com.outfit_share.entity.product.Orders;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,7 +31,6 @@ public class UserDetail {
 
     @Id
     @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "user_name")
