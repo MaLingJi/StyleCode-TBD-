@@ -6,4 +6,5 @@ import com.outfit_share.entity.product.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
+	
 }
