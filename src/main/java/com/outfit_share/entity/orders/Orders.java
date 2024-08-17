@@ -3,8 +3,11 @@ package com.outfit_share.entity.orders;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.outfit_share.entity.users.UserDetail;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -58,16 +61,17 @@ public class Orders {
 	@Column(name = "orderDate")
 	private Date orderDate;
 	
+	
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private  UserDetail userDetail;
 	
+
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "orders")
 	private List<OrdersDetails> ordersDetails;
 	
 	
-//	@Column(name = "updateDate")
-//	private Date updateDate;
+
 
 	@PrePersist
 	public void onCreate() {

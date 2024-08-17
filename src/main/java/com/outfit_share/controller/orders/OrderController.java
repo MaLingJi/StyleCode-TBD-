@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.outfit_share.entity.orders.Cart;
 import com.outfit_share.entity.orders.Orders;
+import com.outfit_share.entity.orders.OrdersDTO;
 import com.outfit_share.entity.orders.OrdersDetails;
+import com.outfit_share.entity.orders.OrdersDetailsDTO;
 import com.outfit_share.service.orders.CartService;
 import com.outfit_share.service.orders.OrdersDetailsService;
 import com.outfit_share.service.orders.OrdersService;
@@ -50,37 +52,42 @@ public class OrderController {
 		return orders;
 	}
 
-	// 客戶角度看他的訂單
+	//客戶角度看他的訂單
+	//改使用DTO作為回傳物件  OK
 	@GetMapping("/findByUserId/{id}")
-	public List<Orders> findByUserId(@PathVariable(value = "id") Integer userId) {
-		List<Orders> byUserId = ordersService.findByUserId(userId);
-		return byUserId;
+	public List<OrdersDTO> findByUserId(@PathVariable(value = "id") Integer userId) {
+		return  ordersService.findByUserId(userId);
+		
 	}
 	
-	// 客戶角度看他得訂單詳情
-	@GetMapping("/findOrderDetails/{orderId}")
-	public List<OrdersDetails> findOdByOrdersId(UUID ordersId){
+	//客戶角度看他得訂單詳情
+	//改使用DTO作為回傳物件  OK
+	@GetMapping("/findOrderDetails/{ordersId}")
+	public List<OrdersDetailsDTO> findOdByOrdersId(@PathVariable(value = "ordersId") UUID ordersId){
 		return odService.findOdByOrderId(ordersId);
 	}
 	// --------------------------------background controller
 
-	// 刪除訂單
+	//刪除訂單
+	//改使用DTO作為回傳物件  OK
 	@DeleteMapping("/delete/{orderId}")
-	public Orders deleteByOrderId(@PathVariable(value = "orderId") UUID orderId) {
-		Orders result = ordersService.findByOrderId(orderId);
+	public OrdersDTO deleteByOrderId(@PathVariable(value = "orderId") UUID orderId) {
+		OrdersDTO result = ordersService.deleteOrders(orderId);
 		result.setStatus(2);
 		return result;
 	}
 
-	// 後台看所有訂單
+	//後台看所有訂單
+	//改使用DTO作為回傳物件  OK
 	@GetMapping("/findAll")
-	public List<Orders> findAll() {
+	public List<OrdersDTO> findAll() {
 		return ordersService.findAll();
 	}
 
 	// 後台看不同狀態訂單(0=尚未付款 1=已付款 2=已取消) 分析用
+	//改使用DTO作為回傳物件  OK
 	@GetMapping("/findByStatus/{status}")
-	public List<Orders> findByStatus(Integer status) {
+	public List<OrdersDTO> findByStatus(@PathVariable  Integer status) {
 		return ordersService.findByStatus(status);
 	}
 

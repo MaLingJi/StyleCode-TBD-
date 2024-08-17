@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import com.outfit_share.entity.orders.OrdersDetails;
 
 public interface OrdersDetailsRepository extends JpaRepository<OrdersDetails, Integer>{
-	@Query("FROM ordersDetails where orders=?1")
+	@Query("FROM OrdersDetails where orders.id=?1")
 	List<OrdersDetails> findByOrdersId(UUID orderId);
 } 
