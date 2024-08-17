@@ -56,4 +56,10 @@ public class PimagesController {
     public List<Pimages> getAllProductImages(@PathVariable Integer productId) {
         return pimagesService.findAllImagesByProductId(productId);
     }
+    
+    // 封面照片
+    @GetMapping("/cover")
+    public Pimages getCoverPhoto(@PathVariable Integer productId) {
+    	return pimagesService.findCoverPhoto(productId);
+    }
 }

@@ -48,11 +48,11 @@ public class ProductController {
         return productService.findProductById(id);
     }
 
-    // 獲取所有商品
-//    @GetMapping
-//    public List<Product> getAllProducts() {
-//        return productService.findAllProduct();
-//    }
+																					    // 獲取所有商品
+																					//    @GetMapping
+																					//    public List<Product> getAllProducts() {
+																					//        return productService.findAllProduct();
+																					//    }
     
     
     // 模糊搜尋 && 價格由高到低||由低到高 && 全部商品

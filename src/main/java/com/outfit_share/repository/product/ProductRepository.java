@@ -10,8 +10,8 @@ import com.outfit_share.entity.product.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-//	@Query("from Product where productName like %:n%")
-//	List<Product> findByNameLikeQuery(@Param("n") String name);
+																									//	@Query("from Product where productName like %:n%")
+																									//	List<Product> findByNameLikeQuery(@Param("n") String name);
 
 	//模糊搜尋 && 價格由高到低||由低到高 && 全部商品
 	@Query("SELECT p FROM Product p WHERE (:name IS NULL OR p.productName LIKE %:name%) ORDER BY "

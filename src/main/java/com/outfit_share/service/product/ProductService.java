@@ -65,10 +65,10 @@ public class ProductService {
 		return null;
 	}
 	
-//	查詢全部商品
-//	public List<Product> findAllProduct() {
-//		return productRepository.findAll();
-//	}
+																					//	查詢全部商品
+																					//	public List<Product> findAllProduct() {
+																					//		return productRepository.findAll();
+																					//	}
 	
 //	模糊搜尋 && 價格由高到低||由低到高 && 全部商品
 	 public List<Product> findProductsByNameAndSort(String name, String sort) {

@@ -120,4 +120,8 @@ public class PimagesSerivce {
 	    return pimagesRepository.findByProductIdProductId(productId);
 	}
 	
+// 	封面照片
+	public Pimages findCoverPhoto(Integer productId) {
+		return pimagesRepository.findTopOneProductImage(productId);
+	}
 }
