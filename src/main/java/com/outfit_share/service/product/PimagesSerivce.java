@@ -37,22 +37,26 @@ public class PimagesSerivce {
 	
 //	新增圖片
 	public Pimages savePimages(MultipartFile file,Integer id) throws IOException{
+		//如果找不到該商品 則會回傳找不到該商品的 ID
 		Product product = productRepo.findById(id).orElseThrow(()-> new RuntimeException("ProductPhoto not found with id: " + id));
 		
+		//取得並清理原始檔案名稱
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 		
+		//建立一個唯一的檔案名，使用UUID來確保唯一性
 		String uniqueFileName =  UUID.randomUUID().toString() + "_" + fileName;
 		
+		//取得上傳目錄的路徑，如果目錄不存在，則建立它
 		Path uploaPath = Paths.get(uploadDir);
-		
 		if (!Files.exists(uploaPath)) {
 			Files.createDirectories(uploaPath);
 		}
 		
+		//建立完整的檔案路徑，將上傳的檔案儲存到這個路徑
 		Path filePath = uploaPath.resolve(uniqueFileName);
-		
 		file.transferTo(filePath.toFile());
 		
+		//將這個Pimages物件保存到資料庫中並返回
 		Pimages pimages = new Pimages();
 		
 		pimages.setImageName(fileName);
@@ -60,6 +64,7 @@ public class PimagesSerivce {
 		pimages.setProductId(product);
 		
 		return pimagesRepository.save(pimages);
+		
 		
 	}
 	

@@ -1,9 +1,11 @@
 package com.outfit_share.service.product;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.outfit_share.entity.product.Product;
@@ -64,7 +66,13 @@ public class ProductService {
 	}
 	
 //	查詢全部商品
-	public List<Product> findAllProduct() {
-		return productRepository.findAll();
-	}
+//	public List<Product> findAllProduct() {
+//		return productRepository.findAll();
+//	}
+	
+//	模糊搜尋 && 價格由高到低||由低到高 && 全部商品
+	 public List<Product> findProductsByNameAndSort(String name, String sort) {
+	        return productRepository.findByNameAndSort(name, sort);
+	    }
+	
 }
