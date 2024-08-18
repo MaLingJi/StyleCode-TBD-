@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.outfit_share.entity.orders.Cart;
@@ -55,7 +56,10 @@ public class OrderController {
 	//客戶角度看他的訂單
 	//改使用DTO作為回傳物件  OK
 	@GetMapping("/findByUserId/{id}")
-	public List<OrdersDTO> findByUserId(@PathVariable(value = "id") Integer userId) {
+	public List<OrdersDTO> findByUserId(@PathVariable(value = "id") Integer userId,@RequestParam(value = "status",required = false) Integer status) {
+		if (status!=null) {
+			return ordersService.findByUserIdAndStatus(userId,status);
+		}
 		return  ordersService.findByUserId(userId);
 		
 	}
@@ -92,5 +96,5 @@ public class OrderController {
 	}
 
 	// findOrderDetailsByStatus 抓訂單詳情分析用待補
-
+	
 }

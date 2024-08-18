@@ -48,6 +48,20 @@ public class OrdersService {
 //					.collect(Collectors.toList());
 //			
 //		}
+	
+	public List<OrdersDTO> findByUserIdAndStatus(Integer userId,Integer status){
+		List<Orders> result = ordersRepository.findByUserIdAndStatus(userId,status);
+		List<OrdersDTO> ordersDTOList = new ArrayList<>();
+		for (Orders order : result) {
+			Hibernate.initialize(order.getUserDetail());
+			OrdersDTO ordersDTO = new OrdersDTO(order);
+			ordersDTOList.add(ordersDTO);
+		}
+
+		return ordersDTOList;
+	}
+	
+	
 
 	// 改使用DTO作為回傳物件
 	public OrdersDTO deleteOrders(UUID orderId) {
