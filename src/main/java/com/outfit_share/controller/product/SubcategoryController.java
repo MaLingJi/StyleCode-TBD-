@@ -19,7 +19,7 @@ public class SubcategoryController {
 
     // 創建新子分類
     @PostMapping
-    public Subcategory createSubcategory(@RequestBody Subcategory subcategory) {
+    public SubcategoryDTO createSubcategory(@RequestBody Subcategory subcategory) {
         return subcategoryService.saveSubcategory(subcategory);
     }
 

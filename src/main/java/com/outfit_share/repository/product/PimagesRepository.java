@@ -16,4 +16,8 @@ public interface PimagesRepository extends JpaRepository<Pimages, Integer> {
 	//封面照
 	@Query(value =  "select top(1)* from pimages where product_id = :id" , nativeQuery = true)
 	Pimages findTopOneProductImage(@Param("id") Integer productId);
+	
+	//有滑鼠移入移出事件測試，切換不同的圖片
+//	@Query("SELECT p FROM Pimages p WHERE p.productId.productId = :id ORDER BY p.imageType") 	
+//    List<Pimages> findByProductIdOrderByImageType(@Param("id") Integer productId);
 }
