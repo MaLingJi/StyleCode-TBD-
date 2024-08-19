@@ -1,0 +1,27 @@
+package com.outfit_share.entity.product;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class SubcategoryDTO {
+
+	private Integer subcategoryId;// 子分類ID
+
+	private String subcategoryName;// 子分類名稱
+
+	private Integer categoryId;// 分類ID
+
+	private String categoryName;// 分類名稱
+
+	public SubcategoryDTO(Subcategory subcategory) {
+		this.subcategoryId = subcategory.getSubcategoryId();
+		this.subcategoryName = subcategory.getSubcategoryName();
+		if (subcategory.getCategory() != null) {
+			this.categoryId = subcategory.getCategory().getCategoryId();
+			this.categoryName = subcategory.getCategory().getCategoryName();
+		}
+	}
+
+}

@@ -33,7 +33,6 @@ public class Categories {
 	@Column(name ="category_name" ,unique = true)
 	private String categoryName;//分類名稱
 	
-	@JsonBackReference("subcategory_category")
 	@OneToMany(cascade =  CascadeType.ALL ,fetch = FetchType.LAZY ,mappedBy = "category")
 	private List<Subcategory> subcategories;
 }

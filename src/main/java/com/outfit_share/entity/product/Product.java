@@ -36,7 +36,6 @@ public class Product {
 	@Column(name = "product_name" ,unique = true)
 	private String 	productName;//商品名稱
 	
-	@JsonManagedReference("product_subcategory")
 	@ManyToOne
 	@JoinColumn(name = "subcategory_id")
 	private Subcategory subcategoryId;//子分類
@@ -59,7 +58,6 @@ public class Product {
 	@Column(name = "onSale")
 	private boolean onSale;//商品狀態(1上架or0下架)
 	
-	@JsonBackReference("pimages_product")
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "productId")
 	private List<Pimages> pimages;
 }

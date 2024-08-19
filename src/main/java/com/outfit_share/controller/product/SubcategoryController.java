@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.outfit_share.entity.product.Subcategory;
+import com.outfit_share.entity.product.SubcategoryDTO;
 import com.outfit_share.service.product.SubcategoryService;
 
 @RestController
@@ -29,19 +30,19 @@ public class SubcategoryController {
 
     // 刪除子分類
     @DeleteMapping("/{id}")
-    public void deleteSubcategory(@PathVariable("id") Integer id) {
-        subcategoryService.deleteSubcategory(id);
+    public SubcategoryDTO deleteSubcategory(@PathVariable("id") Integer id) {
+    	return subcategoryService.deleteSubcategory(id);
     }
 
     // 獲取單個子分類
     @GetMapping("/{id}")
-    public Subcategory getSubcategory(@PathVariable("id") Integer id) {
+    public SubcategoryDTO getSubcategory(@PathVariable("id") Integer id) {
         return subcategoryService.findSubcategoryById(id);
     }
     
     // 新增: 通過父分類ID獲取子分類列表
     @GetMapping("/category/{id}")
-    public List<Subcategory> getSubcategoriesByCategoryId(@PathVariable("id") Integer categoryId) {
+    public List<SubcategoryDTO> getSubcategoriesByCategoryId(@PathVariable("id") Integer categoryId) {
         return subcategoryService.findSubcategoriesByCategoryId(categoryId);
     }
 }

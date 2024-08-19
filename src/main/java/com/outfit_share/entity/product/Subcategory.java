@@ -35,12 +35,10 @@ public class Subcategory {
 	@Column(name = "subcategory_name" ,unique = true)
 	private String subcategoryName;//子分類名稱
 	
-	@JsonManagedReference("subcategory_category")
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Categories category;//分類ID
 	
-	@JsonBackReference("product_subcategory")
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "subcategoryId")
 	private List<Product> prodcut;
 }
