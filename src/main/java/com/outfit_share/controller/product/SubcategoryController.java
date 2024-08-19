@@ -3,6 +3,7 @@ package com.outfit_share.controller.product;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.outfit_share.entity.product.Subcategory;
@@ -24,8 +25,8 @@ public class SubcategoryController {
 
     // 更新子分類
     @PutMapping("/{id}")
-    public Subcategory updateSubcategory(@PathVariable("id") Integer id, @RequestBody String subcategoryName) {
-        return subcategoryService.updateSubcategory(id, subcategoryName);
+    public Subcategory updateSubcategory(@PathVariable("id") Integer id, @RequestBody Subcategory subcategory ) {
+        return subcategoryService.updateSubcategory(id, subcategory);
     }
 
     // 刪除子分類

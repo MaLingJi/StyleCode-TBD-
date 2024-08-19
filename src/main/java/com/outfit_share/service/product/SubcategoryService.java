@@ -14,6 +14,7 @@ import com.outfit_share.entity.product.SubcategoryDTO;
 import com.outfit_share.repository.product.SubcategoryRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.Setter;
 
 @Service
 @Transactional
@@ -30,12 +31,13 @@ public class SubcategoryService {
 	}
 	
 //	修改子分類
-	public Subcategory updateSubcategory(Integer id ,String Subcategory) {
+	public Subcategory updateSubcategory(Integer id ,Subcategory subcategory) {
 		Optional<Subcategory> optional = subcategoryRepository.findById(id);
 		
 		if(optional.isPresent()) {
 			Subcategory result = optional.get();
-			result.setSubcategoryName(Subcategory);
+			result.setCategory(subcategory.getCategory());
+			result.setSubcategoryName(subcategory.getSubcategoryName());
 		}
 		return null;
 	}
