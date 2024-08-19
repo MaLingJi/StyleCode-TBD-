@@ -25,7 +25,7 @@ public class SubcategoryController {
 
     // 更新子分類
     @PutMapping("/{id}")
-    public Subcategory updateSubcategory(@PathVariable("id") Integer id, @RequestBody Subcategory subcategory ) {
+    public SubcategoryDTO updateSubcategory(@PathVariable("id") Integer id, @RequestBody Subcategory subcategory ) {
         return subcategoryService.updateSubcategory(id, subcategory);
     }
 

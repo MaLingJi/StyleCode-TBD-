@@ -25,13 +25,14 @@ public class SubcategoryService {
 	private SubcategoryRepository subcategoryRepository;
 	
 //	新增子分類
-	public Subcategory saveSubcategory(Subcategory subcategory){
-		return subcategoryRepository.save(subcategory);
+	public SubcategoryDTO saveSubcategory(Subcategory subcategory){
+		Subcategory result = subcategoryRepository.save(subcategory);
+		return new SubcategoryDTO(result);
 		
 	}
 	
 //	修改子分類
-	public Subcategory updateSubcategory(Integer id ,Subcategory subcategory) {
+	public SubcategoryDTO updateSubcategory(Integer id ,Subcategory subcategory) {
 		Optional<Subcategory> optional = subcategoryRepository.findById(id);
 		
 		if(optional.isPresent()) {

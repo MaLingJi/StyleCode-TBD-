@@ -13,13 +13,19 @@ public class PimagesDTO {
 	
 	private Integer productId;//商品的ID
 	
+	private String productName;//商品的ID
+	
 	private String imgUrl;//照片URL
 
-	public PimagesDTO(Integer imageId, String imageName, Integer productId, String imgUrl) {
-		this.imageId = imageId;
-		this.imageName = imageName;
-		this.productId = productId;
-		this.imgUrl = imgUrl;
+	public PimagesDTO(Pimages pimages) {
+		this.imageId = pimages.getImageId();
+		this.imageName = pimages.getImageName();
+		this.imgUrl = pimages.getImgUrl();
+		
+		if (pimages.getProductId() != null) {
+			this.productId = pimages.getProductId().getProductId();
+			this.productName = pimages.getProductId().getProductName();
+		}
 	}
 	
 	

@@ -29,13 +29,12 @@ public class Pimages {
 	@Column(name = "image_id" )
 	private Integer imageId;//照片ID
 	
-	@Column(name = "image_name" ,unique = true)
-	private String imageName;//照片名字
-	
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product productId;//商品的ID
 	
+	@Column(name = "image_name" ,unique = true)
+	private String imageName;//照片名字
 	
 	@Column(name = "img_url")
 	private String imgUrl;//照片URL

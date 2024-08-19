@@ -8,27 +8,40 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ProductDTO {
-    
-    private Integer productId;
-    private String productName;
-    private Integer subcategoryId; // 只包含ID，而不是整個Subcategory對象
-    private Integer price;
-    private Integer stock;
-    private String size;
-    private String color;
-    private String productDescription;
-    private boolean onSale;
-    
-    // 構造函數
-    public ProductDTO(Product product) {
-        this.productId = productId;
-        this.productName = productName;
-        this.subcategoryId = subcategoryId;
-        this.price = price;
-        this.stock = stock;
-        this.size = size;
-        this.color = color;
-        this.productDescription = productDescription;
-        this.onSale = onSale;
-    }
+
+	private Integer productId;
+	
+	private String productName;
+	
+	private Integer subcategoryId; // 只包含ID，而不是整個Subcategory對象
+	
+	private String subcategoryName; // 只包含Name，而不是整個Subcategory對象
+	
+	private Integer price;
+	
+	private Integer stock;
+	
+	private String size;
+	
+	private String color;
+	
+	private String productDescription;
+	
+	private boolean onSale;
+
+	public ProductDTO(Product product) {
+		this.productId = product.getProductId();
+		this.productName = product.getProductName();
+		this.price = product.getPrice();
+		this.stock = product.getStock();
+		this.size = product.getSize();
+		this.color = product.getColor();
+		this.productDescription = product.getProductDescription();
+		this.onSale = product.isOnSale();
+
+		if (product.getSubcategoryId() != null) {
+			this.subcategoryId = product.getSubcategoryId().getSubcategoryId();
+			this.subcategoryName = product.getSubcategoryId().getSubcategoryName();
+		}
+	}
 }
