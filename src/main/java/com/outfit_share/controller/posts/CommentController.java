@@ -3,7 +3,6 @@ package com.outfit_share.controller.posts;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,12 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.outfit_share.entity.post.Comment;
 import com.outfit_share.service.post.CommentService;
 
-@Controller
+@RestController
 @RequestMapping("/comment")
 public class CommentController {
 
@@ -24,7 +23,7 @@ public class CommentController {
 	private CommentService comtService;
 	
 	@PostMapping
-	public Comment addComment(@RequestParam Comment comment) {
+	public Comment addComment(@RequestBody Comment comment) {
 		return comtService.createComment(comment);
 	}
 	

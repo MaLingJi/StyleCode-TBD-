@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.outfit_share.entity.post.Comment;
 import com.outfit_share.entity.post.Post;
-import com.outfit_share.entity.product.Orders;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -82,6 +81,7 @@ public class UserDetail {
     private List<Post> post;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail")
+    @JsonManagedReference
     private List<Comment> comment;
 
     // @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy =

@@ -9,7 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.outfit_share.entity.post.Comment;
+import com.outfit_share.entity.post.Post;
+import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.repository.post.CommentRepository;
+import com.outfit_share.repository.post.PostRepository;
+import com.outfit_share.repository.users.UserDetailRepository;
 
 @Service
 public class CommentService {
@@ -17,10 +21,29 @@ public class CommentService {
 	@Autowired
 	private CommentRepository commentRepo;
 	
+	@Autowired
+	private PostRepository postRepo;
+	
+	@Autowired
+	private UserDetailRepository userDetailRepo;
+	
+	//依賴userDetailRepo和postRepo找尋文章中的postid,沒寫postid回傳為null
 	public Comment createComment(Comment comment) {
-		comment.setCreatedAt(new Date());
-		return commentRepo.save(comment);
-	}
+		Post post = postRepo.findById(comment.getPost().getPostId()).orElse(null);
+	    UserDetail userDetail = userDetailRepo.findById(comment.getUserDetail().getId()).orElse(null);
+
+	    if (post == null) {
+	        throw new IllegalArgumentException("找不到貼文");
+	    }
+	    if (userDetail == null) {
+	        throw new IllegalArgumentException("未找到用戶詳細信息");
+	    }
+	        comment.setPost(post);
+	        comment.setUserDetail(userDetail);
+	        comment.setCreatedAt(new Date());
+
+	        return commentRepo.save(comment);
+	    }
 	
 	public Comment findCommentById(Integer commentId) {
 		Optional<Comment> optional = commentRepo.findById(commentId);

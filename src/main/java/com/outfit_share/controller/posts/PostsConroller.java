@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.outfit_share.entity.post.Post;
@@ -47,4 +48,9 @@ public class PostsConroller {
 		postService.deletePostById(postId);
 	}
 
+	//模糊搜尋文章中分類 分享/討論 的標題
+	@GetMapping("/type")
+	public List<Post> searchPosts(@RequestParam String contentType,@RequestParam String keyword){
+		return postService.searchPostsByTypeAndKeyword(contentType, keyword);
+	}
 }

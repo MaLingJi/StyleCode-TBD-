@@ -60,4 +60,8 @@ public class PostService {
 		return null;
 	}
 	
+	//封裝查詢邏輯
+	public List<Post> searchPostsByTypeAndKeyword(String contentType,String keyword){
+		return postRepo.findPostByTypeAndKeyword(contentType, keyword);
+	}
 }

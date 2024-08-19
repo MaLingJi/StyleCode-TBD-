@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.outfit_share.entity.users.UserDetail;
 
 import jakarta.persistence.Column;
@@ -33,6 +34,7 @@ public class Comment {
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
+	@JsonBackReference
 	private UserDetail userDetail;
 
 	@Column(name = "comment")
@@ -84,11 +86,11 @@ public class Comment {
 		this.commentId = commentId;
 	}
 
-	public Post getPosts() {
+	public Post getPost() {
 		return post;
 	}
 
-	public void setPosts(Post post) {
+	public void setPost(Post post) {
 		this.post = post;
 	}
 
