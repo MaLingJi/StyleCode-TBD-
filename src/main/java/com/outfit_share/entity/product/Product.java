@@ -4,6 +4,7 @@ package com.outfit_share.entity.product;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.outfit_share.entity.orders.OrdersDetails;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -60,4 +61,7 @@ public class Product {
 	@JsonManagedReference
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "productId")
 	private List<Pimages> pimages;
+	
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "product")
+	private List<OrdersDetails> ordersDetails;
 }
