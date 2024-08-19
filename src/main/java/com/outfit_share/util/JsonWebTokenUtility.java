@@ -75,4 +75,21 @@ public class JsonWebTokenUtility {
         return null;
     }
 
+    public Integer getUserIdFromToken(String token) {
+        try {
+            Password password = Keys.password(charArraySecret);
+            String jwtToken = token.substring(7);
+            Claims payload = Jwts.parser()
+                    .decryptWith(password)
+                    .build()
+                    .parseEncryptedClaims(jwtToken)
+                    .getPayload();
+            return payload.get("userId", Integer.class);
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("Invalid token: " + e.getMessage());
+            return null;
+        }
+
+    }
 }
