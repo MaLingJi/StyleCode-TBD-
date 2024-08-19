@@ -18,16 +18,12 @@ import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "notifications")
-@Component
 public class Notifications {
 
     @Id
     @Column(name = "notification_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    // @Column(name = "user_id")
-    // private Integer userId;
 
     @Column(name = "message ")
     private String message;

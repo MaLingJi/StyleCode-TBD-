@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.outfit_share.entity.post.Post;
 
-public interface PostRepository extends JpaRepository<Post, Integer>{
+public interface PostRepository extends JpaRepository<Post, Integer> {
 
 	//按類型和關鍵字尋找帖子
 	@Query("FROM Post p where p.contentType = :contentType AND p.postTitle LIKE %:keyword%")

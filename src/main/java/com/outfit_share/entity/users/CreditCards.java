@@ -24,8 +24,8 @@ public class CreditCards {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cardId;
 
-    @Column(name = "user_id", insertable = false, updatable = false)
-    private Integer userId;
+    // @Column(name = "user_id", insertable = false, updatable = false)
+    // private Integer userId;
 
     @Column(name = "card_number")
     private String cardNumber;
@@ -63,7 +63,7 @@ public class CreditCards {
 
     public CreditCards(Integer userId, String cardNumber, Date expirationDate, String securityCode, String holderName,
             String billingAddress, Date createdTime, Date updatedTime, UserDetail userDetail) {
-        this.userId = userId;
+        // this.userId = userId;
         this.cardNumber = cardNumber;
         this.expirationDate = expirationDate;
         this.securityCode = securityCode;
@@ -77,7 +77,7 @@ public class CreditCards {
     public CreditCards(Integer cardId, Integer userId, String cardNumber, Date expirationDate, String securityCode,
             String holderName, String billingAddress, Date createdTime, Date updatedTime, UserDetail userDetail) {
         this.cardId = cardId;
-        this.userId = userId;
+        // this.userId = userId;
         this.cardNumber = cardNumber;
         this.expirationDate = expirationDate;
         this.securityCode = securityCode;
@@ -96,13 +96,13 @@ public class CreditCards {
         this.cardId = cardId;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
+    // public Integer getUserId() {
+    // return userId;
+    // }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
+    // public void setUserId(Integer userId) {
+    // this.userId = userId;
+    // }
 
     public String getCardNumber() {
         return cardNumber;
