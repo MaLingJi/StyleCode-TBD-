@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,17 +36,30 @@ public class ProductController {
     public Product updateProduct(@PathVariable Integer id, @RequestBody Product product) {
         return productService.updateProduct(id, product);
     }
-
+    
     // 刪除商品
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Integer id) {
+    public String deleteProduct(@PathVariable Integer id) {
         productService.deleteProduct(id);
+        
+        return "刪除ok";
     }
 
     // 獲取單個商品
     @GetMapping("/{id}")
     public Product getProduct(@PathVariable Integer id) {
         return productService.findProductById(id);
+    }
+    
+    // 處理商品購買
+    @PostMapping("/{id}/purchase")
+    public ResponseEntity<?> purchaseProduct(@PathVariable Integer id, @RequestParam Integer quantity) {
+        try {
+            Product updatedProduct = productService.purchaseProduct(id, quantity);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 																					    // 獲取所有商品

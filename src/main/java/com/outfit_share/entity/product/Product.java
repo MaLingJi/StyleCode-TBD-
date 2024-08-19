@@ -57,7 +57,7 @@ public class Product {
 	private String productDescription;//商品說明
 	
 	@Column(name = "onSale")
-	private Integer onSale;//商品狀態(1上架or0下架)
+	private boolean onSale;//商品狀態(1上架or0下架)
 	
 	@JsonBackReference("pimages_product")
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "productId")
