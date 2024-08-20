@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.outfit_share.entity.orders.OrdersDetails;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
