@@ -1,4 +1,4 @@
-package com.outfit_share.entity.orders;
+package com.outfit_share.entity.orders.pay;
 
 import java.math.BigDecimal;
 import java.util.List;
