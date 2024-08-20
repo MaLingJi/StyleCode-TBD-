@@ -27,28 +27,32 @@ public class CartService {
 
 	@Transactional
 	public Cart addToCart(Integer userId, Integer productId, Integer vol) {
-		Cart dbCart = cartRepository.findByUserIdAndProductId(userId, productId);
-		if (dbCart != null) {
-			dbCart.setVol(dbCart.getVol() + vol);
-			return dbCart;
+		Optional<Product> option2 = proRepo.findById(productId);
+		Product product = option2.get();
+		if (product.getStock() >= vol) {
+			Cart dbCart = cartRepository.findByUserIdAndProductId(userId, productId);
+			if (dbCart != null) {
+				dbCart.setVol(dbCart.getVol() + vol);
+				return dbCart;
+			}
+
+			Optional<Users> optional = usersRepo.findById(userId);
+			Users users = optional.get();
+
+			CartId cartId = new CartId();
+			cartId.setProductId(productId);
+			cartId.setUserId(userId);
+
+			Cart cart = new Cart();
+			cart.setCartId(cartId);
+			cart.setVol(vol);
+			cart.setProduct(product);
+			cart.setUsers(users);
+
+			return cartRepository.save(cart);
 		}
 
-		Optional<Users> optional = usersRepo.findById(userId);
-		Users users = optional.get();
-		Optional<Product> optional2 = proRepo.findById(productId);
-		Product product = optional2.get();
-
-		CartId cartId = new CartId();
-		cartId.setProductId(productId);
-		cartId.setUserId(userId);
-
-		Cart cart = new Cart();
-		cart.setCartId(cartId);
-		cart.setVol(vol);
-		cart.setProduct(product); // Revise later
-		cart.setUsers(users); // Revise later
-
-		return cartRepository.save(cart);
+		return null;
 	}
 
 	public List<Cart> findByUserId(Integer userId) {
@@ -56,30 +60,28 @@ public class CartService {
 		return result;
 
 	}
-	
+
 	@Transactional
-	public Cart addOneVol(Integer userId,Integer productId) {
+	public Cart addOneVol(Integer userId, Integer productId) {
 		Cart result = cartRepository.findByUserIdAndProductId(userId, productId);
-		result.setVol(result.getVol()+1);
+		result.setVol(result.getVol() + 1);
 		return result;
 	}
-	
+
 	@Transactional
-	public Cart minusOneVol(Integer userId,Integer productId) {
+	public Cart minusOneVol(Integer userId, Integer productId) {
 		Cart result = cartRepository.findByUserIdAndProductId(userId, productId);
-		if (result.getVol()==1) {
+		if (result.getVol() == 1) {
 			cartRepository.delete(result);
-		}
-		else {
-			result.setVol(result.getVol()-1);
+		} else {
+			result.setVol(result.getVol() - 1);
 		}
 		return result;
 	}
-	
+
 	@Transactional
 	public void deleteById(Integer userId) {
 		cartRepository.deleteByUsers(userId);
 	}
-	
-	
+
 }

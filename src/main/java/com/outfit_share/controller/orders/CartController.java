@@ -21,7 +21,10 @@ public class CartController {
 	public Cart addToCart(@RequestBody Cart cartRequest) {
 		Cart toCart = cartService.addToCart(cartRequest.getCartId().getUserId(), cartRequest.getCartId().getProductId(),
 				cartRequest.getVol());
-		return toCart;
+		if (toCart != null) {
+			return toCart;
+		}
+		return null;
 	};
 
 	@GetMapping("/find/{id}")

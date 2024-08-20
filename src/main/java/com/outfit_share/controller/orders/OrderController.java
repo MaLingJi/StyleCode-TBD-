@@ -39,23 +39,12 @@ public class OrderController {
 
 	@PostMapping("/addOrder") //待測試
 	// 新增訂單
-	public Orders addOrder(@RequestBody OrdersDTO ordersRequest) {
-		Orders orders = new Orders();
-		orders.setTotalAmounts(ordersRequest.getTotalAmounts());
-		UserDetail detailById = udService.findDetailById(ordersRequest.getUserId());
-		orders.setUserDetail(detailById);// need to update
-		Orders saveOrder = ordersService.saveOrders(orders);
-
-		List<Cart> byUserId = cartService.findByUserId(ordersRequest.getUserId());
-		for (Cart cart : byUserId) {
-			OrdersDetails ordersDetails = new OrdersDetails();
-			ordersDetails.setOrders(saveOrder);
-			ordersDetails.setProduct(cart.getProduct());// need to update
-			ordersDetails.setQuantity(cart.getVol());
-			odService.saveOrderDetails(ordersDetails);
+	public OrdersDTO addOrder(@RequestBody Orders ordersRequest) {
+		OrdersDTO order = ordersService.addOrder(ordersRequest);
+		if (order!=null) {
+			return order;
 		}
-		cartService.deleteById(ordersRequest.getUserId());
-		return orders;
+		return null;
 	}
 
 	//客戶角度看他的訂單
