@@ -19,7 +19,7 @@ import com.outfit_share.entity.product.ProductDTO;
 import com.outfit_share.service.product.ProductService;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/product/products")
 public class ProductController {
 
     @Autowired

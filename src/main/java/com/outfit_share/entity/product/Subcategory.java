@@ -32,11 +32,11 @@ public class Subcategory {
 	@Column(name = "subcategory_id")
 	private Integer subcategoryId;//子分類ID
 	
-	@Column(name = "subcategory_name" ,unique = true)
+	@Column(name = "subcategory_name" ,unique = true , nullable = false)
 	private String subcategoryName;//子分類名稱
 	
 	@ManyToOne
-	@JoinColumn(name = "category_id")
+	@JoinColumn(name = "category_id" , nullable = false)
 	private Categories category;//分類ID
 	
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "subcategoryId")

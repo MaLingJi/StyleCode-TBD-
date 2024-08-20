@@ -17,13 +17,13 @@ public class PimagesDTO {
 
 	private String imgUrl;// 照片URL
 
-//	private String imageType; 有滑鼠移入移出事件測試，切換不同的圖片	
+	private String imageType; //有滑鼠移入移出事件測試，切換不同的圖片	
 
 	public PimagesDTO(Pimages pimages) {
 		this.imageId = pimages.getImageId();
 		this.imageName = pimages.getImageName();
 		this.imgUrl = pimages.getImgUrl();
-//		this.imageType = pimages.getImageType(); 有滑鼠移入移出事件測試，切換不同的圖片	
+		this.imageType = pimages.getImageType(); //有滑鼠移入移出事件測試，切換不同的圖片	
 
 		if (pimages.getProductId() != null) {
 			this.productId = pimages.getProductId().getProductId();

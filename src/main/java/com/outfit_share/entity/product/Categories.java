@@ -30,7 +30,7 @@ public class Categories {
 	@Column(name ="category_id")
 	private Integer categoryId;//分類ID
 	
-	@Column(name ="category_name" ,unique = true)
+	@Column(name ="category_name" ,unique = true , nullable = false)
 	private String categoryName;//分類名稱
 	
 	@OneToMany(cascade =  CascadeType.ALL ,fetch = FetchType.LAZY ,mappedBy = "category")

@@ -18,68 +18,67 @@ import com.outfit_share.entity.product.PimagesDTO;
 import com.outfit_share.service.product.PimagesService;
 
 @RestController
-@RequestMapping("/api/products/{productId}/images")
+@RequestMapping("/product/products/{productId}/images")
 public class PimagesController {
 
-    @Autowired
-    private PimagesService pimagesService;
+	@Autowired
+	private PimagesService pimagesService;
 
-    // 上傳新圖片
-    @PostMapping
-    public PimagesDTO uploadImage(@RequestParam("file") MultipartFile file,
-    		@PathVariable Integer productId ) throws IOException {
-        return pimagesService.savePimages(file, productId );
-    }
-//    // 上傳新圖片 ，有滑鼠移入移出事件測試，切換不同的圖片
+	// 上傳新圖片
 //    @PostMapping
 //    public PimagesDTO uploadImage(@RequestParam("file") MultipartFile file,
-//    		@PathVariable Integer productId ,@RequestParam(required = false) String imageType) throws IOException {
-//    	return pimagesService.savePimages(file, productId ,imageType);
+//    		@PathVariable Integer productId ) throws IOException {
+//        return pimagesService.savePimages(file, productId );
 //    }
-    
-    //上傳多張圖片
-    @PostMapping("/multiple")
-    public List<PimagesDTO> uploadMultipleImages(@RequestParam("file") MultipartFile[] files,
-    		@PathVariable Integer productId ) throws IOException {
-        return pimagesService.saveMultiplePimages(files, productId );
-    }
-    
-//    //上傳多張圖片，有滑鼠移入移出事件測試，切換不同的圖片
+	// 上傳新圖片 ，有滑鼠移入移出事件測試，切換不同的圖片
+	@PostMapping
+	public PimagesDTO uploadImage(@RequestParam("file") MultipartFile file, @PathVariable Integer productId,
+			@RequestParam(required = false) String imageType) throws IOException {
+		return pimagesService.savePimages(file, productId, imageType);
+	}
+
+	// 上傳多張圖片
 //    @PostMapping("/multiple")
 //    public List<PimagesDTO> uploadMultipleImages(@RequestParam("file") MultipartFile[] files,
-//    		@PathVariable Integer productId ,@RequestParam(required = false) String imageType) throws IOException {
-//    	return pimagesService.saveMultiplePimages(files, productId , imageType);
+//    		@PathVariable Integer productId ) throws IOException {
+//        return pimagesService.saveMultiplePimages(files, productId );
 //    }
 
-    // 更新圖片
-    @PutMapping("/{imageId}")
-    public PimagesDTO updateImage(@RequestParam("file") MultipartFile file, 
-                               @PathVariable Integer productId,
-                               @PathVariable Integer imageId) throws IOException {
-        return pimagesService.updatePimages(file, imageId);
-    }
-    
-    // 刪除圖片
-    @DeleteMapping("/{imageId}")
-    public PimagesDTO deleteImage(@PathVariable Integer productId, @PathVariable Integer imageId) {
-    	return pimagesService.deletePimages(imageId);
-    }
+	// 上傳多張圖片，有滑鼠移入移出事件測試，切換不同的圖片
+	@PostMapping("/multiple")
+	public List<PimagesDTO> uploadMultipleImages(@RequestParam("file") MultipartFile[] files,
+			@PathVariable Integer productId, @RequestParam(required = false) String imageType) throws IOException {
+		return pimagesService.saveMultiplePimages(files, productId, imageType);
+	}
 
-    // 獲取單個圖片信息
-    @GetMapping("/{imageId}")
-    public PimagesDTO getImage(@PathVariable Integer productId, @PathVariable Integer imageId) {
-        return pimagesService.findPimagesById(imageId);
-    }
+	// 更新圖片
+	@PutMapping("/{id}")
+	public PimagesDTO updateImage(@RequestParam("file") MultipartFile file, @PathVariable Integer productId,
+			@PathVariable("id") Integer id) throws IOException {
+		return pimagesService.updatePimages(file, id);
+	}
 
-    // 獲取商品的所有圖片
-    @GetMapping
-    public List<PimagesDTO> getAllProductImages(@PathVariable Integer productId) {
-        return pimagesService.findAllImagesByProductId(productId);
-    }
-    
-    // 封面照片
-    @GetMapping("/cover")
-    public PimagesDTO getCoverPhoto(@PathVariable Integer productId) {
-    	return pimagesService.findCoverPhoto(productId);
-    }
+	// 刪除圖片
+	@DeleteMapping("/{id}")
+	public PimagesDTO deleteImage(@PathVariable Integer productId, @PathVariable("id") Integer id) {
+		return pimagesService.deletePimages(id);
+	}
+
+	// 獲取單個圖片信息
+	@GetMapping("/{id}")
+	public PimagesDTO getImage(@PathVariable Integer productId, @PathVariable("id") Integer id) {
+		return pimagesService.findPimagesById(id);
+	}
+
+	// 獲取商品的所有圖片
+	@GetMapping
+	public List<PimagesDTO> getAllProductImages(@PathVariable Integer productId) {
+		return pimagesService.findAllImagesByProductId(productId);
+	}
+
+	// 封面照片
+	@GetMapping("/cover")
+	public PimagesDTO getCoverPhoto(@PathVariable Integer productId) {
+		return pimagesService.findCoverPhoto(productId);
+	}
 }

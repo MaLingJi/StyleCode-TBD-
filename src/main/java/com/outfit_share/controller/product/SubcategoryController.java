@@ -11,7 +11,7 @@ import com.outfit_share.entity.product.SubcategoryDTO;
 import com.outfit_share.service.product.SubcategoryService;
 
 @RestController
-@RequestMapping("/api/subcategories")
+@RequestMapping("/product/subcategories")
 public class SubcategoryController {
 
     @Autowired
@@ -42,7 +42,7 @@ public class SubcategoryController {
     }
     
     // 新增: 通過父分類ID獲取子分類列表
-    @GetMapping("/category/{id}")
+    @GetMapping("/categories/{id}")
     public List<SubcategoryDTO> getSubcategoriesByCategoryId(@PathVariable("id") Integer categoryId) {
         return subcategoryService.findSubcategoriesByCategoryId(categoryId);
     }
