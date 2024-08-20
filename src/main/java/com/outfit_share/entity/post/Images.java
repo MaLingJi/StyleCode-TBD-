@@ -39,6 +39,14 @@ public class Images {
 		this.imgUrl = imgUrl;
 	}
 
+	public Post getPost() {
+		return post;
+	}
+
+	public void setPost(Post post) {
+		this.post = post;
+	}
+
 	public int getImageId() {
 		return imageId;
 	}
