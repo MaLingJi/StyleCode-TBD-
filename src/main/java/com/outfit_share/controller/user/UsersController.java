@@ -1,12 +1,13 @@
 package com.outfit_share.controller.user;
 
+import java.util.Date;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.entity.users.Users;
 import com.outfit_share.service.users.UserDetailService;
@@ -44,11 +45,17 @@ public class UsersController {
         users.setPwd(encodedPwd);
         users.setPermissions("Member");
         uService.resgister(users);
+
+        UserDetail userDetail = new UserDetail();
+        userDetail.setUsers(users);
+        userDetail.setCreatedTime(new Date());
+        userDetail.setDiscountPoints(0);
+        uDetailService.saveDetail(userDetail);
         return "login";
     }
 
     @GetMapping("/login")
-    public String getMethodName() {
+    public String toLogin() {
         return "login";
     }
 
@@ -72,11 +79,6 @@ public class UsersController {
             responseJson.put("success", false);
             responseJson.put("message", "帳號或密碼錯誤");
         } else {
-            UserDetail dbUserDetail = uDetailService.findDetailById(dbUser.getId());
-
-            ObjectMapper mapper = new ObjectMapper();
-            String uDetailJson = mapper.writeValueAsString(dbUserDetail);
-
             responseJson.put("success", true);
             responseJson.put("message", "登入成功");
 
@@ -87,11 +89,9 @@ public class UsersController {
             String token = jwtUtil.createEncryptedToken(user.toString(), null);
             responseJson.put("token", token);
             // TODO:待確認要存甚麼資訊
-            responseJson.put("userEmail", dbUser.getEmail());
-            responseJson.put("userDetail", uDetailJson);
+            responseJson.put("userId", dbUser.getId());
         }
 
         return responseJson.toString();
     }
-
 }

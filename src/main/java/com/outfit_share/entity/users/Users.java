@@ -1,7 +1,5 @@
 package com.outfit_share.entity.users;
 
-import org.springframework.stereotype.Component;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 @Entity
@@ -31,6 +30,7 @@ public class Users {
 	private String permissions;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "users")
+	@PrimaryKeyJoinColumn
 	private UserDetail userDetail;
 
 	public Users() {
