@@ -38,6 +38,12 @@ public class OrdersService {
 
 	public OrdersDTO addOrder(@RequestBody Orders ordersRequest) {
 		List<Cart> cartList = cartRepo.findByUserId(ordersRequest.getUserDetail().getId());
+		
+        // 檢查購物車是否為空
+        if (cartList.isEmpty()) {
+            return null;  // 購物車為空，直接返回 null
+        }
+        
 		//check stock and cartVol
 		for (Cart cart : cartList) {
             if (cart.getVol() > cart.getProduct().getStock()) {
