@@ -31,6 +31,7 @@ import com.outfit_share.repository.orders.TransLPRepository;
 import com.outfit_share.util.Encrypt;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.java.Log;
 
 @Service
 @Transactional
@@ -48,7 +49,7 @@ public class PayService {
 
 		form.setAmount(100);
 		form.setCurrency("TWD");
-		form.setOrderId("6F9619FF-8B86-D011-B42D-00C04FC964FF");
+		form.setOrderId("6F9619FF-8B86-D011-B42D-00C04F1964F9");
 
 		ProductPackageForm productPackageForm = new ProductPackageForm();
 		productPackageForm.setId("package_id");
@@ -158,18 +159,25 @@ public class PayService {
 					return returnCode;
 				}
 			} else {
-				return  "wrong code:" + response.getString("returnCode");
+				return "wrong code:" + response.getString("returnCode");
 			}
 		}
 		return "cant find order";
 	}
-	
-	//改狀態
+
+	// 改狀態
 	public void processScucess(UUID orderId) {
 		Optional<Orders> order = odRepo.findById(orderId);
-		Orders orders = order.get();
-		orders.setStatus(1);
-		odRepo.save(orders);
+		if (order.isPresent()) {
+			Orders orders = order.get();
+			if (orders.getStatus() == 0) {
+				orders.setStatus(1);
+				odRepo.save(orders);
+			} else {
+				System.out.println("status not 0");
+			}
+		} else {
+			System.out.println("order not exist");
+		}
 	}
-
 }

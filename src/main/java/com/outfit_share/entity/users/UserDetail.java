@@ -4,19 +4,16 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.outfit_share.entity.orders.Orders;
 import com.outfit_share.entity.post.Comment;
 import com.outfit_share.entity.post.Post;
-
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -28,7 +25,6 @@ import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "userDetail")
-@Component
 public class UserDetail {
 
     @Id
@@ -63,9 +59,6 @@ public class UserDetail {
     @Column(name = "discount_points")
     private Integer discountPoints;
 
-    @Column(name = "user_permissions")
-    private String permissions;
-
     @OneToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Users users;
@@ -77,14 +70,15 @@ public class UserDetail {
     private List<Notifications> notifications;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail")
+    @JsonManagedReference
     private List<Post> post;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail")
+    @JsonManagedReference
     private List<Comment> comment;
 
-     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy =
-     "userDetail") // 物件的userDetail
-     private List<Orders> orders;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userDetail")
+    private List<Orders> orders;
 
     @PrePersist
     public void onCreate() {
@@ -99,35 +93,9 @@ public class UserDetail {
     public UserDetail() {
     }
 
-    public UserDetail(String userName, String realName, String address, String phone, Date createdTime,
-            Date updatedTime, String userPhoto, Integer discountPoints, String permissions, Users users,
-            List<CreditCards> creditCards, List<Notifications> notifications, List<Post> post,
-            List<Comment> comments
-     , List<Orders> orders
-    ) {
-        this.userName = userName;
-        this.realName = realName;
-        this.address = address;
-        this.phone = phone;
-        this.createdTime = createdTime;
-        this.updatedTime = updatedTime;
-        this.userPhoto = userPhoto;
-        this.discountPoints = discountPoints;
-        this.permissions = permissions;
-        this.users = users;
-        this.creditCards = creditCards;
-        this.notifications = notifications;
-        this.post = post;
-        this.comment = comments;
-         this.orders = orders;
-    }
-
     public UserDetail(Integer id, String userName, String realName, String address, String phone, Date createdTime,
-            Date updatedTime, String userPhoto, Integer discountPoints, String permissions, Users users,
-            List<CreditCards> creditCards, List<Notifications> notifications, List<Post> post,
-            List<Comment> comments,
-     List<Orders> orders
-    ) {
+            Date updatedTime, String userPhoto, Integer discountPoints, Users users, List<CreditCards> creditCards,
+            List<Notifications> notifications, List<Post> post, List<Comment> comment, List<Orders> orders) {
         this.id = id;
         this.userName = userName;
         this.realName = realName;
@@ -137,13 +105,31 @@ public class UserDetail {
         this.updatedTime = updatedTime;
         this.userPhoto = userPhoto;
         this.discountPoints = discountPoints;
-        this.permissions = permissions;
         this.users = users;
         this.creditCards = creditCards;
         this.notifications = notifications;
         this.post = post;
-        this.comment = comments;
-         this.orders = orders;
+        this.comment = comment;
+        this.orders = orders;
+    }
+
+    public UserDetail(String userName, String realName, String address, String phone, Date createdTime,
+            Date updatedTime, String userPhoto, Integer discountPoints, Users users, List<CreditCards> creditCards,
+            List<Notifications> notifications, List<Post> post, List<Comment> comment, List<Orders> orders) {
+        this.userName = userName;
+        this.realName = realName;
+        this.address = address;
+        this.phone = phone;
+        this.createdTime = createdTime;
+        this.updatedTime = updatedTime;
+        this.userPhoto = userPhoto;
+        this.discountPoints = discountPoints;
+        this.users = users;
+        this.creditCards = creditCards;
+        this.notifications = notifications;
+        this.post = post;
+        this.comment = comment;
+        this.orders = orders;
     }
 
     public Integer getId() {
@@ -218,14 +204,6 @@ public class UserDetail {
         this.discountPoints = discountPoints;
     }
 
-    public String getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(String permissions) {
-        this.permissions = permissions;
-    }
-
     public Users getUsers() {
         return users;
     }
@@ -250,11 +228,11 @@ public class UserDetail {
         this.notifications = notifications;
     }
 
-    public List<Post> getPosts() {
+    public List<Post> getPost() {
         return post;
     }
 
-    public void setPosts(List<Post> post) {
+    public void setPost(List<Post> post) {
         this.post = post;
     }
 
@@ -266,12 +244,12 @@ public class UserDetail {
         this.comment = comment;
     }
 
-     public List<Orders> getOrders() {
-     return orders;
-     }
+    public List<Orders> getOrders() {
+        return orders;
+    }
 
-     public void setOrders(List<Orders> orders) {
-     this.orders = orders;
-     }
+    public void setOrders(List<Orders> orders) {
+        this.orders = orders;
+    }
 
 }

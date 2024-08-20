@@ -18,9 +18,11 @@ import com.outfit_share.entity.orders.Orders;
 import com.outfit_share.entity.orders.OrdersDTO;
 import com.outfit_share.entity.orders.OrdersDetails;
 import com.outfit_share.entity.orders.OrdersDetailsDTO;
+import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.service.orders.CartService;
 import com.outfit_share.service.orders.OrdersDetailsService;
 import com.outfit_share.service.orders.OrdersService;
+import com.outfit_share.service.users.UserDetailService;
 
 @RestController
 @RequestMapping("/order")
@@ -31,17 +33,20 @@ public class OrderController {
 	private CartService cartService;
 	@Autowired
 	private OrdersDetailsService odService;
+	@Autowired
+	private UserDetailService udService;
 
 
 	@PostMapping("/addOrder") //待測試
 	// 新增訂單
-	public Orders addOrder(@RequestBody Orders ordersRequest) {
+	public Orders addOrder(@RequestBody OrdersDTO ordersRequest) {
 		Orders orders = new Orders();
 		orders.setTotalAmounts(ordersRequest.getTotalAmounts());
-		orders.setUserDetail(null);// need to update
+		UserDetail detailById = udService.findDetailById(ordersRequest.getUserId());
+		orders.setUserDetail(detailById);// need to update
 		Orders saveOrder = ordersService.saveOrders(orders);
 
-		List<Cart> byUserId = cartService.findByUserId(ordersRequest.getUserDetail().getId());
+		List<Cart> byUserId = cartService.findByUserId(ordersRequest.getUserId());
 		for (Cart cart : byUserId) {
 			OrdersDetails ordersDetails = new OrdersDetails();
 			ordersDetails.setOrders(saveOrder);
@@ -49,7 +54,7 @@ public class OrderController {
 			ordersDetails.setQuantity(cart.getVol());
 			odService.saveOrderDetails(ordersDetails);
 		}
-		cartService.deleteById(ordersRequest.getUserDetail().getId());
+		cartService.deleteById(ordersRequest.getUserId());
 		return orders;
 	}
 
