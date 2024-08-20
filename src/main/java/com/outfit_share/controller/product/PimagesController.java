@@ -18,7 +18,7 @@ import com.outfit_share.entity.product.PimagesDTO;
 import com.outfit_share.service.product.PimagesService;
 
 @RestController
-@RequestMapping("/product/products/{productId}/images")
+@RequestMapping("/products/images")
 public class PimagesController {
 
 	@Autowired
@@ -31,7 +31,7 @@ public class PimagesController {
 //        return pimagesService.savePimages(file, productId );
 //    }
 	// 上傳新圖片 ，有滑鼠移入移出事件測試，切換不同的圖片
-	@PostMapping
+	@PostMapping("/admin/{productId}/create")
 	public PimagesDTO uploadImage(@RequestParam("file") MultipartFile file, @PathVariable Integer productId,
 			@RequestParam(required = false) String imageType) throws IOException {
 		return pimagesService.savePimages(file, productId, imageType);
@@ -45,27 +45,27 @@ public class PimagesController {
 //    }
 
 	// 上傳多張圖片，有滑鼠移入移出事件測試，切換不同的圖片
-	@PostMapping("/multiple")
+	@PostMapping("/admin/{productId}/multiple")
 	public List<PimagesDTO> uploadMultipleImages(@RequestParam("file") MultipartFile[] files,
 			@PathVariable Integer productId, @RequestParam(required = false) String imageType) throws IOException {
 		return pimagesService.saveMultiplePimages(files, productId, imageType);
 	}
 
 	// 更新圖片
-	@PutMapping("/{id}")
+	@PutMapping("/admin/{productId}/{id}")
 	public PimagesDTO updateImage(@RequestParam("file") MultipartFile file, @PathVariable Integer productId,
 			@PathVariable("id") Integer id) throws IOException {
 		return pimagesService.updatePimages(file, id);
 	}
 
 	// 刪除圖片
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/admin/{productId}/{id}")
 	public PimagesDTO deleteImage(@PathVariable Integer productId, @PathVariable("id") Integer id) {
 		return pimagesService.deletePimages(id);
 	}
 
 	// 獲取單個圖片信息
-	@GetMapping("/{id}")
+	@GetMapping("/{productId}/{id}")
 	public PimagesDTO getImage(@PathVariable Integer productId, @PathVariable("id") Integer id) {
 		return pimagesService.findPimagesById(id);
 	}
@@ -77,7 +77,7 @@ public class PimagesController {
 	}
 
 	// 封面照片
-	@GetMapping("/cover")
+	@GetMapping("/{productId}/cover")
 	public PimagesDTO getCoverPhoto(@PathVariable Integer productId) {
 		return pimagesService.findCoverPhoto(productId);
 	}

@@ -50,6 +50,9 @@ public class ProductDTO {
 //			this.subcategoryId = product.getSubcategoryId().getSubcategoryId();
 //			this.subcategoryName = product.getSubcategoryId().getSubcategoryName();
 //			this.categoriesName = product.getSubcategoryId().getCategory().getCategoryName();
+			
+			if(product.getPimages() != null) {
+				
 			this.pimages = new ArrayList<>();
 			
 			for(Pimages pimages : product.getPimages()) {
@@ -58,5 +61,6 @@ public class ProductDTO {
 				}
 			}
 		}
+	}
 	}
 }

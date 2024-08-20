@@ -11,26 +11,26 @@ import com.outfit_share.entity.product.SubcategoryDTO;
 import com.outfit_share.service.product.SubcategoryService;
 
 @RestController
-@RequestMapping("/product/subcategories")
+@RequestMapping("/subcategories")
 public class SubcategoryController {
 
     @Autowired
     private SubcategoryService subcategoryService;
 
     // 創建新子分類
-    @PostMapping
+    @PostMapping("/admin/create")
     public SubcategoryDTO createSubcategory(@RequestBody Subcategory subcategory) {
         return subcategoryService.saveSubcategory(subcategory);
     }
 
     // 更新子分類
-    @PutMapping("/{id}")
+    @PutMapping("/admin/{id}")
     public SubcategoryDTO updateSubcategory(@PathVariable("id") Integer id, @RequestBody Subcategory subcategory ) {
         return subcategoryService.updateSubcategory(id, subcategory);
     }
 
     // 刪除子分類
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public SubcategoryDTO deleteSubcategory(@PathVariable("id") Integer id) {
     	return subcategoryService.deleteSubcategory(id);
     }
