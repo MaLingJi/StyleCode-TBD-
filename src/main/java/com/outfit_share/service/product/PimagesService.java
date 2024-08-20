@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +37,8 @@ public class PimagesService {
 	@Autowired
 	private PimagesRepository pimagesRepository;
 
-//	新增圖片
+//	新增圖片 , 
+//	String imageType ， pimages.setImageType(imageType);，有滑鼠移入移出事件測試，切換不同的圖片
 	public PimagesDTO savePimages(MultipartFile file, Integer id) throws IOException {
 		Product product = productRepo.findById(id)
 				.orElseThrow(() -> new RuntimeException("ProductPhoto not found with id: " + id));
@@ -60,15 +62,18 @@ public class PimagesService {
 		pimages.setImageName(fileName);
 		pimages.setImgUrl(filePath.toString());
 		pimages.setProductId(product);
+		
 
 		Pimages savedPimages = pimagesRepository.save(pimages);
 		return new PimagesDTO(savedPimages);
 	}
 
-//  上傳多個圖片
-	public List<PimagesDTO> saveMultiplePimages(MultipartFile[] files, Integer productId) throws IOException {
+//  上傳多個圖片 ,  
+//								有滑鼠移入移出事件測試，切換不同的圖片								//	String imageType , 有滑鼠移入移出事件測試，切換不同的圖片	
+	public List<PimagesDTO> saveMultiplePimages(MultipartFile[] files, Integer productId)
+			throws IOException {
 		List<PimagesDTO> savedImages = new ArrayList<>();
-		for (MultipartFile file : files) {
+		for (MultipartFile file : files) {			//, imageType 有滑鼠移入移出事件測試，切換不同的圖片	
 			savedImages.add(savePimages(file, productId));
 		}
 		return savedImages;
@@ -132,8 +137,24 @@ public class PimagesService {
 		return pimagesDTOs;
 	}
 
+////	搜尋該商品的全部圖片的另一種寫法，有滑鼠移入移出事件測試，切換不同的圖片
+//	public List<PimagesDTO> findAllImagesByProductId(Integer productId) {
+//		List<Pimages> pimages = pimagesRepository.findByProductIdOrderByImageType(productId);
+//
+//		// 更簡潔的語法
+////	        return pimages.stream().map(PimagesDTO::new).collect(Collectors.toList());
+//
+//		List<PimagesDTO> pimagesDTOs = new ArrayList<>();
+//		for (Pimages pimage : pimages) {
+//			pimagesDTOs.add(new PimagesDTO(pimage));
+//		}
+//		return pimagesDTOs;
+//	}
+
+//	封面照
 	public PimagesDTO findCoverPhoto(Integer productId) {
 		Pimages coverPhoto = pimagesRepository.findTopOneProductImage(productId);
 		return coverPhoto != null ? new PimagesDTO(coverPhoto) : null;
 	}
+
 }

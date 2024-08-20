@@ -48,6 +48,7 @@ public class ProductService {
 			result.setColor(product.getColor());
 			result.setProductDescription(product.getProductDescription());
 			result.setPimages(product.getPimages());
+			result.setSubcategoryId(product.getSubcategoryId());
 			// 檢查庫存並更新狀態
 			result = checkStockAndUpdateStatus(result);
 
