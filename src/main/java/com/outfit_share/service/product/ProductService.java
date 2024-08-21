@@ -36,11 +36,6 @@ public class ProductService {
 		return product;
 	}
 
-////	新增商品
-//	public ProductDTO saveProduct(Product product) {
-//		Product saveProduct = productRepository.save(product);
-//		return new ProductDTO(saveProduct);
-//	}
 
 //	新增商品
 	public ProductDTO saveProductWithImages(Product product, MultipartFile[] file, String imageType)
@@ -80,14 +75,26 @@ public class ProductService {
 		if (optional.isPresent()) {
 			Product result = optional.get();
 
-			result.setProductName(product.getProductName());
-			result.setPrice(product.getPrice());
-			result.setStock(product.getStock());
-			result.setSize(product.getSize());
-			result.setColor(product.getColor());
-			result.setProductDescription(product.getProductDescription());
-//			result.setPimages(product.getPimages());
-			result.setSubcategoryId(product.getSubcategoryId());
+			// 只更新非null的字段
+			if (product.getProductName() != null) {
+				result.setProductName(product.getProductName());
+			}
+			if (product.getPrice() != null) {
+				result.setPrice(product.getPrice());
+			}
+			if (product.getStock() != null) {
+				result.setStock(product.getStock());
+			}
+			if (product.getSize() != null) {
+				result.setSize(product.getSize());
+			}
+			if (product.getColor() != null) {
+				result.setColor(product.getColor());
+			}
+			if (product.getProductDescription() != null) {
+				result.setProductDescription(product.getProductDescription());
+			}
+
 			// 檢查庫存並更新狀態
 			result = checkStockAndUpdateStatus(result);
 
@@ -96,10 +103,9 @@ public class ProductService {
 		}
 
 		return null;
-
 	}
 
-////	修改商品
+//	修改商品(可同時修改照片)
 //	public ProductDTO updateProductWithImages(Integer id, Product product, MultipartFile[] file,
 //			List<Integer> deleteImageIds, String imageType) throws IOException {
 //		Optional<Product> optional = productRepository.findById(id);
@@ -199,10 +205,6 @@ public class ProductService {
 		return null;
 	}
 
-	// 查詢全部商品
-	// public List<Product> findAllProduct() {
-	// return productRepository.findAll();
-	// }
 
 //	模糊搜尋 && 價格由高到低||由低到高 && 全部商品
 	public List<ProductDTO> findProductsByNameAndSort(String name, String sort) {
