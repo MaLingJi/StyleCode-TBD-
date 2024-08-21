@@ -24,17 +24,18 @@ public class SubcategoryDTO {
 		this.subcategoryId = subcategory.getSubcategoryId();
 		this.subcategoryName = subcategory.getSubcategoryName();
 
-		if (subcategory.getCategory() != null) {
+//		if (subcategory.getCategory() != null) {
 //			this.categoryId = subcategory.getCategory().getCategoryId();
 //			this.categoryName = subcategory.getCategory().getCategoryName();
+			if (subcategory.getProduct() != null) {
 
 				this.product = new ArrayList<>();
-
-				for (Product product : subcategory.getProdcut()) {
+				for (Product product : subcategory.getProduct()) {
 					if (product != null) {
 						this.product.add(new ProductDTO(product));
 					}
 				}
 			}
 		}
+	
 }

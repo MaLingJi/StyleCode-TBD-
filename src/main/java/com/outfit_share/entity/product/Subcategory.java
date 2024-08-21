@@ -40,5 +40,5 @@ public class Subcategory {
 	private Categories category;//分類ID
 	
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "subcategoryId")
-	private List<Product> prodcut;
+	private List<Product> product;
 }
