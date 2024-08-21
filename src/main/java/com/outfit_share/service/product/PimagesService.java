@@ -127,15 +127,15 @@ public class PimagesService {
 		return null;
 	}
 
-//	搜尋該商品的全部圖片
-//	public List<PimagesDTO> findAllImagesByProductId(Integer productId) {
-//		List<Pimages> pimages = pimagesRepository.findByProductIdProductId(productId);
-//		List<PimagesDTO> pimagesDTOs = new ArrayList<>();
-//		for (Pimages pimage : pimages) {
-//			pimagesDTOs.add(new PimagesDTO(pimage));
-//		}
-//		return pimagesDTOs;
-//	}
+																											//	搜尋該商品的全部圖片
+																											//	public List<PimagesDTO> findAllImagesByProductId(Integer productId) {
+																											//		List<Pimages> pimages = pimagesRepository.findByProductIdProductId(productId);
+																											//		List<PimagesDTO> pimagesDTOs = new ArrayList<>();
+																											//		for (Pimages pimage : pimages) {
+																											//			pimagesDTOs.add(new PimagesDTO(pimage));
+																											//		}
+																											//		return pimagesDTOs;
+																											//	}
 
 //	搜尋該商品的全部圖片的另一種寫法，有滑鼠移入移出事件測試，切換不同的圖片
 	public List<PimagesDTO> findAllImagesByProductId(Integer productId) {

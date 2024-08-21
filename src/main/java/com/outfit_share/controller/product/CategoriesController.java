@@ -17,39 +17,41 @@ import com.outfit_share.entity.product.CategoriesDTO;
 import com.outfit_share.service.product.CategoriesService;
 
 @RestController
-@RequestMapping("/categories")
+//@RequestMapping("/categories")
 public class CategoriesController {
 
     @Autowired
     private CategoriesService categoriesService;
 
     // 創建新分類
-    @PostMapping("/admin/create")
+    @PostMapping("/admin/categories/create")
     public CategoriesDTO createCategories(@RequestBody Categories category) {
         return categoriesService.saveCategories(category);
     }
 
     // 更新分類名稱
-    @PutMapping("/admin/{id}")
+    @PutMapping("/admin/categories/{id}")
     public CategoriesDTO updateCategoriesById(@PathVariable Integer id, @RequestBody String categoryName) {
         return categoriesService.updateCategories(id, categoryName);
     }
 
     // 刪除分類
-    @DeleteMapping("/admin/{id}")
+    @DeleteMapping("/admin/categories/{id}")
     public CategoriesDTO deleteCategoriesById(@PathVariable Integer id) {
         return categoriesService.deleteCategories(id);
     }
 
     // 獲取單個分類
-    @GetMapping("/{id}")
+    @GetMapping("/categories/{id}")
     public CategoriesDTO getCategoriesById(@PathVariable Integer id) {
         return categoriesService.findCategoriesById(id);
     }
     
     // 獲取全部分類
-    @GetMapping
+    @GetMapping("/categories")
     public List<CategoriesDTO> getAllCategories(){
     	return categoriesService.findAllCategories();
+    	
+    	
     }
 }

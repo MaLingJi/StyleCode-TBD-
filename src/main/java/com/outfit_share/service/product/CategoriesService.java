@@ -28,12 +28,12 @@ public class CategoriesService {
 	}
 
 //	修改分類名稱
-	public CategoriesDTO updateCategories(Integer id, String updateCategories) {
+	public CategoriesDTO updateCategories(Integer id, String categories) {
 		Optional<Categories> optional = categoriesRepository.findById(id);
 
 		if (optional.isPresent()) {
 			Categories result = optional.get();
-			result.setCategoryName(updateCategories);
+			result.setCategoryName(categories);
 			Categories updatedCategory = categoriesRepository.save(result);
 			return new CategoriesDTO(updatedCategory);
 		}
