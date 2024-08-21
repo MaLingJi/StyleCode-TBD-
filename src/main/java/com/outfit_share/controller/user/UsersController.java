@@ -48,6 +48,7 @@ public class UsersController {
 
         UserDetail userDetail = new UserDetail();
         userDetail.setUsers(users);
+        userDetail.setUserName("user");
         userDetail.setCreatedTime(new Date());
         userDetail.setDiscountPoints(0);
         uDetailService.saveDetail(userDetail);

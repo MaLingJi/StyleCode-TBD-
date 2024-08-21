@@ -20,101 +20,99 @@ import com.outfit_share.service.users.UserDetailService;
 @Controller
 public class PostsConroller {
 
-	 @Autowired
-	 private PostService postService;
+	@Autowired
+	private PostService postService;
 
-	 @Autowired
-	 private UserDetailService userDService;
+	@Autowired
+	private UserDetailService userDService;
 
-	 @GetMapping("/posts/add")
-	 public String addPosts(Model model) {
-//	  Integer currentUserId = getCurrentUserId();//實現此方法以獲取當前用戶 ID
-//	  model.addAttribute("currentUserId", currentUserId);
-	 return "posts/addPosts";
-	 }
+	@GetMapping("/posts/add")
+	public String addPosts(Model model) {
+		// Integer currentUserId = getCurrentUserId();//實現此方法以獲取當前用戶 ID
+		// model.addAttribute("currentUserId", currentUserId);
+		return "posts/addPosts";
+	}
 
-	 @PostMapping("/posts/addPosts")
-	 public String posts(
-	 @RequestParam Integer userId,
-	 @RequestParam String contenttype,
-	 @RequestParam String posttitle,
-	 @RequestParam String contenttext,
-	 @RequestParam(required = false) @DateTimeFormat(iso =
-	 DateTimeFormat.ISO.DATE_TIME) Date createdat,
-	 @RequestParam(required = false) @DateTimeFormat(iso =
-	 DateTimeFormat.ISO.DATE_TIME) Date deletedat,
-	 Model model) {
+	@PostMapping("/posts/addPosts")
+	public String posts(
+			@RequestParam Integer userId,
+			@RequestParam String contenttype,
+			@RequestParam String posttitle,
+			@RequestParam String contenttext,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date createdat,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date deletedat,
+			Model model) {
 
-	 // Integer userIdInt = Integer.valueOf(userId); // 轉換為 Integer
-	 // System.out.println("userId: " + userId);
-	 UserDetail user = userDService.findUserById(userId);
-	 if (user  == null) {
-	 model.addAttribute("錯誤", "未找到用戶");
-	 return "posts/addPosts";
-	 }
+		// Integer userIdInt = Integer.valueOf(userId); // 轉換為 Integer
+		// System.out.println("userId: " + userId);
+		UserDetail user = userDService.findDetailById(userId);
+		if (user == null) {
+			model.addAttribute("錯誤", "未找到用戶");
+			return "posts/addPosts";
+		}
 
-	 Post post = new Post();
-	 post.setUserDetail(user);
-	 post.setContentType(contenttype);
-	 post.setContentText(contenttext);
-	 post.setPostTitle(posttitle);
-	 post.setCreatedAt(createdat);
-	 post.setDeletedAt(null);// 尚未刪除
+		Post post = new Post();
+		post.setUserDetail(user);
+		post.setContentType(contenttype);
+		post.setContentText(contenttext);
+		post.setPostTitle(posttitle);
+		post.setCreatedAt(createdat);
+		post.setDeletedAt(null);// 尚未刪除
 
-	 postService.createPost(post);
-	 
-	 model.addAttribute("OK", "新增成功");
-	 return "posts/addPosts";
-	 }
+		postService.createPost(post);
 
-	 @GetMapping("/posts/list")
-	 public String findAll(Model model) {
-	 List<Post> list = postService.findAllPost();
+		model.addAttribute("OK", "新增成功");
+		return "posts/addPosts";
+	}
 
-	 model.addAttribute("posts", list);
-	 return "posts/showPosts";
-	 }
+	@GetMapping("/posts/list")
+	public String findAll(Model model) {
+		List<Post> list = postService.findAllPost();
 
-	 @GetMapping("/posts/update")
-	 public String updatePosts(@RequestParam Integer id, Model model) {
-	 Post post = postService.findPostById(id);
-	 if (post == null) {
-	 model.addAttribute("錯誤", "未找到貼文");
-	 return "posts/list";
-	 }
-	 model.addAttribute("posts", post);
-	 return "posts/upPosts";
-	 }
+		model.addAttribute("posts", list);
+		return "posts/showPosts";
+	}
 
-	 @PostMapping("/posts/updatePoasts")
-	 public String updatePoastspage(@ModelAttribute Post post, Model model) {
-	 Post existingPost = postService.findPostById(post.getPostId());
+	@GetMapping("/posts/update")
+	public String updatePosts(@RequestParam Integer id, Model model) {
+		Post post = postService.findPostById(id);
+		if (post == null) {
+			model.addAttribute("錯誤", "未找到貼文");
+			return "posts/list";
+		}
+		model.addAttribute("posts", post);
+		return "posts/upPosts";
+	}
 
-	 if (existingPost != null) {
-	 model.addAttribute("錯誤", "未找到貼文");
-	 return "posts/list";
-	 }
-	 // 更新貼文資料
-	 existingPost.setContentText(post.getContentText());
-	 existingPost.setContentType(post.getContentType());
-	 existingPost.setPostTitle(post.getPostTitle());
-	 existingPost.setDeletedAt(post.getDeletedAt()); // 可選：設定刪除時間
+	@PostMapping("/posts/updatePoasts")
+	public String updatePoastspage(@ModelAttribute Post post, Model model) {
+		Post existingPost = postService.findPostById(post.getPostId());
 
-	 postService.createPost(existingPost);
+		if (existingPost != null) {
+			model.addAttribute("錯誤", "未找到貼文");
+			return "posts/list";
+		}
+		// 更新貼文資料
+		existingPost.setContentText(post.getContentText());
+		existingPost.setContentType(post.getContentType());
+		existingPost.setPostTitle(post.getPostTitle());
+		existingPost.setDeletedAt(post.getDeletedAt()); // 可選：設定刪除時間
 
-	 return "redirect:/posts/list";
-	 }
+		postService.createPost(existingPost);
 
-	 @PostMapping("/posts/delete")
-	 public String deletePost(@RequestParam Integer id, Model model) {
-	 Post post = postService.findPostById(id);
-	 if (post == null) {
-	 model.addAttribute("錯誤", "未找到貼文");
-	 return "posts/list";
-	 }
+		return "redirect:/posts/list";
+	}
 
-	 postService.deletePostById(id);
+	@PostMapping("/posts/delete")
+	public String deletePost(@RequestParam Integer id, Model model) {
+		Post post = postService.findPostById(id);
+		if (post == null) {
+			model.addAttribute("錯誤", "未找到貼文");
+			return "posts/list";
+		}
 
-	 return "redirect:/posts/list";
-	 }
+		postService.deletePostById(id);
+
+		return "redirect:/posts/list";
+	}
 }
