@@ -64,8 +64,13 @@ public class CartService {
 	@Transactional
 	public Cart addOneVol(Integer userId, Integer productId) {
 		Cart result = cartRepository.findByUserIdAndProductId(userId, productId);
-		result.setVol(result.getVol() + 1);
-		return result;
+		Optional<Product> byId = proRepo.findById(productId);
+		Integer stock = byId.get().getStock();
+		if (result.getVol() + 1 <= stock) {
+			result.setVol(result.getVol() + 1);
+			return result;
+		}
+		return null;
 	}
 
 	@Transactional

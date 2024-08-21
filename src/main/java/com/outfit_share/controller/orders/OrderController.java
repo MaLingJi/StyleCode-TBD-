@@ -37,7 +37,7 @@ public class OrderController {
 	private UserDetailService udService;
 
 
-	@PostMapping("/addOrder") //待測試
+	@PostMapping("/admin/add") //待測試
 	// 新增訂單
 	public OrdersDTO addOrder(@RequestBody Orders ordersRequest) {
 		OrdersDTO order = ordersService.addOrder(ordersRequest);
@@ -49,8 +49,8 @@ public class OrderController {
 
 	//客戶角度看他的訂單
 	//改使用DTO作為回傳物件  OK
-	@GetMapping("/findByUserId/{id}")
-	public List<OrdersDTO> findByUserId(@PathVariable(value = "id") Integer userId,@RequestParam(value = "status",required = false) Integer status) {
+	@GetMapping("/find/{userId}")
+	public List<OrdersDTO> findByUserId(@PathVariable(value = "userId") Integer userId,@RequestParam(value = "status",required = false) Integer status) {
 		if (status!=null) {
 			return ordersService.findByUserIdAndStatus(userId,status);
 		}
@@ -60,7 +60,7 @@ public class OrderController {
 	
 	//客戶角度看他得訂單詳情
 	//改使用DTO作為回傳物件  OK
-	@GetMapping("/findOrderDetails/{ordersId}")
+	@GetMapping("/findOd/{ordersId}")
 	public List<OrdersDetailsDTO> findOdByOrdersId(@PathVariable(value = "ordersId") UUID ordersId){
 		return odService.findOdByOrderId(ordersId);
 	}
@@ -68,7 +68,7 @@ public class OrderController {
 
 	//刪除訂單
 	//改使用DTO作為回傳物件  OK
-	@DeleteMapping("/delete/{orderId}")
+	@DeleteMapping("/admin/delete/{orderId}")
 	public OrdersDTO deleteByOrderId(@PathVariable(value = "orderId") UUID orderId) {
 		OrdersDTO result = ordersService.deleteOrders(orderId);
 		result.setStatus(2);
@@ -77,14 +77,14 @@ public class OrderController {
 
 	//後台看所有訂單
 	//改使用DTO作為回傳物件  OK
-	@GetMapping("/findAll")
+	@GetMapping("/admin/findAll")
 	public List<OrdersDTO> findAll() {
 		return ordersService.findAll();
 	}
 
 	// 後台看不同狀態訂單(0=尚未付款 1=已付款 2=已取消) 分析用
 	//改使用DTO作為回傳物件  OK
-	@GetMapping("/findByStatus/{status}")
+	@GetMapping("/admin/findByStatus/{status}")
 	public List<OrdersDTO> findByStatus(@PathVariable  Integer status) {
 		return ordersService.findByStatus(status);
 	}
