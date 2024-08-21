@@ -3,6 +3,7 @@ package com.outfit_share.util;
 import java.util.Base64;
 import java.util.Date;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +39,7 @@ public class JsonWebTokenUtility {
         Date now = new Date();
 
         if (lifespan == null) {
-            lifespan = this.expire * 60 * 1000;
+            lifespan = this.expire * 60 * 10000;
         }
         // 當前時間的毫秒值 //有效時間毫秒
         long end = System.currentTimeMillis() + lifespan;
@@ -65,7 +66,8 @@ public class JsonWebTokenUtility {
                 .decryptWith(password) // 解密
                 .build();
         try {
-            Claims payload = parser.parseEncryptedClaims(token).getPayload();
+            String jwtToken = token.substring(7); // 去掉'Bearer '
+            Claims payload = parser.parseEncryptedClaims(jwtToken).getPayload();
 
             String subject = payload.getSubject();
             return subject;
@@ -75,21 +77,11 @@ public class JsonWebTokenUtility {
         return null;
     }
 
-    public Integer getUserIdFromToken(String token) {
-        try {
-            Password password = Keys.password(charArraySecret);
-            String jwtToken = token.substring(7);
-            Claims payload = Jwts.parser()
-                    .decryptWith(password)
-                    .build()
-                    .parseEncryptedClaims(jwtToken)
-                    .getPayload();
-            return payload.get("userId", Integer.class);
-        } catch (Exception e) {
-            // TODO: handle exception
-            System.out.println("Invalid token: " + e.getMessage());
-            return null;
-        }
-
+    // 驗證user方法
+    public boolean isUser(Integer userId, String token) {
+        String data = validateEncryptedToken(token);
+        JSONObject dataObj = new JSONObject(data);
+        Integer tokenUserId = dataObj.getInt("userId");
+        return tokenUserId.equals(userId);
     }
 }

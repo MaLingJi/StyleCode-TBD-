@@ -33,8 +33,8 @@ public class JwtInterceptor implements HandlerInterceptor {
             } else {
                 // 有
                 // 檢查使用者有無權限
-                String role = user.optString("permissionsauth");
-                String requestURI = request.getRequestURI();
+                String role = user.optString("permissions");
+                String requestURI = request.getRequestURI();/// admin/profile/photo/{id}
 
                 if (requestURI.startsWith("/admin") && !"Admin".equals(role)) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -49,8 +49,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         if (auth != null && auth.length() != 0) {
             System.out.println("auth = " + auth);
-            String token = auth.substring(7); // 去掉'Bearer '
-            String data = jwtUtil.validateEncryptedToken(token);
+            String data = jwtUtil.validateEncryptedToken(auth);
             System.out.println("data = " + data);
             if (data != null && data.length() != 0) {
                 return new JSONObject(data);
