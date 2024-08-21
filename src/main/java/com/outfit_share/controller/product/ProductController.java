@@ -30,21 +30,21 @@ public class ProductController {
     private ProductService productService;
 
     // 新增商品
-//    @PostMapping("/admin/products/create")
-//    public ProductDTO createProduct(@RequestBody Product product) {
-//        return productService.saveProduct(product);
-//    }
+   @PostMapping("/admin/products/create")
+   public ProductDTO createProduct(@RequestBody Product product) {
+       return productService.saveProduct(product);
+   }
     
     //新增商品(可以同時新增照片)
-    @PostMapping("/admin/products/createwithimages")
-    public ProductDTO createProductWithImages(
-            @RequestPart("product") String productJson,
-            @RequestPart("file") MultipartFile[] images,
-            @RequestParam(required = false) String imageType) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        Product product = mapper.readValue(productJson, Product.class);
-        return productService.saveProductWithImages(product, images, imageType);
-    }
+    // @PostMapping("/admin/products/createwithimages")
+    // public ProductDTO createProductWithImages(
+    //         @RequestPart("product") String productJson,
+    //         @RequestParam(value = "file", required = false) MultipartFile[] file,
+    //         @RequestParam(required = false) String imageType) throws IOException {
+    //     ObjectMapper mapper = new ObjectMapper();
+    //     Product product = mapper.readValue(productJson, Product.class);
+    //     return productService.saveProductWithImages(product, file, imageType);
+    // }
 
 
     // 更新商品

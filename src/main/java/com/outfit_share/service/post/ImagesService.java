@@ -24,7 +24,7 @@ import com.outfit_share.repository.post.PostRepository;
 @Service
 public class ImagesService {
 
-    @Value("${upload.dir}")
+    @Value("${post.upload.dir}")
     private String uploadDir;
     
     @Autowired

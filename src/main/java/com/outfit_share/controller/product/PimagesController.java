@@ -46,9 +46,9 @@ public class PimagesController {
 
 	// 上傳多張圖片，有滑鼠移入移出事件測試，切換不同的圖片
 	@PostMapping("/admin/products/images/{productId}/multiple")
-	public List<PimagesDTO> uploadMultipleImages(@RequestParam("file") MultipartFile[] files,
+	public List<PimagesDTO> uploadMultipleImages(@RequestParam("file") MultipartFile[] file,
 			@PathVariable Integer productId, @RequestParam(required = false) String imageType) throws IOException {
-		return pimagesService.saveMultiplePimages(files, productId, imageType);
+		return pimagesService.saveMultiplePimages(file, productId, imageType);
 	}
 
 	// 更新圖片

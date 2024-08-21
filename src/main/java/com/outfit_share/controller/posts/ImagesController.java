@@ -49,7 +49,7 @@ public class ImagesController {
 		return imagesService.updateImage(id,file);
 	}
 	
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{id}")  // TODO: 需要加上deleteAt以實現軟刪除圖片
 	public void deleteImages(@PathVariable Integer id) {
 		imagesService.deleteImagesById(id);
 	}

@@ -36,6 +36,12 @@ public class ProductService {
 		return product;
 	}
 
+//	新增商品
+	public ProductDTO saveProduct(Product product) {
+		Product saveProduct = productRepository.save(product);
+		return new ProductDTO(saveProduct);
+	}
+
 
 //	新增商品
 	public ProductDTO saveProductWithImages(Product product, MultipartFile[] file, String imageType)

@@ -48,9 +48,10 @@ public class PostsConroller {
 		postService.deletePostById(postId);
 	}
 
-	//模糊搜尋文章中分類 分享/討論 的標題
+	//模糊搜尋文章中分類 分享/討論 的標題  
 	@GetMapping("/type")
 	public List<Post> searchPosts(@RequestParam String contentType,@RequestParam String keyword){
 		return postService.searchPostsByTypeAndKeyword(contentType, keyword);
 	}
+	// TODO: 要改成只有一個參數時也可搜尋，無參數時就findAll
 }
