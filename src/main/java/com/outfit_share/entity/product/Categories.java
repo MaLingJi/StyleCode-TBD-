@@ -2,6 +2,9 @@ package com.outfit_share.entity.product;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +30,7 @@ public class Categories {
 	@Column(name ="category_id")
 	private Integer categoryId;//分類ID
 	
-	@Column(name ="category_name" ,unique = true)
+	@Column(name ="category_name" ,unique = true , nullable = false)
 	private String categoryName;//分類名稱
 	
 	@OneToMany(cascade =  CascadeType.ALL ,fetch = FetchType.LAZY ,mappedBy = "category")

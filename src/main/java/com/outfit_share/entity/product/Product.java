@@ -3,6 +3,7 @@ package com.outfit_share.entity.product;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.outfit_share.entity.orders.OrdersDetails;
 
@@ -33,32 +34,31 @@ public class Product {
 	@Column(name = "product_id")
 	private Integer productId;//商品ID
 	
-	@Column(name = "product_name" ,unique = true)
+	@Column(name = "product_name" ,unique = true , nullable = false)
 	private String 	productName;//商品名稱
 	
 	@ManyToOne
-	@JoinColumn(name = "subcategory_id")
+	@JoinColumn(name = "subcategory_id" , nullable = false)
 	private Subcategory subcategoryId;//子分類
 	
-	@Column(name = "price")
+	@Column(name = "price" , nullable = false)
 	private Integer price;//價錢
 	
-	@Column(name = "stock")
+	@Column(name = "stock" , nullable = false )
 	private Integer stock;//庫存
 	
-	@Column(name = "size")
+	@Column(name = "size" , nullable = false)
 	private String size;//尺寸
 	
-	@Column(name = "color")
+	@Column(name = "color" , nullable = false)
 	private String color;//顏色
 	
-	@Column(name = "product_description")
+	@Column(name = "product_description" , nullable = false)
 	private String productDescription;//商品說明
 	
-	@Column(name = "onSale")
-	private Integer onSale;//商品狀態(1上架or0下架)(
+	@Column(name = "onSale" , nullable = false)
+	private boolean onSale;//商品狀態(1上架or0下架)
 	
-	@JsonManagedReference
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "productId")
 	private List<Pimages> pimages;
 	
