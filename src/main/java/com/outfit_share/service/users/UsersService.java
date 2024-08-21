@@ -20,6 +20,15 @@ public class UsersService {
     @Autowired
     private UsersRepository uRepo;
 
+    public Users findUserById(Integer id) {
+        Optional<Users> optional = uRepo.findById(id);
+        if (optional.isPresent()) {
+            Users dbUser = optional.get();
+            return dbUser;
+        }
+        return null;
+    }
+
     public boolean checkEmail(String email) {
         Optional<Users> dbUser = uRepo.findByEmail(email);
         if (dbUser.isPresent()) {
@@ -32,8 +41,8 @@ public class UsersService {
         return uRepo.save(users);
     }
 
-    public Users login(String loginUseremail, String loginPwd) {
-        Optional<Users> optional = uRepo.findByEmail(loginUseremail);
+    public Users login(String loginUserEmail, String loginPwd) {
+        Optional<Users> optional = uRepo.findByEmail(loginUserEmail);
 
         if (optional.isPresent()) {
             Users dbUser = optional.get();
@@ -45,6 +54,17 @@ public class UsersService {
             }
         }
         return null;
+    }
+
+    public boolean changePassword(String userEmail, String oldPwd, String newPwd) {
+        Users dbUser = this.login(userEmail, oldPwd);
+        if (dbUser != null && newPwd != null && newPwd.length() != 0) {
+            String encodedPwd = pwdEncoder.encode(newPwd);
+            dbUser.setPwd(encodedPwd);
+            uRepo.save(dbUser);
+            return true;
+        }
+        return false;
     }
 
 }

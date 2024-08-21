@@ -1,4 +1,4 @@
-package com.outfit_share.util;
+	package com.outfit_share.util;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ public class JwtInterceptor implements HandlerInterceptor {
                 response.setHeader("Access-Control-Allow-Credentials", "true");// 允許跨域請求
                 response.setHeader("Access-Control-Allow-Origin", "*"); // 指定那些網域可以請求 "*":要改成 "https://example.com"
                 response.setHeader("Access-Control-Allow-Headers", "*"); // 指定實際請求中可以使用那些Header
+                System.out.println("沒登入");
                 return false;
             } else {
                 // 有
@@ -38,10 +39,7 @@ public class JwtInterceptor implements HandlerInterceptor {
                 if (requestURI.startsWith("/admin") && !"Admin".equals(role)) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return false;
-                } else if (requestURI.startsWith("/member") && !"Member".equals(role)) {
                 }
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                return false;
             }
         }
         return true;

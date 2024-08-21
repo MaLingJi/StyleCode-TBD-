@@ -1,41 +1,37 @@
 package com.outfit_share.entity.orders;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.outfit_share.entity.product.Product;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+
+@Entity
+@Table(name = "transactionLP")
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "ordersDetails")
-public class OrdersDetails {
+public class TransactionLP {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-
-	@Column(name = "quantity")
-	private Integer quantity;
-
-
-	@ManyToOne
-	@JoinColumn(name = "orders_id")
-	private Orders orders;
-
-	@ManyToOne
-	@JoinColumn(name = "product_id")
-	private Product product;
-
+    private String transactionId;
+    private String orderId;
+    private Integer amount;
+	@Override
+	public String toString() {
+		return "TransactionLP [id=" + id + ", transactionId=" + transactionId + ", orderId=" + orderId + ", amount="
+				+ amount + "]";
+	}
+    
 }

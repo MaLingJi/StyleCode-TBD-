@@ -25,5 +25,7 @@ public class JwtConfig implements WebMvcConfigurer {
         		.addPathPatterns("/subcategories/admin/**")
         		.addPathPatterns("/products/admin/**")
         		.addPathPatterns("/products/images/admin/**");
+                // .addPathPatterns("/member/**");
+//        		.addPathPatterns("/product/**");
     }
 }
