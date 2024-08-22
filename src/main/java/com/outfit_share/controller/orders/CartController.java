@@ -8,11 +8,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.outfit_share.entity.orders.Cart;
+import com.outfit_share.entity.orders.CartItemDTO;
 import com.outfit_share.service.orders.CartService;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/cart")
+@CrossOrigin(origins = "http://localhost:5173")
 public class CartController {
 	@Autowired
 	private CartService cartService;
@@ -26,10 +30,11 @@ public class CartController {
 		}
 		return null;
 	};
-
+	
+	
 	@GetMapping("/find/{id}")
-	public List<Cart> findCartById(@PathVariable(value = "id") Integer id) {
-		List<Cart> result = cartService.findByUserId(id);
+	public List<CartItemDTO> findCartById(@PathVariable(value = "id") Integer id) {
+		List<CartItemDTO> result = cartService.findByUserId(id);
 		return result;
 	}
 

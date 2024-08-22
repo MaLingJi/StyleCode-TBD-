@@ -1,5 +1,7 @@
 package com.outfit_share.service.orders;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.outfit_share.entity.orders.Cart;
 import com.outfit_share.entity.orders.CartId;
+import com.outfit_share.entity.orders.CartItemDTO;
 import com.outfit_share.entity.product.Product;
 import com.outfit_share.entity.users.Users;
 import com.outfit_share.repository.orders.CartRepository;
@@ -55,9 +58,25 @@ public class CartService {
 		return null;
 	}
 
-	public List<Cart> findByUserId(Integer userId) {
+	public List<CartItemDTO> findByUserId(Integer userId) {
 		List<Cart> result = cartRepository.findByUserId(userId);
-		return result;
+		List<CartItemDTO> cartIremDTO = new ArrayList<>();
+		
+		for(Cart cart:result) {
+			CartItemDTO dto = new CartItemDTO();
+			dto.setUserId(cart.getCartId().getUserId());
+			dto.setProductId(cart.getCartId().getProductId());
+			dto.setQuantity(cart.getVol());
+			Optional<Product> optional = proRepo.findById(cart.getCartId().getProductId());
+			if (optional.isPresent()) {
+				Product product = optional.get();		
+				dto.setProductName(product.getProductName());
+				dto.setProductPrice(product.getPrice());
+			}
+			cartIremDTO.add(dto);	
+		}
+		
+		return cartIremDTO;
 
 	}
 
