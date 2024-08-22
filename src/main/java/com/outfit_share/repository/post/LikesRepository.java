@@ -3,7 +3,8 @@ package com.outfit_share.repository.post;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.outfit_share.entity.post.Likes;
+import com.outfit_share.entity.post.LikesId;
 
-public interface LikesRepository extends JpaRepository<Likes, Integer>{
+public interface LikesRepository extends JpaRepository<Likes, LikesId> {
 
 }

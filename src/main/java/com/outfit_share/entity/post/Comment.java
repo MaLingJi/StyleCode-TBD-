@@ -4,12 +4,17 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.outfit_share.entity.users.UserDetail;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -20,70 +25,89 @@ public class Comment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "comments_id")
-	private int commentsId;
-	
+	@Column(name = "comment_id")
+	private Integer commentId;
+
+	@ManyToOne
 	@JoinColumn(name = "post_id")
-	private int postId;
-	
+	private Post post;
+
+	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private int userId;
-	
+	@JsonBackReference
+	private UserDetail userDetail;
+
 	@Column(name = "comment")
-	private String comMent;
-	
-	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss EEEE")
+	private String comment;
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at")
 	private Date createdAt;
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "deleted_at", nullable = true)
+    private Date deletedAt;
+
+    // 創建時會自動創時間
+    @PrePersist
+    public void onCreate() {
+        if (createdAt == null) {
+            createdAt = new Date();
+        }
+    }
 	
 	public Comment() {
 	}
 
-	public Comment(int commentsId, int postId, int userId, String comMent, Date createdAt) {
-		this.commentsId = commentsId;
-		this.postId = postId;
-		this.userId = userId;
-		this.comMent = comMent;
+	public Comment(Post post, UserDetail userDetail, String comment, Date createdAt, Date deletedAt) {
+		this.post = post;
+		this.userDetail = userDetail;
+		this.comment = comment;
 		this.createdAt = createdAt;
+		this.deletedAt = deletedAt;
 	}
 
-	public Comment(int commentsId, String comMent, Date createdAt) {
-		this.commentsId = commentsId;
-		this.comMent = comMent;
+	public Comment(Integer commentId, Post post, UserDetail userDetail, String comment, Date createdAt, Date deletedAt) {
+		this.commentId = commentId;
+		this.post = post;
+		this.userDetail = userDetail;
+		this.comment = comment;
 		this.createdAt = createdAt;
+		this.deletedAt = deletedAt;
 	}
 
-	public int getCommentsId() {
-		return commentsId;
+	public Integer getCommentId() {
+		return commentId;
 	}
 
-	public void setCommentsId(int commentsId) {
-		this.commentsId = commentsId;
+	public void setCommentId(Integer commentId) {
+		this.commentId = commentId;
 	}
 
-	public int getPostId() {
-		return postId;
+	public Post getPost() {
+		return post;
 	}
 
-	public void setPostId(int postId) {
-		this.postId = postId;
+	public void setPost(Post post) {
+		this.post = post;
 	}
 
-	public int getUserId() {
-		return userId;
+	public UserDetail getUserDetail() {
+		return userDetail;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setUserDetail(UserDetail userDetail) {
+		this.userDetail = userDetail;
 	}
 
-	public String getComMent() {
-		return comMent;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setComMent(String comMent) {
-		this.comMent = comMent;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public Date getCreatedAt() {
@@ -93,4 +117,13 @@ public class Comment {
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
+
+	public Date getDeletedAt() {
+		return deletedAt;
+	}
+
+	public void setDeletedAt(Date deletedAt) {
+		this.deletedAt = deletedAt;
+	}
+
 }

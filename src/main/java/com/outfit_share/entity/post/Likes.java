@@ -1,52 +1,57 @@
 package com.outfit_share.entity.post;
 
-import jakarta.persistence.Column;
+import org.springframework.stereotype.Component;
+
+import com.outfit_share.entity.users.UserDetail;
+
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Likes")
+@Table(name = "likes")
+@Component
 public class Likes {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "likes_id")
-	private int likesId;
-	
-	@JoinColumn(name = "post_id")
-	private int postId;
-	
-	@JoinColumn(name = "user_id")
-	private int userId;
-	
-	public Likes() {
-	}
+    @EmbeddedId
+    private LikesId likesId;
 
-	public int getLikesId() {
-		return likesId;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("postId")
+    private Post post;
 
-	public void setLikesId(int likesId) {
-		this.likesId = likesId;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("userId")
+    private UserDetail userDetail;
 
-	public int getPostId() {
-		return postId;
-	}
+    public Likes() {
+    }
 
-	public void setPostId(int postId) {
-		this.postId = postId;
-	}
+    public LikesId getLikesId() {
+        return likesId;
+    }
 
-	public int getUserId() {
-		return userId;
-	}
+    public void setLikesId(LikesId likesId) {
+        this.likesId = likesId;
+    }
 
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+    public Post getPosts() {
+        return post;
+    }
+
+    public void setPosts(Post post) {
+        this.post = post;
+    }
+
+    public UserDetail getUserDetail() {
+        return userDetail;
+    }
+
+    public void setUserDetail(UserDetail userDetail) {
+        this.userDetail = userDetail;
+    }
+
 }

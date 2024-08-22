@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,25 +17,34 @@ public class Images {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "image_id")
 	private int imageId;
-	
+
+	@ManyToOne
 	@JoinColumn(name = "post_id")
-	private int postId;
-	
+	private Post post;
+
 	@Column(name = "img_url")
 	private String imgUrl;
-	
+
 	public Images() {
 	}
 
-	public Images(int imageId, int postId, String imgUrl) {
+	public Images(int imageId, Post post, String imgUrl) {
 		this.imageId = imageId;
-		this.postId = postId;
+		this.post = post;
 		this.imgUrl = imgUrl;
 	}
 
 	public Images(int imageId, String imgUrl) {
 		this.imageId = imageId;
 		this.imgUrl = imgUrl;
+	}
+
+	public Post getPost() {
+		return post;
+	}
+
+	public void setPost(Post post) {
+		this.post = post;
 	}
 
 	public int getImageId() {
@@ -45,12 +55,12 @@ public class Images {
 		this.imageId = imageId;
 	}
 
-	public int getPostId() {
-		return postId;
+	public Post getPostId() {
+		return post;
 	}
 
-	public void setPostId(int postId) {
-		this.postId = postId;
+	public void setPostId(Post post) {
+		this.post = post;
 	}
 
 	public String getImgUrl() {

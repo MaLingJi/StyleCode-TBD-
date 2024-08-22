@@ -3,7 +3,6 @@ package com.outfit_share.entity.users;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.stereotype.Component;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,16 +17,12 @@ import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "notifications")
-@Component
 public class Notifications {
 
     @Id
     @Column(name = "notification_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(name = "user_id")
-    private Integer userId;
 
     @Column(name = "message ")
     private String message;
@@ -50,6 +45,56 @@ public class Notifications {
     public Notifications() {
     }
 
+    public Integer getId() {
+        return id;
+    }
 
-    
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public UserDetail getUserDetail() {
+        return userDetail;
+    }
+
+    public void setUserDetail(UserDetail userDetail) {
+        this.userDetail = userDetail;
+    }
+
+    public Integer getUserId() {
+        return userDetail != null ? userDetail.getId() : null;
+    }
+
 }
