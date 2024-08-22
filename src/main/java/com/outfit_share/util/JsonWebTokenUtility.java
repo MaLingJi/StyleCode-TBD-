@@ -3,6 +3,7 @@ package com.outfit_share.util;
 import java.util.Base64;
 import java.util.Date;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class JsonWebTokenUtility {
 
-    // @Value("$(jwt.token.expire)")
+    @Value("${jwt.token.expire}")
     private long expire;
 
     private byte[] base64EncodedSecret;
@@ -38,13 +39,14 @@ public class JsonWebTokenUtility {
         Date now = new Date();
 
         if (lifespan == null) {
-            lifespan = this.expire * 60 * 1000;
+            lifespan = this.expire * 60 * 10000;
         }
         // 當前時間的毫秒值 //有效時間毫秒
         long end = System.currentTimeMillis() + lifespan;
         Date expiredate = new Date(end);// 轉換成Date形式
 
         Password password = Keys.password(charArraySecret);
+        System.out.println(password);
         JwtBuilder builder = Jwts.builder()
                 .subject(data) // JWT內容主體
                 .issuedAt(now) // 建立時間
@@ -64,7 +66,8 @@ public class JsonWebTokenUtility {
                 .decryptWith(password) // 解密
                 .build();
         try {
-            Claims payload = parser.parseEncryptedClaims(token).getPayload();
+            String jwtToken = token.substring(7); // 去掉'Bearer '
+            Claims payload = parser.parseEncryptedClaims(jwtToken).getPayload();
 
             String subject = payload.getSubject();
             return subject;
@@ -74,4 +77,11 @@ public class JsonWebTokenUtility {
         return null;
     }
 
+    // 驗證user方法
+    public boolean isUser(Integer userId, String token) {
+        String data = validateEncryptedToken(token);
+        JSONObject dataObj = new JSONObject(data);
+        Integer tokenUserId = dataObj.getInt("userId");
+        return tokenUserId.equals(userId);
+    }
 }

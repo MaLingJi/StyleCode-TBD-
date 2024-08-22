@@ -1,118 +1,60 @@
 package com.outfit_share.controller.posts;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.outfit_share.entity.post.Post;
-import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.service.post.PostService;
-import com.outfit_share.service.users.UserDetailService;
 
-@Controller
+@RestController
+@RequestMapping("/post")
 public class PostsConroller {
 
 	@Autowired
 	private PostService postService;
 
-	@Autowired
-	private UserDetailService userDService;
-
-	@GetMapping("/posts/add")
-	public String addPosts(Model model) {
-		// Integer currentUserId = getCurrentUserId();//實現此方法以獲取當前用戶 ID
-		// model.addAttribute("currentUserId", currentUserId);
-		return "posts/addPosts";
+	@PostMapping
+	public Post addPost(@RequestBody Post post) {
+		return postService.createPost(post);
 	}
 
-	@PostMapping("/posts/addPosts")
-	public String posts(
-			@RequestParam Integer userId,
-			@RequestParam String contenttype,
-			@RequestParam String posttitle,
-			@RequestParam String contenttext,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date createdat,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date deletedat,
-			Model model) {
-
-		// Integer userIdInt = Integer.valueOf(userId); // 轉換為 Integer
-		// System.out.println("userId: " + userId);
-		UserDetail user = userDService.findUserById(userId);
-		if (user == null) {
-			model.addAttribute("錯誤", "未找到用戶");
-			return "posts/addPosts";
-		}
-
-		Post post = new Post();
-		post.setUserDetail(user);
-		post.setContentType(contenttype);
-		post.setContentText(contenttext);
-		post.setPostTitle(posttitle);
-		post.setCreatedAt(createdat);
-		post.setDeletedAt(null);// 尚未刪除
-
-		postService.createPost(post);
-
-		model.addAttribute("OK", "新增成功");
-		return "posts/addPosts";
+	@GetMapping("/{id}")
+	public Post findPostById(@PathVariable("id") Integer postId) {
+		return postService.findPostById(postId);
 	}
 
-	@GetMapping("/posts/list")
-	public String findAll(Model model) {
-		List<Post> list = postService.findAllPost();
-
-		model.addAttribute("posts", list);
-		return "posts/showPosts";
+	@GetMapping
+	public List<Post> findAllPosts() {
+		return postService.findAllPost();
 	}
 
-	@GetMapping("/posts/update")
-	public String updatePosts(@RequestParam Integer id, Model model) {
-		Post post = postService.findPostById(id);
-		if (post == null) {
-			model.addAttribute("錯誤", "未找到貼文");
-			return "posts/list";
-		}
-		model.addAttribute("posts", post);
-		return "posts/upPosts";
+	@PutMapping("/{id}")
+	public Post updatePost(@PathVariable("id") Integer postId, @RequestBody Post post) {
+		return postService.updatePost(postId, post);
 	}
 
-	@PostMapping("/posts/updatePoasts")
-	public String updatePoastspage(@ModelAttribute Post post, Model model) {
-		Post existingPost = postService.findPostById(post.getPostId());
-
-		if (existingPost != null) {
-			model.addAttribute("錯誤", "未找到貼文");
-			return "posts/list";
-		}
-		// 更新貼文資料
-		existingPost.setContentText(post.getContentText());
-		existingPost.setContentType(post.getContentType());
-		existingPost.setPostTitle(post.getPostTitle());
-		existingPost.setDeletedAt(post.getDeletedAt()); // 可選：設定刪除時間
-
-		postService.createPost(existingPost);
-
-		return "redirect:/posts/list";
+	@DeleteMapping("/{id}")
+	public void deletePost(@PathVariable("id") Integer postId) {
+		postService.deletePostById(postId);
 	}
 
-	@PostMapping("/posts/delete")
-	public String deletePost(@RequestParam Integer id, Model model) {
-		Post post = postService.findPostById(id);
-		if (post == null) {
-			model.addAttribute("錯誤", "未找到貼文");
-			return "posts/list";
-		}
-
-		postService.deletePostById(id);
-
-		return "redirect:/posts/list";
+	// 模糊搜尋文章中分類 分享/討論 的標題
+	@GetMapping("/type")
+	public List<Post> searchPosts(
+			@RequestParam(value = "contentType", required = false) String contentType,
+			@RequestParam(value = "keyword", required = false) String keyword) {
+		return postService.searchPostsByTypeAndKeyword(contentType, keyword);
 	}
+	// TODO: 要改成只有一個參數時也可搜尋，無參數時就findAll
+	// P.S.這邊我改成靠前端綁定來處理即可
 }

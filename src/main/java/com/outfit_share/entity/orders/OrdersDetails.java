@@ -1,6 +1,8 @@
 package com.outfit_share.entity.orders;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.outfit_share.entity.product.Product;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +28,7 @@ public class OrdersDetails {
 
 	@Column(name = "quantity")
 	private Integer quantity;
+
 
 	@ManyToOne
 	@JoinColumn(name = "orders_id")

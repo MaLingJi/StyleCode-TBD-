@@ -3,8 +3,11 @@ package com.outfit_share.entity.orders;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.outfit_share.entity.users.UserDetail;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,30 +42,48 @@ public class Orders {
 
 	@Column(name = "status")
 	private Integer status;
+	
+	@Column(name = "payment_method")
+	private Integer payment_method;
+	
+	@Column(name = "shipping_address")
+	private String shipping_address;
+	
+	@Column(name = "discount_points")
+	private Integer discount_points;
+	
+	@Column(name = "updated_at")
+	private Date updated_at;
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE", timezone = "GMT+8")
+	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE",timezone = "GMT+8")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "orderDate")
 	private Date orderDate;
-
+	
+	
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private UserDetail userDetail;
+	@JoinColumn(name="user_id")
+	private  UserDetail userDetail;
+	
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "orders")
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "orders")
 	private List<OrdersDetails> ordersDetails;
+	
+	
 
-	// @Column(name = "updateDate")
-	// private Date updateDate;
 
 	@PrePersist
 	public void onCreate() {
 		if (orderDate == null) {
 			orderDate = new Date();
 		}
-		if (status == null) {
+		if(status == null) {
 			this.status = 0;
 		}
 	}
+	
+	
 
 }
+

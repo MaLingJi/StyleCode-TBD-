@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.outfit_share.entity.users.UserDetail;
 
 import jakarta.persistence.Column;
@@ -33,6 +34,7 @@ public class Comment {
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
+	@JsonBackReference
 	private UserDetail userDetail;
 
 	@Column(name = "comment")
@@ -44,17 +46,18 @@ public class Comment {
 	private Date createdAt;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE")
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "deleted_at", nullable = true)
-	private Date deletedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "deleted_at", nullable = true)
+    private Date deletedAt;
 
-	@PrePersist
-	public void onCreate() {
-		if (createdAt == null) {
-			createdAt = new Date();
-		}
-	}
-
+    // 創建時會自動創時間
+    @PrePersist
+    public void onCreate() {
+        if (createdAt == null) {
+            createdAt = new Date();
+        }
+    }
+	
 	public Comment() {
 	}
 
@@ -79,15 +82,15 @@ public class Comment {
 		return commentId;
 	}
 
-	public void setCommentId(Integer commentsId) {
-		this.commentId = commentsId;
+	public void setCommentId(Integer commentId) {
+		this.commentId = commentId;
 	}
 
-	public Post getPosts() {
+	public Post getPost() {
 		return post;
 	}
 
-	public void setPosts(Post post) {
+	public void setPost(Post post) {
 		this.post = post;
 	}
 
@@ -115,11 +118,12 @@ public class Comment {
 		this.createdAt = createdAt;
 	}
 
-	public Date getDeleteAt() {
-		return createdAt;
+	public Date getDeletedAt() {
+		return deletedAt;
 	}
 
-	public void getDeleteAt(Date deletedAt) {
+	public void setDeletedAt(Date deletedAt) {
 		this.deletedAt = deletedAt;
 	}
+
 }

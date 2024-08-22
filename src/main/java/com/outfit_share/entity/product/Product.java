@@ -3,6 +3,8 @@ package com.outfit_share.entity.product;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.outfit_share.entity.orders.OrdersDetails;
 
 import jakarta.persistence.CascadeType;
@@ -30,32 +32,32 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "product_id")
-	private Integer productId;
+	private Integer productId;//商品ID
 	
-	@Column(name = "product_name" ,unique = true)
-	private String 	productName;
+	@Column(name = "product_name" ,unique = true , nullable = false)
+	private String 	productName;//商品名稱
 	
 	@ManyToOne
-	@JoinColumn(name = "subcategory_id")
-	private Subcategory subcategoryId;
+	@JoinColumn(name = "subcategory_id" , nullable = false)
+	private Subcategory subcategoryId;//子分類
 	
-	@Column(name = "price")
-	private Integer price;
+	@Column(name = "price" , nullable = false)
+	private Integer price;//價錢
 	
-	@Column(name = "stock")
-	private Integer stock;
+	@Column(name = "stock" , nullable = false )
+	private Integer stock;//庫存
 	
-	@Column(name = "size")
-	private String size;
+	@Column(name = "size" , nullable = false)
+	private String size;//尺寸
 	
-	@Column(name = "color")
-	private String color;
+	@Column(name = "color" , nullable = false)
+	private String color;//顏色
 	
-	@Column(name = "product_description")
-	private String productDescription;
+	@Column(name = "product_description" , nullable = false)
+	private String productDescription;//商品說明
 	
-	@Column(name = "onSale")
-	private Integer onSale;
+	@Column(name = "onSale" , nullable = false)
+	private boolean onSale;//商品狀態(1上架or0下架)
 	
 	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "productId")
 	private List<Pimages> pimages;
