@@ -35,6 +35,8 @@ public class PostsConroller {
 
 	@GetMapping
 	public List<Post> findAllPosts() {
+		System.out.println("return type: " + postService.findAllPost().getClass().getSimpleName());
+		System.out.println("return: " + postService.findAllPost());
 		return postService.findAllPost();
 	}
 
