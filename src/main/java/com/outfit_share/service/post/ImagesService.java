@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -106,15 +107,19 @@ public class ImagesService {
         return null;
     }
     
-    public void deleteImagesById(Integer id) {
+    //軟刪除 紀錄是誰的圖片(但仍保存圖片)
+    public Images deleteImagesById(Integer id) {
     	Optional<Images> optionalImage = imagesRepo.findById(id);
     	
     	if (optionalImage.isPresent()) {
-    		imagesRepo.deleteById(id);
+    		Images images = optionalImage.get();
+    		images.setDeletedAt(new Date());
+    		return imagesRepo.save(images);
     	} else {
     		throw new RuntimeException("找不到id的image:" + id);
     	}
     }
+    
     //按postId查找多張照片
     public List<Images> findImagesByPostId(Integer postId) {
         return imagesRepo.findByPost_PostId(postId);

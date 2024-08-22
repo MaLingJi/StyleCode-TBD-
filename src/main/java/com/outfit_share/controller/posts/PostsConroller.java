@@ -50,8 +50,11 @@ public class PostsConroller {
 
 	//模糊搜尋文章中分類 分享/討論 的標題  
 	@GetMapping("/type")
-	public List<Post> searchPosts(@RequestParam String contentType,@RequestParam String keyword){
+	public List<Post> searchPosts(
+								@RequestParam(value = "contentType", required = false) String contentType,
+								@RequestParam(value = "keyword", required = false) String keyword){
 		return postService.searchPostsByTypeAndKeyword(contentType, keyword);
 	}
 	// TODO: 要改成只有一個參數時也可搜尋，無參數時就findAll
+	// P.S.這邊我改成靠前端綁定來處理即可
 }
