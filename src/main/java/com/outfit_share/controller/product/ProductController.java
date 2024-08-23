@@ -97,6 +97,11 @@ public class ProductController {
         return productService.findProductById(id);
     }
     
+    @GetMapping("/products/subcategory/{subcategoryId}")
+    public List<ProductDTO> ProductsBySubcategoryId(@PathVariable Integer subcategoryId){
+    	return productService.findProductsBySubcategoryId(subcategoryId);
+    }
+    
 
 																												    // 獲取所有商品
 																												//    @GetMapping

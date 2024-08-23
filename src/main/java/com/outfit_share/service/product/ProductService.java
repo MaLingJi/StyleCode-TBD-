@@ -1,6 +1,5 @@
 package com.outfit_share.service.product;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -8,10 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.outfit_share.entity.product.Pimages;
-import com.outfit_share.entity.product.PimagesDTO;
 import com.outfit_share.entity.product.Product;
 import com.outfit_share.entity.product.ProductDTO;
 import com.outfit_share.repository.product.ProductRepository;
@@ -44,35 +40,35 @@ public class ProductService {
 
 
 //	新增商品
-	public ProductDTO saveProductWithImages(Product product, MultipartFile[] file, String imageType)
-			throws IOException {
-		// 保存商品
-		Product savedProduct = productRepository.save(product);
-
-		// 上傳並保存
-		List<PimagesDTO> savedImages = pimagesService.saveMultiplePimages(file, savedProduct.getProductId(), imageType);
-		List<Pimages> updatedPimages = new ArrayList<>();
-
-		if (savedImages != null) {
-			for (PimagesDTO dto : savedImages) {
-				if (dto != null) {
-					Pimages pimage = new Pimages();
-					pimage.setImageId(dto.getImageId());
-					pimage.setImageName(dto.getImageName());
-					pimage.setImgUrl(dto.getImgUrl());
-					pimage.setImageType(dto.getImageType());
-					pimage.setProductId(savedProduct);
-					updatedPimages.add(pimage);
-				}
-			}
-		}
-		savedProduct.setPimages(updatedPimages);
-
-		// 再次保存商品以更新圖片關聯
-		savedProduct = productRepository.save(savedProduct);
-
-		return new ProductDTO(savedProduct);
-	}
+//	public ProductDTO saveProductWithImages(Product product, MultipartFile[] file, String imageType)
+//			throws IOException {
+//		// 保存商品
+//		Product savedProduct = productRepository.save(product);
+//
+//		// 上傳並保存
+//		List<PimagesDTO> savedImages = pimagesService.saveMultiplePimages(file, savedProduct.getProductId(), imageType);
+//		List<Pimages> updatedPimages = new ArrayList<>();
+//
+//		if (savedImages != null) {
+//			for (PimagesDTO dto : savedImages) {
+//				if (dto != null) {
+//					Pimages pimage = new Pimages();
+//					pimage.setImageId(dto.getImageId());
+//					pimage.setImageName(dto.getImageName());
+//					pimage.setImgUrl(dto.getImgUrl());
+//					pimage.setImageType(dto.getImageType());
+//					pimage.setProductId(savedProduct);
+//					updatedPimages.add(pimage);
+//				}
+//			}
+//		}
+//		savedProduct.setPimages(updatedPimages);
+//
+//		// 再次保存商品以更新圖片關聯
+//		savedProduct = productRepository.save(savedProduct);
+//
+//		return new ProductDTO(savedProduct);
+//	}
 
 //	修改商品
 	public ProductDTO updateProduct(Integer id, Product product) {
@@ -210,6 +206,21 @@ public class ProductService {
 
 		return null;
 	}
+	
+//	搜尋子分類底下的所有商品
+    public List<ProductDTO> findProductsBySubcategoryId(Integer subcategoryId) {
+        List<Product> products = productRepository.findBySubcategoryId(subcategoryId);
+        
+     // 更簡潔的語法
+//        return products.stream().map(ProductDTO::new).collect(Collectors.toList());
+        
+        List<ProductDTO> productDTO = new ArrayList<>();
+        for(Product product : products) {
+        	productDTO.add(new ProductDTO(product));
+        }
+        return productDTO;
+        
+    }
 
 
 //	模糊搜尋 && 價格由高到低||由低到高 && 全部商品

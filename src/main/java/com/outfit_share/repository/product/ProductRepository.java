@@ -18,5 +18,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 			+ "CASE WHEN :sort = 'priceAsc' THEN p.price END ASC, "
 			+ "CASE WHEN :sort = 'priceDesc' THEN p.price END DESC")
 	List<Product> findByNameAndSort(@Param("name") String name, @Param("sort") String sort);
+	
+	//搜尋子分類底下的商品
+	@Query("SELECT p FROM Product p WHERE p.subcategoryId.subcategoryId = :subcategoryId")
+	List<Product> findBySubcategoryId(@Param("subcategoryId") Integer subcategoryId);
 
 }
