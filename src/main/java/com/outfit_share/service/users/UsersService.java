@@ -37,7 +37,14 @@ public class UsersService {
         return false;
     }
 
-    public Users resgister(Users users) {
+    public Users creatUsers(String userEmail, String userPwd) {
+
+        // 將密碼加密
+        String encodedPwd = pwdEncoder.encode(userPwd);
+        Users users = new Users();
+        users.setEmail(userEmail);
+        users.setPwd(encodedPwd);
+        users.setPermissions("Member");
         return uRepo.save(users);
     }
 
