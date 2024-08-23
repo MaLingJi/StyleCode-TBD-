@@ -58,24 +58,38 @@ public class CartService {
 		return null;
 	}
 
+	public Cart updateVol(Integer newVol, Integer productId,Integer userId) {
+		Optional<Product> optional = proRepo.findById(productId);
+		if (optional.isPresent()) {
+			Product product = optional.get();
+			if (product.getStock() >= newVol) {
+				Cart dbCart = cartRepository.findByUserIdAndProductId(userId, productId);
+				dbCart.setVol(newVol);
+				cartRepository.save(dbCart);
+				return dbCart;
+			}
+		}
+		return null;
+	}
+
 	public List<CartItemDTO> findByUserId(Integer userId) {
 		List<Cart> result = cartRepository.findByUserId(userId);
 		List<CartItemDTO> cartIremDTO = new ArrayList<>();
-		
-		for(Cart cart:result) {
+
+		for (Cart cart : result) {
 			CartItemDTO dto = new CartItemDTO();
 			dto.setUserId(cart.getCartId().getUserId());
 			dto.setProductId(cart.getCartId().getProductId());
 			dto.setQuantity(cart.getVol());
 			Optional<Product> optional = proRepo.findById(cart.getCartId().getProductId());
 			if (optional.isPresent()) {
-				Product product = optional.get();		
+				Product product = optional.get();
 				dto.setProductName(product.getProductName());
 				dto.setProductPrice(product.getPrice());
 			}
-			cartIremDTO.add(dto);	
+			cartIremDTO.add(dto);
 		}
-		
+
 		return cartIremDTO;
 
 	}
@@ -102,10 +116,18 @@ public class CartService {
 		}
 		return result;
 	}
-
+	
+	//訂單產生刪除用
 	@Transactional
 	public void deleteById(Integer userId) {
 		cartRepository.deleteByUsers(userId);
 	}
-
+	
+	//購物車刪除商品用
+	@Transactional
+	public String deleteByUserIdProductId(Integer userId,Integer productId) {
+		Cart dbCart = cartRepository.findByUserIdAndProductId(userId, productId);
+		cartRepository.delete(dbCart);
+		return "scucess";
+	}
 }

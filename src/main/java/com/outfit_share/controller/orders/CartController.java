@@ -12,7 +12,9 @@ import com.outfit_share.entity.orders.CartItemDTO;
 import com.outfit_share.service.orders.CartService;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/cart")
@@ -30,19 +32,37 @@ public class CartController {
 		}
 		return null;
 	};
-	
-	
+
 	@GetMapping("/find/{id}")
 	public List<CartItemDTO> findCartById(@PathVariable(value = "id") Integer id) {
 		List<CartItemDTO> result = cartService.findByUserId(id);
 		return result;
 	}
 
+	@PutMapping("/update")
+	public Cart updateCartVol(@RequestBody Cart cartRequest) {
+		Cart updateVolCart = cartService.updateVol(cartRequest.getVol(), cartRequest.getCartId().getProductId(),
+				cartRequest.getCartId().getUserId());
+		if (updateVolCart != null) {
+			return updateVolCart;
+		}
+
+		return null;
+	}
+
+	@DeleteMapping("/delete")
+	public String deleteCart(@RequestBody CartItemDTO cartRequest) {
+		String message = cartService.deleteByUserIdProductId(cartRequest.getUserId(), cartRequest.getProductId());
+		if(message=="scucess") {
+			return "scucess";
+		}
+		return null;
+	}
+
 	@PostMapping("/addOneVol")
-	public Cart addVol(@RequestBody Cart cartRequest) {
-		if (cartRequest.getCartId() != null) {
-			Cart result = cartService.addOneVol(cartRequest.getCartId().getUserId(),
-					cartRequest.getCartId().getProductId());
+	public Cart addVol(@RequestBody CartItemDTO cartRequest) {
+		Cart result = cartService.addOneVol(cartRequest.getUserId(), cartRequest.getProductId());
+		if (result != null) {
 			return result;
 		}
 		return null;
