@@ -9,6 +9,15 @@ import org.springframework.data.domain.Sort;
 import com.outfit_share.entity.product.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
+
+	// 搜尋子分類底下的商品
+	@Query("SELECT p FROM Product p WHERE p.subcategoryId.subcategoryId = :subcategoryId")
+	List<Product> findBySubcategoryId(@Param("subcategoryId") Integer subcategoryId);
+
+	// 搜尋分類底下的所有商品
+	@Query("SELECT p FROM Product p WHERE p.subcategoryId.category.categoryId = :categoryId")
+	List<Product> findByCategoryId(Integer categoryId);
+
 	// 模糊搜尋
 	@Query("from Product where productName like %:name%")
 	List<Product> findByNameLikeQuery(@Param("name") String name);

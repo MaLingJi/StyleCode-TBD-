@@ -60,7 +60,7 @@ public class PimagesService {
 		Pimages pimages = new Pimages();
 
 		pimages.setImageName(fileName);
-		pimages.setImgUrl(filePath.toString());
+		pimages.setImgUrl(uniqueFileName);
 		pimages.setProductId(product);
 		pimages.setImageType(imageType);
 
