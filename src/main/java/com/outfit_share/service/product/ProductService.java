@@ -221,8 +221,38 @@ public class ProductService {
         return productDTO;
         
     }
+    
+//  搜尋分類底下的所有商品
+    public List<ProductDTO> findProductsByCategoryId(Integer categoryId) {
+        List<Product> products = productRepository.findByCategoryId(categoryId);
+        
+        //更簡潔的語法
+//        return products.stream().map(ProductDTO::new).collect(Collectors.toList());
+        
+        List<ProductDTO> productDTO= new ArrayList<>();
+        
+        for(Product product : products) {
+        	productDTO.add(new ProductDTO(product));
+        }
+        return productDTO;
+    }
 
 
+ // 新增: 通过分类ID或子分类ID查找商品
+    public List<ProductDTO> findProductsByCategoryOrSubcategory(Integer categoryId, Integer subcategoryId) {
+        List<Product> products;
+        if (subcategoryId != null) {
+            products = productRepository.findBySubcategoryId(subcategoryId);
+        } else if (categoryId != null) {
+            products = productRepository.findByCategoryId(categoryId);
+        } else {
+            products = productRepository.findAll();
+        }
+        return products.stream().map(ProductDTO::new).collect(Collectors.toList());
+    }
+    
+    
+    
 //	模糊搜尋 && 價格由高到低||由低到高 && 全部商品
 	public List<ProductDTO> findProductsByNameAndSort(String name, String sort) {
 		List<Product> products = productRepository.findByNameAndSort(name, sort);
