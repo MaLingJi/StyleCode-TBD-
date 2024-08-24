@@ -1,5 +1,6 @@
 package com.outfit_share.service.users;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.entity.users.UserDetailDTO;
+import com.outfit_share.entity.users.Users;
 import com.outfit_share.repository.users.UserDetailRepository;
 
 @Service
@@ -31,7 +33,12 @@ public class UserDetailService {
         return null;
     }
 
-    public UserDetail saveDetail(UserDetail uDetail) {
+    public UserDetail createDetail(Users users) {
+        UserDetail uDetail = new UserDetail();
+        uDetail.setUsers(users);
+        uDetail.setUserName("user");
+        uDetail.setCreatedTime(new Date());
+        uDetail.setDiscountPoints(0);
         return udRepo.save(uDetail);
     }
 
@@ -48,5 +55,9 @@ public class UserDetailService {
         userDetailDTO.setUserPhoto(user.getUserPhoto());
         userDetailDTO.setDiscountPoints(user.getDiscountPoints());
         return userDetailDTO;
+    }
+
+    public UserDetail saveDetail(UserDetail uDetail) {
+        return udRepo.save(uDetail);
     }
 }
