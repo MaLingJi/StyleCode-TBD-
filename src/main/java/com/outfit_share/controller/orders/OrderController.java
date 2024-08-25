@@ -39,7 +39,7 @@ public class OrderController {
 
 	@PostMapping("/admin/add") //待測試
 	// 新增訂單
-	public OrdersDTO addOrder(@RequestBody Orders ordersRequest) {
+	public OrdersDTO addOrder(@RequestBody OrdersDTO ordersRequest) {
 		OrdersDTO order = ordersService.addOrder(ordersRequest);
 		if (order!=null) {
 			return order;

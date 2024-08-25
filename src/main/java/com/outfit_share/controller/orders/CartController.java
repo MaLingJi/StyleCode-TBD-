@@ -18,15 +18,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/cart")
-@CrossOrigin(origins = "http://localhost:5173")
 public class CartController {
 	@Autowired
 	private CartService cartService;
 
 	@PostMapping("/add")
-	public Cart addToCart(@RequestBody Cart cartRequest) {
-		Cart toCart = cartService.addToCart(cartRequest.getCartId().getUserId(), cartRequest.getCartId().getProductId(),
-				cartRequest.getVol());
+	public Cart addToCart(@RequestBody CartItemDTO cartRequest) {
+		Cart toCart = cartService.addToCart(cartRequest.getUserId(), cartRequest.getProductId(),
+				cartRequest.getQuantity());
 		if (toCart != null) {
 			return toCart;
 		}
@@ -40,9 +39,9 @@ public class CartController {
 	}
 
 	@PutMapping("/update")
-	public Cart updateCartVol(@RequestBody Cart cartRequest) {
-		Cart updateVolCart = cartService.updateVol(cartRequest.getVol(), cartRequest.getCartId().getProductId(),
-				cartRequest.getCartId().getUserId());
+	public Cart updateCartVol(@RequestBody CartItemDTO cartRequest) {
+		Cart updateVolCart = cartService.updateVol(cartRequest.getQuantity(), cartRequest.getProductId(),
+				cartRequest.getUserId());
 		if (updateVolCart != null) {
 			return updateVolCart;
 		}

@@ -36,8 +36,8 @@ public class OrdersService {
 	@Autowired
 	private ProductRepository pdRepo;
 
-	public OrdersDTO addOrder(@RequestBody Orders ordersRequest) {
-		List<Cart> cartList = cartRepo.findByUserId(ordersRequest.getUserDetail().getId());
+	public OrdersDTO addOrder(@RequestBody OrdersDTO ordersRequest) {
+		List<Cart> cartList = cartRepo.findByUserId(ordersRequest.getUserId());
 		
         // 檢查購物車是否為空
         if (cartList.isEmpty()) {
@@ -55,7 +55,7 @@ public class OrdersService {
 		Orders orders = new Orders();
 		orders.setTotalAmounts(ordersRequest.getTotalAmounts());
 
-		Optional<UserDetail> optional = udRepo.findById(ordersRequest.getUserDetail().getId());
+		Optional<UserDetail> optional = udRepo.findById(ordersRequest.getUserId());
 		UserDetail userDetail = optional.get();	
 		orders.setUserDetail(userDetail);
 		Orders saveOrders = ordersRepository.save(orders);
@@ -74,7 +74,7 @@ public class OrdersService {
 			product.setStock(product.getStock()-cart.getVol());
 			pdRepo.save(product);
 		}
-		cartRepo.deleteByUsers(ordersRequest.getUserDetail().getId()); 
+		cartRepo.deleteByUsers(ordersRequest.getUserId()); 
 		
 		return new OrdersDTO(saveOrders);
 		

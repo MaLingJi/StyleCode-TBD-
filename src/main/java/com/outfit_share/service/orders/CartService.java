@@ -58,7 +58,7 @@ public class CartService {
 		return null;
 	}
 
-	public Cart updateVol(Integer newVol, Integer productId,Integer userId) {
+	public Cart updateVol(Integer newVol, Integer productId, Integer userId) {
 		Optional<Product> optional = proRepo.findById(productId);
 		if (optional.isPresent()) {
 			Product product = optional.get();
@@ -98,10 +98,14 @@ public class CartService {
 	public Cart addOneVol(Integer userId, Integer productId) {
 		Cart result = cartRepository.findByUserIdAndProductId(userId, productId);
 		Optional<Product> byId = proRepo.findById(productId);
-		Integer stock = byId.get().getStock();
-		if (result.getVol() + 1 <= stock) {
-			result.setVol(result.getVol() + 1);
-			return result;
+		if (byId.isPresent()) {
+			Integer stock = byId.get().getStock();
+			if (result.getVol() + 1 <= stock) {
+				result.setVol(result.getVol() + 1);
+				cartRepository.save(result);
+				return result;
+			}
+			return null;
 		}
 		return null;
 	}
@@ -109,25 +113,44 @@ public class CartService {
 	@Transactional
 	public Cart minusOneVol(Integer userId, Integer productId) {
 		Cart result = cartRepository.findByUserIdAndProductId(userId, productId);
-		if (result.getVol() == 1) {
-			cartRepository.delete(result);
-		} else {
-			result.setVol(result.getVol() - 1);
+		Optional<Product> byId = proRepo.findById(productId);
+		if (byId.isPresent()) {
+			Integer stock = byId.get().getStock();
+			if (result.getVol() == 1) {
+				cartRepository.delete(result);
+			}
+
+			if (result.getVol() - 1 <= stock) {
+				result.setVol(result.getVol() - 1);
+				cartRepository.save(result);
+				return result;
+			}
+			
+			if (result.getVol() - 1 > stock) {
+				result.setVol(result.getVol() - 1);
+				cartRepository.save(result);
+				return null;
+			}
+			return null;
+
 		}
-		return result;
+		return null;
 	}
-	
-	//訂單產生刪除用
+
+	// 訂單產生刪除用
 	@Transactional
 	public void deleteById(Integer userId) {
 		cartRepository.deleteByUsers(userId);
 	}
-	
-	//購物車刪除商品用
+
+	// 購物車刪除商品用
 	@Transactional
-	public String deleteByUserIdProductId(Integer userId,Integer productId) {
+	public String deleteByUserIdProductId(Integer userId, Integer productId) {
 		Cart dbCart = cartRepository.findByUserIdAndProductId(userId, productId);
-		cartRepository.delete(dbCart);
-		return "scucess";
+		if (dbCart != null) {
+			cartRepository.delete(dbCart);
+			return "scucess";
+		}
+		return null;
 	}
 }
