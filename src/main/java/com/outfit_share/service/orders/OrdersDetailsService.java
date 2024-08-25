@@ -1,6 +1,7 @@
 package com.outfit_share.service.orders;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,14 +30,27 @@ public class OrdersDetailsService {
 		List<OrdersDetails> ordersDetails = odRepo.findByOrdersId(orderId);
 		List<OrdersDetailsDTO> dtoList = new ArrayList<>();
 		
-		for(OrdersDetails od : ordersDetails) {
-			Hibernate.initialize(od.getOrders());
-			Hibernate.initialize(od.getProduct());
-			OrdersDetailsDTO ordersDTO = new OrdersDetailsDTO(od);
-			dtoList.add(ordersDTO);
-		}
-		return dtoList;
 		
+		for(OrdersDetails od : ordersDetails) {
+			OrdersDetailsDTO odDto = new OrdersDetailsDTO();
+			odDto.setId(od.getId());
+			odDto.setOrdersId(od.getOrders().getId());
+			odDto.setPrice(od.getProduct().getPrice());
+			odDto.setProductId(od.getProduct().getProductId());
+			odDto.setProductName(od.getProduct().getProductName());
+			odDto.setQuantity(od.getQuantity());
+			dtoList.add(odDto);
+		}
+		
+		return dtoList;
+//		for(OrdersDetails od : ordersDetails) {
+//			Hibernate.initialize(od.getOrders());
+//			Hibernate.initialize(od.getProduct());
+//			OrdersDetailsDTO ordersDTO = new OrdersDetailsDTO(od);
+//			dtoList.add(ordersDTO);
+//		}
+//		return dtoList;
+
 //      改使用DTO作為回傳物件 另種寫法
 //		return ordersDetails.stream()
 //				.map(OrdersDetailsDTO::new)
