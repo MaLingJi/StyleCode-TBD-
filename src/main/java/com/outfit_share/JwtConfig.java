@@ -21,7 +21,7 @@ public class JwtConfig implements WebMvcConfigurer {
         InterceptorRegistration reg = registry.addInterceptor(jwtInterceptor);
 
         // 加入需要攔截的Patterns
-        reg.addPathPatterns("/admin/**")
+        reg.addPathPatterns("**/**/admin/**")
                 .addPathPatterns("/member/**")
         		.addPathPatterns("/pay/**")
         		.addPathPatterns("/order/admin/**")
@@ -41,6 +41,6 @@ public class JwtConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:///C:/StyleCode_Image/ProductPhoto/");
+                .addResourceLocations("file:///C:/StyleCode_Image/");
     }
 }

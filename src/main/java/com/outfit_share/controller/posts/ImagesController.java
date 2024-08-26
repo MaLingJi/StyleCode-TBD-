@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +29,7 @@ public class ImagesController {
         try {
         	return imagesService.createImages(file, postId);
         }catch (IOException e) {
-        	throw new RuntimeException("圖片上船過程中出錯",e);
+        	throw new RuntimeException("圖片上傳過程中出錯",e);
         }
     }
 
@@ -49,10 +48,11 @@ public class ImagesController {
 		return imagesService.updateImage(id,file);
 	}
 	
-	@DeleteMapping("/{id}")  // TODO: 需要加上deleteAt以實現軟刪除圖片
+	@DeleteMapping("/{id}")
 	public void deleteImages(@PathVariable Integer id) {
 		imagesService.deleteImagesById(id);
 	}
+	
 	//按postId查找多張照片
 	@GetMapping("/post/{postId}")
     public List<Images> findImagesByPostId(@PathVariable Integer postId) {

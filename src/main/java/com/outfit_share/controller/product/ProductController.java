@@ -97,17 +97,30 @@ public class ProductController {
         return productService.findProductById(id);
     }
     
+    //搜尋子分類底下的商品
     @GetMapping("/products/subcategory/{subcategoryId}")
-    public List<ProductDTO> ProductsBySubcategoryId(@PathVariable Integer subcategoryId){
+    public List<ProductDTO> getProductsBySubcategoryId(@PathVariable Integer subcategoryId){
     	return productService.findProductsBySubcategoryId(subcategoryId);
     }
     
-
-																												    // 獲取所有商品
-																												//    @GetMapping
-																												//    public List<Product> getAllProducts() {
-																												//        return productService.findAllProduct();
-																												//    }
+    //搜尋分類底下的所有商品
+    @GetMapping("/products/category/{categoryId}")
+    public List<ProductDTO> getAllProductsByCategoryId(@PathVariable Integer categoryId){
+    	return productService.findProductsByCategoryId(categoryId);
+    }
+    
+    
+    //搜尋子分類底下的商品	 || 搜尋分類底下的所有商品
+    //按照分類搜尋商品/filter?categoryId=??
+    //按照子分類搜尋商品/filter?subcategoryId=??
+    //找尋分類底下的子分類中的商品 /filter?categoryId=??&subcategoryId=??
+    @GetMapping("/products/filter")
+    public ResponseEntity<List<ProductDTO>> filterProducts(
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) Integer subcategoryId) {
+        List<ProductDTO> products = productService.findProductsByCategoryOrSubcategory(categoryId, subcategoryId);
+        return ResponseEntity.ok(products);
+    }
     
     
     // 模糊搜尋 && 價格由高到低||由低到高 && 全部商品
