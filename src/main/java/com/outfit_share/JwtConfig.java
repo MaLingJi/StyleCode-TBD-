@@ -28,19 +28,4 @@ public class JwtConfig implements WebMvcConfigurer {
         		.addPathPatterns("/order/**");
 	
     }
-    
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173") // 允许的前端源
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-    }
-    
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:///C:/StyleCode_Image/");
-    }
 }
