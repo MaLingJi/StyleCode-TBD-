@@ -32,8 +32,12 @@ public class ProductController {
 
     // 新增商品
    @PostMapping("/admin/products/create")
-   public ProductDTO createProduct(@RequestBody Product product) {
-       return productService.saveProduct(product);
+   public ResponseEntity<ProductDTO> createProduct(@RequestBody Product product) {
+       if (product.getProductName() == null || product.getProductName().trim().isEmpty()) {
+           return ResponseEntity.badRequest().body(null);
+       }
+       ProductDTO createdProduct = productService.saveProduct(product, product.getProductDetails());
+       return ResponseEntity.ok(createdProduct);
    }
     
     //新增商品(可以同時新增照片)
@@ -51,7 +55,7 @@ public class ProductController {
     // 更新商品
     @PutMapping("/admin/products/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody Product product) {
-          ProductDTO updateProduct = productService.updateProduct(id, product);
+          ProductDTO updateProduct = productService.updateProduct(id, product, product.getProductDetails());
           if(updateProduct != null) {
         	  return ResponseEntity.ok(updateProduct);
           }
@@ -59,18 +63,6 @@ public class ProductController {
           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     
-																												//    //更新商品(可同時修改照片)
-																												//    @PutMapping("/admin/products/{id}")
-																												//    public ProductDTO updateProduct(
-																												//            @PathVariable Integer id,
-																												//            @RequestPart(value = "product") String productJson,
-																												//            @RequestPart(value = "file", required = false) MultipartFile[] file,
-																												//            @RequestParam(value = "deleteImageIds", required = false) List<Integer> deleteImageIds,
-																												//            @RequestParam(required = false) String imageType) throws IOException {
-																												//        ObjectMapper mapper = new ObjectMapper();
-																												//        Product product = mapper.readValue(productJson, Product.class);
-																												//        return productService.updateProductWithImages(id, product, file, deleteImageIds, imageType);
-																												//    }
 
     // 刪除商品
     @DeleteMapping("/admin/products/{id}")
@@ -82,11 +74,11 @@ public class ProductController {
     // 處理商品購買
     // 輸入的範例//admin/products/1/purchase?quantity=2
     @PostMapping("/admin/products/{id}/purchase")
-    public ResponseEntity<?> purchaseProduct(@PathVariable Integer id, @RequestParam Integer quantity) {
+    public ResponseEntity<?> purchaseProduct(@PathVariable Integer id, @PathVariable Integer detailId, @RequestParam Integer quantity) {
     	try {
-    		ProductDTO updatedProduct = productService.purchaseProduct(id, quantity);
+    		ProductDTO updatedProduct = productService.purchaseProduct(id, detailId, quantity);
     		return ResponseEntity.ok(updatedProduct);
-    	} catch (IllegalArgumentException e) {
+    	} catch (IllegalArgumentException | IllegalStateException  e) {
     		return ResponseEntity.badRequest().body(e.getMessage());
     	}
     }
