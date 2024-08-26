@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -206,6 +207,19 @@ public class ProductService {
 
 		return null;
 	}
+	
+    //    查詢所有商品
+    public List<ProductDTO> findAllProduct(){
+        List<Product> list = productRepository.findAll();
+        List<ProductDTO> dtolist = new ArrayList<>();
+
+        for(Product product : list) {
+            Hibernate.initialize(product.getProductId());
+            ProductDTO productDTO = new ProductDTO(product);
+            dtolist.add(productDTO);
+        }
+        return dtolist;
+    }
 	
 //	搜尋子分類底下的所有商品
     public List<ProductDTO> findProductsBySubcategoryId(Integer subcategoryId) {
