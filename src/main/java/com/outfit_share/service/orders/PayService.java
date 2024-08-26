@@ -3,7 +3,10 @@ package com.outfit_share.service.orders;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,9 +23,11 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.outfit_share.entity.orders.Orders;
+import com.outfit_share.entity.orders.OrdersDetailsDTO;
 import com.outfit_share.entity.orders.TransactionLP;
 import com.outfit_share.entity.orders.pay.CheckoutPaymentRequestForm;
 import com.outfit_share.entity.orders.pay.ConfirmData;
+import com.outfit_share.entity.orders.pay.LinePayDTO;
 import com.outfit_share.entity.orders.pay.ProductForm;
 import com.outfit_share.entity.orders.pay.ProductPackageForm;
 import com.outfit_share.entity.orders.pay.RedirectUrls;
@@ -43,33 +48,54 @@ public class PayService {
 	@Autowired
 	private OrdersRepository odRepo;
 
-	public String requestPayment() throws JsonProcessingException {
+	public String requestPayment(LinePayDTO lpRequest) throws JsonProcessingException {
 		// Request API
+		System.out.println(lpRequest);
+
 		CheckoutPaymentRequestForm form = new CheckoutPaymentRequestForm();
 
-		form.setAmount(100);
+		form.setAmount(lpRequest.getTotalAmounts());
 		form.setCurrency("TWD");
-		form.setOrderId("008984DF-14D7-494A-9E48-474447875841");
+		form.setOrderId(lpRequest.getOrderId());
 
 		ProductPackageForm productPackageForm = new ProductPackageForm();
-		productPackageForm.setId("package_id");
+		productPackageForm.setId(lpRequest.getOrderId());
 		productPackageForm.setName("shop_name");
-		productPackageForm.setAmount(new BigDecimal("100"));
+		productPackageForm.setAmount(new BigDecimal(lpRequest.getTotalAmounts()));
 
-		ProductForm productForm = new ProductForm();
-		productForm.setId("product_id");
-		productForm.setName("product_name");
-		productForm.setImageUrl("");
-		productForm.setQuantity(new BigDecimal("10"));
-		productForm.setPrice(new BigDecimal("10"));
-		productPackageForm.setProducts(Arrays.asList(productForm));
+//		ProductForm productForm = new ProductForm();
+//		productForm.setId("product_id");
+//		productForm.setName("product_name");
+//		productForm.setImageUrl("");
+//		productForm.setQuantity(new BigDecimal("10"));
+//		productForm.setPrice(new BigDecimal("10"));
+
+		List<ProductForm> pdList = new ArrayList<>();
+
+		List<OrdersDetailsDTO> odList = lpRequest.getOrderDetails();
+		for (OrdersDetailsDTO od : odList) {
+			ProductForm productForm = new ProductForm();
+			productForm.setId(od.getProductId().toString());
+			productForm.setName(od.getProductName());
+			productForm.setQuantity(new BigDecimal(od.getQuantity()));
+			productForm.setPrice(new BigDecimal(od.getPrice()));
+			pdList.add(productForm);
+		}
+
+		productPackageForm.setProducts(pdList);
 
 		form.setPackages(Arrays.asList(productPackageForm));
+
 		RedirectUrls redirectUrls = new RedirectUrls();
+
 		redirectUrls.setConfirmUrl("http://localhost:8080/pay/linePayConfirm?orderId=" + form.getOrderId());
+
 		redirectUrls.setCancelUrl("https://claude.ai/chat/641fb415-2ef0-4a44-83e6-f8497e7519e5");
+
 		form.setRedirectUrls(redirectUrls);
+
 		System.out.println(redirectUrls);
+
 		String jsonBody = objectMapper.writeValueAsString(form);
 
 		String ChannelSecret = "6b4e7ed2347de4425b24b016b657f639";
@@ -110,10 +136,15 @@ public class PayService {
 			transactionLP.setAmount(form.getAmount());
 			transactionLP.setOrderId(form.getOrderId());
 			transactionLP.setTransactionId(transactionId.toString());
-			transLPRepo.save(transactionLP);
 
-			return paymentUrl;
-
+			TransactionLP byTransId = transLPRepo.findByOrderId(transactionLP.getOrderId());
+			System.out.println(transactionLP.getTransactionId());
+			if (byTransId != null) {
+				return paymentUrl;
+			} else {
+				transLPRepo.save(transactionLP);
+				return paymentUrl;
+			}
 		}
 		return null;
 	}
@@ -123,7 +154,7 @@ public class PayService {
 		if (order != null) {
 			System.out.println(order);
 			ConfirmData confirmData = new ConfirmData();
-			confirmData.setAmount(new BigDecimal(100));
+			confirmData.setAmount(new BigDecimal(order.getAmount()));
 			confirmData.setCurrency("TWD");
 
 			String jsonBody = objectMapper.writeValueAsString(confirmData);
@@ -150,7 +181,7 @@ public class PayService {
 
 			JSONObject response = new JSONObject(responseEntity.getBody());
 
-			System.out.println(response);
+			System.out.println("confirm response:" + response);
 
 			if (response != null && response.has("returnCode")) {
 				String returnCode = response.getString("returnCode");

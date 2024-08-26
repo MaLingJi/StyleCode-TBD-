@@ -25,9 +25,13 @@ public class TransactionLP {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
+	
     private String transactionId;
+    
     private String orderId;
+    
     private Integer amount;
+    
 	@Override
 	public String toString() {
 		return "TransactionLP [id=" + id + ", transactionId=" + transactionId + ", orderId=" + orderId + ", amount="

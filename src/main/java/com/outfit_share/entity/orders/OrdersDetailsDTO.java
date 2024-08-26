@@ -16,6 +16,11 @@ public class OrdersDetailsDTO {
     private Integer productId; 
     private String productName;
     private Integer price;
+	@Override
+	public String toString() {
+		return "OrdersDetailsDTO [id=" + id + ", quantity=" + quantity + ", ordersId=" + ordersId + ", productId="
+				+ productId + ", productName=" + productName + ", price=" + price + "]";
+	}
     
 
 //    // 構造函數
