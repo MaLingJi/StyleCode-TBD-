@@ -26,5 +26,4 @@ public class JwtConfig implements WebMvcConfigurer {
         		.addPathPatterns("/order/**");
 	
     }
-    
 }

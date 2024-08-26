@@ -65,19 +65,19 @@ public class PimagesController {
 	}
 
 	// 獲取單個圖片信息
-	@GetMapping("/images/products/{productId}/{id}")
+	@GetMapping("/products/{productId}/images/{id}")
 	public PimagesDTO getImage(@PathVariable Integer productId, @PathVariable("id") Integer id) {
 		return pimagesService.findPimagesById(id);
 	}
 
 	// 獲取商品的所有圖片
-	@GetMapping("/images/{productId}")
+	@GetMapping("/{productId}/images")
 	public List<PimagesDTO> getAllProductImages(@PathVariable Integer productId) {
 		return pimagesService.findAllImagesByProductId(productId);
 	}
 
 	// 封面照片
-	@GetMapping("/images/cover/{productId}")
+	@GetMapping("/{productId}/cover")
 	public PimagesDTO getCoverPhoto(@PathVariable Integer productId) {
 		return pimagesService.findCoverPhoto(productId);
 	}

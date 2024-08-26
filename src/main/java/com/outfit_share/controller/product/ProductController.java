@@ -92,7 +92,7 @@ public class ProductController {
     //查詢所有商品
     @GetMapping("/allproducts")
     public List<ProductDTO> getAllProduct(){
-        return productService.findAllProduct();
+    	return productService.findAllProduct();
     }
     
     //搜尋子分類底下的商品
@@ -108,7 +108,7 @@ public class ProductController {
     }
     
     
-    //搜尋子分類底下的商品	 || 搜尋分類底下的所有商品
+    //搜尋子分類底下的商品 || 搜尋分類底下的所有商品 || 全部商品 
     //按照分類搜尋商品/filter?categoryId=??
     //按照子分類搜尋商品/filter?subcategoryId=??
     //找尋分類底下的子分類中的商品 /filter?categoryId=??&subcategoryId=??
@@ -121,7 +121,7 @@ public class ProductController {
     }
     
     
-    // 模糊搜尋 && 價格由高到低||由低到高 && 全部商品
+    // 模糊搜尋 && 價格由高到低 || 由低到高 && 全部商品
     // 只按名稱搜尋：/products?name=某商品名  
     // 僅按價格排序：
     // 從低到高：/products?sort=priceAsc

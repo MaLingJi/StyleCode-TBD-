@@ -157,20 +157,20 @@ public class ProductService {
 
 		return null;
 	}
-
-	// 查詢所有商品
-	public List<ProductDTO> findAllProduct() {
+	
+//	查詢所有商品
+	public List<ProductDTO> findAllProduct(){
 		List<Product> list = productRepository.findAll();
 		List<ProductDTO> dtolist = new ArrayList<>();
-
-		for (Product product : list) {
+		
+		for(Product product : list) {
 			Hibernate.initialize(product.getProductId());
 			ProductDTO productDTO = new ProductDTO(product);
 			dtolist.add(productDTO);
 		}
 		return dtolist;
 	}
-
+	
 //	搜尋子分類底下的所有商品
 	public List<ProductDTO> findProductsBySubcategoryId(Integer subcategoryId) {
 		List<Product> products = productRepository.findBySubcategoryId(subcategoryId);
@@ -214,6 +214,8 @@ public class ProductService {
 		return products.stream().map(ProductDTO::new).collect(Collectors.toList());
 	}
 
+    
+    
 //	模糊搜尋 && 價格由高到低||由低到高 && 全部商品
 	public List<ProductDTO> findProductsByNameAndSort(String name, String sort) {
 		List<Product> products = productRepository.findByNameAndSort(name, sort);
