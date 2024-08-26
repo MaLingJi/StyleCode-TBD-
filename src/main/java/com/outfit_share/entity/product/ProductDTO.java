@@ -19,6 +19,8 @@ public class ProductDTO {
 	private Integer subcategoryId; // 只包含子分類ID，而不是整個Subcategory對象
 
 	private String subcategoryName; // 只包含子分類Name，而不是整個Subcategory對象
+	
+	private Integer price;//價錢
 
 	private List<ProductDetailsDTO> productDetails;
 
@@ -29,13 +31,15 @@ public class ProductDTO {
 		this.productName = product.getProductName();
 		this.subcategoryId = product.getSubcategoryId().getSubcategoryId();
 		this.subcategoryName = product.getSubcategoryId().getSubcategoryName();
-
+		
+		
 		if(product.getProductDetails() != null) {
 			this.productDetails = new ArrayList<>();
 			
 			for(ProductDetails productDetails : product.getProductDetails()) {
 				if(productDetails != null) {
 					this.productDetails.add(new ProductDetailsDTO(productDetails));
+					this.price = productDetails.getPrice();
 				}
 			}
 		}
