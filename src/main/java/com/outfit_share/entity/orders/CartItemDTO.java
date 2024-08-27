@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CartItemDTO {
 	private Integer userId;
-	private Integer productId;
+	private Integer productDetailsId;
 	private Integer quantity;
 	private String productName;
 	private Integer productPrice;

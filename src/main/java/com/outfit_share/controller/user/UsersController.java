@@ -1,14 +1,12 @@
 package com.outfit_share.controller.user;
 
-import java.util.Date;
-
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.entity.users.Users;
 import com.outfit_share.service.users.UserDetailService;
 import com.outfit_share.service.users.UsersService;
@@ -16,14 +14,9 @@ import com.outfit_share.util.JsonWebTokenUtility;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class UsersController {
-
-    @Autowired
-    private PasswordEncoder pwdEncoder;
 
     @Autowired
     private UsersService uService;
@@ -34,30 +27,30 @@ public class UsersController {
     @Autowired
     private JsonWebTokenUtility jwtUtil;
 
-    @PostMapping("/register")
-    public String postMethodName(@RequestParam("userEmail") String userEmail, @RequestParam("userPwd") String pwd) {
+    // 確認此Email有沒有被註冊過
+    @PostMapping("/checkEmail")
+    public ResponseEntity<String> checkUser(@RequestBody String json) {
 
-        Users users = new Users();
-        // 將密碼加密
-        String encodedPwd = pwdEncoder.encode(pwd);
-
-        users.setEmail(userEmail);
-        users.setPwd(encodedPwd);
-        users.setPermissions("Member");
-        uService.resgister(users);
-
-        UserDetail userDetail = new UserDetail();
-        userDetail.setUsers(users);
-        userDetail.setUserName("user");
-        userDetail.setCreatedTime(new Date());
-        userDetail.setDiscountPoints(0);
-        uDetailService.saveDetail(userDetail);
-        return "login";
+        JSONObject reqJsonObj = new JSONObject(json);
+        String userEmail = reqJsonObj.isNull("userEmail") ? null : reqJsonObj.getString("userEmail");
+        boolean status = uService.checkEmail(userEmail);
+        if (status) {
+            return new ResponseEntity<String>("Y", HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("N", HttpStatus.OK);
     }
 
-    @GetMapping("/login")
-    public String toLogin() {
-        return "login";
+    @PostMapping("/register")
+    public ResponseEntity<String> resgister(@RequestBody String json) {
+
+        JSONObject reqJsonObj = new JSONObject(json);
+        String userEmail = reqJsonObj.isNull("userEmail") ? null : reqJsonObj.getString("userEmail");
+        String userPwd = reqJsonObj.isNull("userPwd") ? null : reqJsonObj.getString("userPwd");
+        Users users = uService.creatUsers(userEmail, userPwd);
+
+        uDetailService.createDetail(users);
+
+        return ResponseEntity.ok("註冊成功");
     }
 
     @PostMapping("/login")
@@ -88,9 +81,10 @@ public class UsersController {
                     .put("permissions", dbUser.getPermissions());
 
             String token = jwtUtil.createEncryptedToken(user.toString(), null);
-            responseJson.put("token", token);
             // TODO:待確認要存甚麼資訊
+            responseJson.put("token", token);
             responseJson.put("userId", dbUser.getId());
+            responseJson.put("permissions", dbUser.getPermissions());
         }
 
         return responseJson.toString();

@@ -1,7 +1,6 @@
 package com.outfit_share.entity.orders;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.outfit_share.entity.product.Product;
+import com.outfit_share.entity.product.ProductDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,13 +34,9 @@ public class OrdersDetails {
 	private Orders orders;
 
 	@ManyToOne
-	@JoinColumn(name = "product_id")
-	private Product product;
+	@JoinColumn(name = "productDetails_id")
+	private ProductDetails productDetails;
 
-	@Override
-	public String toString() {
-		return "OrdersDetails [id=" + id + ", quantity=" + quantity + ", orders=" + orders + ", product=" + product
-				+ "]";
-	}
+	
 
 }
