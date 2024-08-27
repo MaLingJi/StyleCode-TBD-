@@ -38,6 +38,7 @@ public class ProductService {
 
 //	新增商品
 	  public ProductDTO saveProduct(Product product, List<ProductDetails> details) {
+		  
 	        if (details != null) {
 	            List<ProductDetails> updatedDetails = new ArrayList<>();
 	            for (ProductDetails detail : details) {
@@ -51,6 +52,28 @@ public class ProductService {
 	        Product savedProduct = productRepository.save(product);
 	        return new ProductDTO(savedProduct);
 	    }
+	  
+//	  在已有的商品編號底下 可以新增其他商品 例:可以新增 其他顏色和尺寸
+	  public ProductDTO addProductDetails(Integer productId, List<ProductDetails> newDetails) {
+		    Optional<Product> optionalProduct = productRepository.findById(productId);
+		    
+		    if (optionalProduct.isPresent()) {
+		        Product product = optionalProduct.get();
+		        
+		        if (newDetails != null) {
+		            for (ProductDetails detail : newDetails) {
+		                detail.setProductId(product);
+		                checkStockAndUpdateStatus(detail);
+		                product.addProductDetail(detail);
+		            }
+		        }
+		        
+		        Product updatedProduct = productRepository.save(product);
+		        return new ProductDTO(updatedProduct);
+		    }
+		    
+		    throw new IllegalArgumentException("商品不存在");
+		}
 
 //	修改商品
 	public ProductDTO updateProduct(Integer id, Product product, List<ProductDetails> details) {
@@ -63,7 +86,13 @@ public class ProductService {
 			if (product.getProductName() != null) {
 				result.setProductName(product.getProductName());
 			}
+			if (product.getPrice() != null) {
+				result.setPrice(product.getPrice());
+			}
 
+			if (product.getProductDescription() != null) {
+				result.setProductDescription(product.getProductDescription());
+			}
 			productRepository.save(result);
 
 			if (details != null) {
@@ -75,9 +104,6 @@ public class ProductService {
 				if (existingDetailOpt.isPresent()) {
 					 ProductDetails existingDetail = existingDetailOpt.get();
 					 
-				if (updatedDetail.getPrice() != null) {
-					existingDetail.setPrice(updatedDetail.getPrice());
-				}
 				if (updatedDetail.getStock() != null) {
 					existingDetail.setStock(updatedDetail.getStock());
 				}
@@ -86,9 +112,6 @@ public class ProductService {
 				}
 				if (updatedDetail.getColor() != null) {
 					existingDetail.setColor(updatedDetail.getColor());
-				}
-				if (updatedDetail.getProductDescription() != null) {
-					existingDetail.setProductDescription(updatedDetail.getProductDescription());
 				}
 
 				// 檢查庫存並更新狀態

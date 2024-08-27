@@ -15,13 +15,15 @@ public class ProductDTO {
 	private Integer productId;
 
 	private String productName;
+	
+	private Integer price;//價錢
 
+	private String productDescription;//商品說明
+	
 	private Integer subcategoryId; // 只包含子分類ID，而不是整個Subcategory對象
 
 	private String subcategoryName; // 只包含子分類Name，而不是整個Subcategory對象
 	
-	private Integer price;//價錢
-
 	private List<ProductDetailsDTO> productDetails;
 
 	private List<PimagesDTO> pimages; // 商品中的照片
@@ -29,8 +31,12 @@ public class ProductDTO {
 	public ProductDTO(Product product) {
 		this.productId = product.getProductId();
 		this.productName = product.getProductName();
+		this.price = product.getPrice();
+		this.productDescription = product.getProductDescription();
+		
 		this.subcategoryId = product.getSubcategoryId().getSubcategoryId();
 		this.subcategoryName = product.getSubcategoryId().getSubcategoryName();
+		
 		
 		
 		if(product.getProductDetails() != null) {
@@ -39,7 +45,6 @@ public class ProductDTO {
 			for(ProductDetails productDetails : product.getProductDetails()) {
 				if(productDetails != null) {
 					this.productDetails.add(new ProductDetailsDTO(productDetails));
-					this.price = productDetails.getPrice();
 				}
 			}
 		}

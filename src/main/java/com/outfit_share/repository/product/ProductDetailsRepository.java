@@ -9,7 +9,7 @@ import com.outfit_share.entity.product.ProductDetails;
 
 public interface ProductDetailsRepository extends JpaRepository <ProductDetails, Integer>{
 
-	@Query("FROM ProductDetails where productId.productId = ?1")
-	List<ProductDetails> findByProductId(Integer productId);
+//	@Query("FROM ProductDetails where productId.productId = ?1")
+//	List<ProductDetails> findByProductId(Integer productId);
 	
 }

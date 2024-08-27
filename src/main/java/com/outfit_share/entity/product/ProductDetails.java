@@ -35,10 +35,7 @@ public class ProductDetails {
 	@ManyToOne
 	@JoinColumn(name = "product_id" ,nullable = false)
 	private Product productId;//商品ID
-	
-	@Column(name = "price" , nullable = false)
-	private Integer price;//價錢
-	
+
 	@Column(name = "stock" , nullable = false )
 	private Integer stock;//庫存
 	
@@ -47,9 +44,6 @@ public class ProductDetails {
 	
 	@Column(name = "color" , nullable = false)
 	private String color;//顏色
-	
-	@Column(name = "product_description" , nullable = false)
-	private String productDescription;//商品說明
 	
 	@Column(name = "onSale" , nullable = false)
 	private boolean onSale;//商品狀態(1上架or0下架)

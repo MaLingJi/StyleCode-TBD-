@@ -1,6 +1,5 @@
 package com.outfit_share.controller.product;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.outfit_share.entity.product.Product;
 import com.outfit_share.entity.product.ProductDTO;
+import com.outfit_share.entity.product.ProductDetails;
 import com.outfit_share.service.product.ProductService;
 
 @RestController
@@ -38,6 +34,13 @@ public class ProductController {
        }
        ProductDTO createdProduct = productService.saveProduct(product, product.getProductDetails());
        return ResponseEntity.ok(createdProduct);
+   }
+   
+   //在已有的商品編號底下 可以新增其他商品 例:可以新增 其他顏色和尺寸
+   @PostMapping("/admin/{productId}/details")
+   public ResponseEntity<ProductDTO> addProductDetails(@PathVariable Integer productId, @RequestBody List<ProductDetails> newDetails) {
+       ProductDTO updatedProduct = productService.addProductDetails(productId, newDetails);
+       return ResponseEntity.ok(updatedProduct);
    }
     
     //新增商品(可以同時新增照片)

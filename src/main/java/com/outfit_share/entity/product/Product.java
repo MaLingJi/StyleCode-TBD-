@@ -36,6 +36,12 @@ public class Product {
 	@Column(name = "product_name", unique = true, nullable = false)
 	private String productName;// 商品名稱
 
+	@Column(name = "price" , nullable = false)
+	private Integer price;//價錢
+	
+	@Column(name = "product_description" , nullable = false)
+	private String productDescription;//商品說明
+	
 	@ManyToOne
 	@JoinColumn(name = "subcategory_id", nullable = false)
 	private Subcategory subcategoryId;// 子分類
