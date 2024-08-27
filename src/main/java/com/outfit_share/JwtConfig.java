@@ -32,7 +32,7 @@ public class JwtConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173") // 允许的前端源
+                .allowedOrigins("http://35.229.197.237:5173") // 允许的前端源
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
@@ -41,6 +41,6 @@ public class JwtConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:///C:/StyleCode_Image/");
+                .addResourceLocations("file:///home/a385500062appletw/StyleCode_Image/");
     }
 }

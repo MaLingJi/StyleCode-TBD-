@@ -17,41 +17,41 @@ import com.outfit_share.entity.post.Post;
 import com.outfit_share.service.post.PostService;
 
 @RestController
-@RequestMapping("/post")
+// @RequestMapping("/post")
 public class PostsConroller {
 
 	@Autowired
 	private PostService postService;
 
-	@PostMapping
+	@PostMapping("/post")
 	public Post addPost(@RequestBody Post post) {
 		return postService.createPost(post);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/post/{id}")
 	public Post findPostById(@PathVariable("id") Integer postId) {
 		return postService.findPostById(postId);
 	}
 
-	@GetMapping
+	@GetMapping("/post")
 	public List<Post> findAllPosts() {
 		System.out.println("return type: " + postService.findAllPost().getClass().getSimpleName());
 		System.out.println("return: " + postService.findAllPost());
 		return postService.findAllPost();
 	}
 
-	@PutMapping("/{id}")
+	@PutMapping("/post/{id}")
 	public Post updatePost(@PathVariable("id") Integer postId, @RequestBody Post post) {
 		return postService.updatePost(postId, post);
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/post/{id}")
 	public void deletePost(@PathVariable("id") Integer postId) {
 		postService.deletePostById(postId);
 	}
 
 	// 模糊搜尋文章中分類 分享/討論 的標題
-	@GetMapping("/type")
+	@GetMapping("/post/type")
 	public List<Post> searchPosts(
 			@RequestParam(value = "contentType", required = false) String contentType,
 			@RequestParam(value = "keyword", required = false) String keyword) {

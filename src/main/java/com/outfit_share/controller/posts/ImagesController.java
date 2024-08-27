@@ -18,13 +18,13 @@ import com.outfit_share.entity.post.Images;
 import com.outfit_share.service.post.ImagesService;
 
 @RestController
-@RequestMapping("/images")
+// @RequestMapping("/images")
 public class ImagesController {
 
 	@Autowired
 	private ImagesService imagesService;
 
-	@PostMapping
+	@PostMapping("/images")
     public List<Images> addImages(@RequestParam("file") List<MultipartFile> file, @RequestParam("postId") Integer postId) {
         try {
         	return imagesService.createImages(file, postId);
@@ -33,28 +33,28 @@ public class ImagesController {
         }
     }
 
-	@GetMapping("/{id}")
+	@GetMapping("/images/{id}")
 	public Images findImagesById(@PathVariable Integer id) {
 		return imagesService.findImagesById(id);
 	}
 
-	@GetMapping
+	@GetMapping("/images")
 	public List<Images> findAllImages() {
 		return imagesService.findAllImages();
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping("/images/{id}")
 	public Images updateImages(@PathVariable Integer id,@RequestParam("file") MultipartFile file) throws IOException {
 		return imagesService.updateImage(id,file);
 	}
 	
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/images/{id}")
 	public void deleteImages(@PathVariable Integer id) {
 		imagesService.deleteImagesById(id);
 	}
 	
 	//按postId查找多張照片
-	@GetMapping("/post/{postId}")
+	@GetMapping("/images/post/{postId}")
     public List<Images> findImagesByPostId(@PathVariable Integer postId) {
         return imagesService.findImagesByPostId(postId);
     }
