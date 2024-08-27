@@ -46,4 +46,10 @@ public class SubcategoryController {
     public List<SubcategoryDTO> getSubcategoriesByCategoryId(@PathVariable("id") Integer categoryId) {
         return subcategoryService.findSubcategoriesByCategoryId(categoryId);
     }
+    
+    
+    @GetMapping("/subcategories")
+    public List<SubcategoryDTO> getAllSubcategories(){
+    	return subcategoryService.findAllSubcategories();
+    }
 }
