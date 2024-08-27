@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.outfit_share.entity.orders.Orders;
 
-public interface OrdersRepository extends JpaRepository<Orders, UUID> {
+public interface OrdersRepository extends JpaRepository<Orders, String> {
 	@Query("FROM Orders WHERE userDetail.id = ?1")
 	List<Orders> findByUserId(Integer userId);
 	

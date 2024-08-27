@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.outfit_share.entity.orders.Orders;
 import com.outfit_share.entity.orders.OrdersDetails;
 
 import jakarta.persistence.CascadeType;
@@ -52,9 +53,7 @@ public class Product {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "productId")
 	private List<Pimages> pimages;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
-	private List<OrdersDetails> ordersDetails;
-	
+
 	
 	public void addProductDetail(ProductDetails detail) {
         productDetails.add(detail);

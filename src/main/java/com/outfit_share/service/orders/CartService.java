@@ -12,8 +12,10 @@ import com.outfit_share.entity.orders.Cart;
 import com.outfit_share.entity.orders.CartId;
 import com.outfit_share.entity.orders.CartItemDTO;
 import com.outfit_share.entity.product.Product;
+import com.outfit_share.entity.product.ProductDetails;
 import com.outfit_share.entity.users.Users;
 import com.outfit_share.repository.orders.CartRepository;
+import com.outfit_share.repository.product.ProductDetailsRepository;
 import com.outfit_share.repository.product.ProductRepository;
 import com.outfit_share.repository.users.UsersRepository;
 
@@ -27,43 +29,48 @@ public class CartService {
 	private UsersRepository usersRepo;
 	@Autowired
 	private ProductRepository proRepo;
+	@Autowired
+	private ProductDetailsRepository prodetailsRepo;
 
 	@Transactional
-	public Cart addToCart(Integer userId, Integer productId, Integer vol) {
-		Optional<Product> option2 = proRepo.findById(productId);
-		Product product = option2.get();
-		if (product.getStock() >= vol) {
-			Cart dbCart = cartRepository.findByUserIdAndProductId(userId, productId);
-			if (dbCart != null) {
-				dbCart.setVol(dbCart.getVol() + vol);
-				return dbCart;
+	public Cart addToCart(Integer userId, Integer productDetailsId, Integer vol) {
+
+		Optional<ProductDetails> productDetails = prodetailsRepo.findById(productDetailsId);
+		if (productDetails.isPresent()) {
+			if (productDetails.get().getStock() >= vol) {
+				Cart dbCart = cartRepository.findByUserIdAndProductId(userId, productDetailsId);
+				if (dbCart != null) {
+					dbCart.setVol(dbCart.getVol() + vol);
+					return dbCart;
+				}
+
+				Optional<Users> optional = usersRepo.findById(userId);
+				Users users = optional.get();
+
+				CartId cartId = new CartId();
+				cartId.setProductDetailsId(productDetailsId);
+				cartId.setUserId(userId);
+
+				Cart cart = new Cart();
+				cart.setCartId(cartId);
+				cart.setVol(vol);
+				cart.setProductDetails(productDetails.get());
+				cart.setUsers(users);
+
+				return cartRepository.save(cart);
 			}
 
-			Optional<Users> optional = usersRepo.findById(userId);
-			Users users = optional.get();
-
-			CartId cartId = new CartId();
-			cartId.setProductId(productId);
-			cartId.setUserId(userId);
-
-			Cart cart = new Cart();
-			cart.setCartId(cartId);
-			cart.setVol(vol);
-			cart.setProduct(product);
-			cart.setUsers(users);
-
-			return cartRepository.save(cart);
+			return null;
 		}
-
 		return null;
 	}
 
-	public Cart updateVol(Integer newVol, Integer productId, Integer userId) {
-		Optional<Product> optional = proRepo.findById(productId);
+	public Cart updateVol(Integer newVol, Integer productDetailsId, Integer userId) {
+		Optional<ProductDetails> optional = prodetailsRepo.findById(productDetailsId);
 		if (optional.isPresent()) {
-			Product product = optional.get();
-			if (product.getStock() >= newVol) {
-				Cart dbCart = cartRepository.findByUserIdAndProductId(userId, productId);
+			Integer stock = optional.get().getStock();
+			if (stock >= newVol) {
+				Cart dbCart = cartRepository.findByUserIdAndProductId(userId, productDetailsId);
 				dbCart.setVol(newVol);
 				cartRepository.save(dbCart);
 				return dbCart;
@@ -79,11 +86,12 @@ public class CartService {
 		for (Cart cart : result) {
 			CartItemDTO dto = new CartItemDTO();
 			dto.setUserId(cart.getCartId().getUserId());
-			dto.setProductId(cart.getCartId().getProductId());
+			dto.setProductDetailsId(cart.getCartId().getProductDetailsId());
 			dto.setQuantity(cart.getVol());
-			Optional<Product> optional = proRepo.findById(cart.getCartId().getProductId());
+			
+			Optional<ProductDetails> optional = prodetailsRepo.findById(cart.getCartId().getProductDetailsId());
 			if (optional.isPresent()) {
-				Product product = optional.get();
+				Product product = optional.get().getProductId();
 				dto.setProductName(product.getProductName());
 				dto.setProductPrice(product.getPrice());
 			}
@@ -95,9 +103,9 @@ public class CartService {
 	}
 
 	@Transactional
-	public Cart addOneVol(Integer userId, Integer productId) {
-		Cart result = cartRepository.findByUserIdAndProductId(userId, productId);
-		Optional<Product> byId = proRepo.findById(productId);
+	public Cart addOneVol(Integer userId, Integer productDetailsId) {
+		Cart result = cartRepository.findByUserIdAndProductId(userId, productDetailsId);
+		Optional<ProductDetails> byId = prodetailsRepo.findById(productDetailsId);
 		if (byId.isPresent()) {
 			Integer stock = byId.get().getStock();
 			if (result.getVol() + 1 <= stock) {
@@ -111,9 +119,9 @@ public class CartService {
 	}
 
 	@Transactional
-	public Cart minusOneVol(Integer userId, Integer productId) {
-		Cart result = cartRepository.findByUserIdAndProductId(userId, productId);
-		Optional<Product> byId = proRepo.findById(productId);
+	public Cart minusOneVol(Integer userId, Integer productDetailsId) {
+		Cart result = cartRepository.findByUserIdAndProductId(userId, productDetailsId);
+		Optional<ProductDetails> byId = prodetailsRepo.findById(productDetailsId);
 		if (byId.isPresent()) {
 			Integer stock = byId.get().getStock();
 			if (result.getVol() == 1) {
@@ -145,8 +153,8 @@ public class CartService {
 
 	// 購物車刪除商品用
 	@Transactional
-	public String deleteByUserIdProductId(Integer userId, Integer productId) {
-		Cart dbCart = cartRepository.findByUserIdAndProductId(userId, productId);
+	public String deleteByUserIdProductId(Integer userId, Integer productDetailsId) {
+		Cart dbCart = cartRepository.findByUserIdAndProductId(userId, productDetailsId);
 		if (dbCart != null) {
 			cartRepository.delete(dbCart);
 			return "scucess";
@@ -157,7 +165,7 @@ public class CartService {
 	public String checkStock(CartItemDTO checkRequest) {
 		List<CartItemDTO> items = checkRequest.getItems();
 		for (CartItemDTO item : items) {
-			Optional<Product> byId = proRepo.findById(item.getProductId());
+			Optional<ProductDetails> byId = prodetailsRepo.findById(item.getProductDetailsId());
 			if (byId.isPresent()) {
 				if (byId.get().getStock() >= item.getQuantity()) {
 					return "ok";

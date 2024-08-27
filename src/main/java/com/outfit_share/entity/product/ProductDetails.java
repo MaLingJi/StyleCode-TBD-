@@ -48,4 +48,7 @@ public class ProductDetails {
 	@Column(name = "onSale" , nullable = false)
 	private boolean onSale;//商品狀態(1上架or0下架)
 	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "productDetails")
+	private List<OrdersDetails> ordersDetails;
+	
 }

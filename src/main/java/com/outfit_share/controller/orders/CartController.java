@@ -23,7 +23,7 @@ public class CartController {
 
 	@PostMapping("/add")
 	public Cart addToCart(@RequestBody CartItemDTO cartRequest) {
-		Cart toCart = cartService.addToCart(cartRequest.getUserId(), cartRequest.getProductId(),
+		Cart toCart = cartService.addToCart(cartRequest.getUserId(), cartRequest.getProductDetailsId(),
 				cartRequest.getQuantity());
 		if (toCart != null) {
 			return toCart;
@@ -39,7 +39,7 @@ public class CartController {
 
 	@PutMapping("/update")
 	public Cart updateCartVol(@RequestBody CartItemDTO cartRequest) {
-		Cart updateVolCart = cartService.updateVol(cartRequest.getQuantity(), cartRequest.getProductId(),
+		Cart updateVolCart = cartService.updateVol(cartRequest.getQuantity(), cartRequest.getProductDetailsId(),
 				cartRequest.getUserId());
 		if (updateVolCart != null) {
 			return updateVolCart;
@@ -50,7 +50,8 @@ public class CartController {
 
 	@DeleteMapping("/delete")
 	public String deleteCart(@RequestBody CartItemDTO cartRequest) {
-		String message = cartService.deleteByUserIdProductId(cartRequest.getUserId(), cartRequest.getProductId());
+		String message = cartService.deleteByUserIdProductId(cartRequest.getUserId(),
+				cartRequest.getProductDetailsId());
 		if (message == "scucess") {
 			return "scucess";
 		}
@@ -59,7 +60,7 @@ public class CartController {
 
 	@PostMapping("/addOneVol")
 	public Cart addVol(@RequestBody CartItemDTO cartRequest) {
-		Cart result = cartService.addOneVol(cartRequest.getUserId(), cartRequest.getProductId());
+		Cart result = cartService.addOneVol(cartRequest.getUserId(), cartRequest.getProductDetailsId());
 		if (result != null) {
 			return result;
 		}
@@ -67,10 +68,10 @@ public class CartController {
 	}
 
 	@PostMapping("/minusOneVol")
-	public Cart minusOneVol(@RequestBody Cart cartRequest) {
-		if (cartRequest.getCartId() != null) {
-			Cart result = cartService.minusOneVol(cartRequest.getCartId().getUserId(),
-					cartRequest.getCartId().getProductId());
+	public Cart minusOneVol(@RequestBody CartItemDTO cartRequest) {
+
+		Cart result = cartService.minusOneVol(cartRequest.getUserId(), cartRequest.getProductDetailsId());
+		if (result != null) {
 			return result;
 		}
 		return null;

@@ -72,7 +72,7 @@ public class PayService {
 		List<CartItemDTO> itemsList = lpRequest.getItems();
 		for (CartItemDTO item : itemsList) {
 			ProductForm productForm = new ProductForm();
-			productForm.setId(item.getProductId().toString());
+			productForm.setId(item.getProductDetailsId().toString());
 			productForm.setName(item.getProductName());
 			productForm.setQuantity(new BigDecimal(item.getQuantity()));
 			productForm.setPrice(new BigDecimal(item.getProductPrice()));
