@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.outfit_share.entity.post.Post;
+import com.outfit_share.entity.post.PostDTO;
 import com.outfit_share.service.post.PostService;
 
 @RestController
@@ -34,9 +35,9 @@ public class PostsConroller {
 	}
 
 	@GetMapping
-	public List<Post> findAllPosts() {
-		System.out.println("return type: " + postService.findAllPost().getClass().getSimpleName());
-		System.out.println("return: " + postService.findAllPost());
+	public List<PostDTO> findAllPosts() {
+		// System.out.println("return type: " + postService.findAllPost().getClass().getSimpleName());
+		// System.out.println("return: " + postService.findAllPost());
 		return postService.findAllPost();
 	}
 

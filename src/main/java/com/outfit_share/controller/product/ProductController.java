@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.outfit_share.entity.product.Product;
 import com.outfit_share.entity.product.ProductDTO;
 import com.outfit_share.entity.product.ProductDetails;
+import com.outfit_share.entity.product.ProductDetailsDTO;
 import com.outfit_share.service.product.ProductService;
 
 @RestController
@@ -56,9 +57,14 @@ public class ProductController {
 
 
     // 更新商品
+    // 只更新商品資訊 /admin/products/{id}
+    // 更新商品資訊並改變商品狀態 || 只改變商品狀態 /admin/products/{id}?onSale=true
     @PutMapping("/admin/products/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody Product product) {
-          ProductDTO updateProduct = productService.updateProduct(id, product, product.getProductDetails());
+    public ResponseEntity<?> updateProduct(@PathVariable Integer id,
+    		@RequestBody Product product,
+    		@RequestParam(required = false) Boolean onSale) {
+    	
+          ProductDTO updateProduct = productService.updateProduct(id, product, product.getProductDetails() ,onSale);
           if(updateProduct != null) {
         	  return ResponseEntity.ok(updateProduct);
           }
@@ -74,10 +80,19 @@ public class ProductController {
         
     }
     
+    //刪除商品詳情
+    @DeleteMapping("/admim/productDetails/{id}")
+    public ProductDetailsDTO deleteDetails(@PathVariable Integer id) {
+    	return productService.deleteDetails(id);
+    }
+    
     // 處理商品購買
-    // 輸入的範例//admin/products/1/purchase?quantity=2
-    @PostMapping("/admin/products/{id}/purchase")
-    public ResponseEntity<?> purchaseProduct(@PathVariable Integer id, @PathVariable Integer detailId, @RequestParam Integer quantity) {
+    // 輸入的範例 /admin/products/{id}/details/{detailId}/purchase?quantity=1
+    @PostMapping("/admin/products/{id}/details/{detailId}/purchase")
+    public ResponseEntity<?> purchaseProduct(@PathVariable Integer id,
+    		@PathVariable Integer detailId,
+    		@RequestParam Integer quantity) {
+    	
     	try {
     		ProductDTO updatedProduct = productService.purchaseProduct(id, detailId, quantity);
     		return ResponseEntity.ok(updatedProduct);
@@ -119,6 +134,7 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> filterProducts(
             @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) Integer subcategoryId) {
+    	
         List<ProductDTO> products = productService.findProductsByCategoryOrSubcategory(categoryId, subcategoryId);
         return ResponseEntity.ok(products);
     }
@@ -135,6 +151,7 @@ public class ProductController {
     public List<ProductDTO> getProducts(
             @RequestParam(required = false) String name,
             @RequestParam(required = false, defaultValue = "") String sort) {
+    	
         return productService.findProductsByNameAndSort(name, sort);
     }
     

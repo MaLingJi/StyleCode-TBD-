@@ -11,7 +11,6 @@ import com.outfit_share.entity.orders.Cart;
 import com.outfit_share.entity.orders.CartItemDTO;
 import com.outfit_share.service.orders.CartService;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
