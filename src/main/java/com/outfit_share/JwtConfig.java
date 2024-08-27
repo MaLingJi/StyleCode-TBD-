@@ -37,9 +37,9 @@ public class JwtConfig implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
     
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:///home/a385500062appletw/StyleCode_Image/");
-    }
+    // @Override
+    // public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    //     registry.addResourceHandler("/image/**")
+    //             .addResourceLocations("file:///home/a385500062appletw/StyleCode_Image/");
+    // }
 }
