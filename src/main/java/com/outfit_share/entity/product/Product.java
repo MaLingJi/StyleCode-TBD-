@@ -1,6 +1,5 @@
 package com.outfit_share.entity.product;
 
-
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -28,40 +27,37 @@ import lombok.Setter;
 @Entity
 @Table(name = "products")
 public class Product {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "product_id")
-	private Integer productId;//商品ID
-	
-	@Column(name = "product_name" ,unique = true , nullable = false)
-	private String 	productName;//商品名稱
-	
-	@ManyToOne
-	@JoinColumn(name = "subcategory_id" , nullable = false)
-	private Subcategory subcategoryId;//子分類
-	
+	private Integer productId;// 商品ID
+
+	@Column(name = "product_name", unique = true, nullable = false)
+	private String productName;// 商品名稱
+
 	@Column(name = "price" , nullable = false)
 	private Integer price;//價錢
-	
-	@Column(name = "stock" , nullable = false )
-	private Integer stock;//庫存
-	
-	@Column(name = "size" , nullable = false)
-	private String size;//尺寸
-	
-	@Column(name = "color" , nullable = false)
-	private String color;//顏色
 	
 	@Column(name = "product_description" , nullable = false)
 	private String productDescription;//商品說明
 	
-	@Column(name = "onSale" , nullable = false)
-	private boolean onSale;//商品狀態(1上架or0下架)
-	
-	@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY , mappedBy = "productId")
+	@ManyToOne
+	@JoinColumn(name = "subcategory_id", nullable = false)
+	private Subcategory subcategoryId;// 子分類
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "productId" )
+	private List<ProductDetails> productDetails;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "productId")
 	private List<Pimages> pimages;
-	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "product")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
 	private List<OrdersDetails> ordersDetails;
+	
+	
+	public void addProductDetail(ProductDetails detail) {
+        productDetails.add(detail);
+        detail.setProductId(this);
+    }
 }

@@ -3,7 +3,10 @@ package com.outfit_share.service.orders;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,10 +22,14 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.outfit_share.entity.orders.CartItemDTO;
 import com.outfit_share.entity.orders.Orders;
+import com.outfit_share.entity.orders.OrdersDTO;
+import com.outfit_share.entity.orders.OrdersDetailsDTO;
 import com.outfit_share.entity.orders.TransactionLP;
 import com.outfit_share.entity.orders.pay.CheckoutPaymentRequestForm;
 import com.outfit_share.entity.orders.pay.ConfirmData;
+import com.outfit_share.entity.orders.pay.LinePayDTO;
 import com.outfit_share.entity.orders.pay.ProductForm;
 import com.outfit_share.entity.orders.pay.ProductPackageForm;
 import com.outfit_share.entity.orders.pay.RedirectUrls;
@@ -42,40 +49,56 @@ public class PayService {
 	private TransLPRepository transLPRepo;
 	@Autowired
 	private OrdersRepository odRepo;
-
-	public String requestPayment() throws JsonProcessingException {
+	@Autowired
+	private OrdersService odService;
+	public String requestPayment(LinePayDTO lpRequest) throws JsonProcessingException {
 		// Request API
-		CheckoutPaymentRequestForm form = new CheckoutPaymentRequestForm();
+		System.out.println(lpRequest);
 
-		form.setAmount(100);
+		CheckoutPaymentRequestForm form = new CheckoutPaymentRequestForm();
+		String tempOrderId = UUID.randomUUID().toString();
+		form.setAmount(lpRequest.getTotalAmounts());
 		form.setCurrency("TWD");
-		form.setOrderId("008984DF-14D7-494A-9E48-474447875841");
+		form.setOrderId(tempOrderId);
 
 		ProductPackageForm productPackageForm = new ProductPackageForm();
-		productPackageForm.setId("package_id");
+		productPackageForm.setId(tempOrderId);
 		productPackageForm.setName("shop_name");
-		productPackageForm.setAmount(new BigDecimal("100"));
+		productPackageForm.setAmount(new BigDecimal(lpRequest.getTotalAmounts()));
 
-		ProductForm productForm = new ProductForm();
-		productForm.setId("product_id");
-		productForm.setName("product_name");
-		productForm.setImageUrl("");
-		productForm.setQuantity(new BigDecimal("10"));
-		productForm.setPrice(new BigDecimal("10"));
-		productPackageForm.setProducts(Arrays.asList(productForm));
+
+		List<ProductForm> pdList = new ArrayList<>();
+
+		List<CartItemDTO> itemsList = lpRequest.getItems();
+		for (CartItemDTO item : itemsList) {
+			ProductForm productForm = new ProductForm();
+			productForm.setId(item.getProductId().toString());
+			productForm.setName(item.getProductName());
+			productForm.setQuantity(new BigDecimal(item.getQuantity()));
+			productForm.setPrice(new BigDecimal(item.getProductPrice()));
+			pdList.add(productForm);
+		}
+
+		productPackageForm.setProducts(pdList);
 
 		form.setPackages(Arrays.asList(productPackageForm));
+
 		RedirectUrls redirectUrls = new RedirectUrls();
-		redirectUrls.setConfirmUrl("http://localhost:8080/pay/linePayConfirm?orderId=" + form.getOrderId());
+
+		redirectUrls.setConfirmUrl("http://localhost:5174/checkPaying?orderId=" + form.getOrderId());
+
 		redirectUrls.setCancelUrl("https://claude.ai/chat/641fb415-2ef0-4a44-83e6-f8497e7519e5");
+
 		form.setRedirectUrls(redirectUrls);
+
 		System.out.println(redirectUrls);
+
 		String jsonBody = objectMapper.writeValueAsString(form);
 
 		String ChannelSecret = "6b4e7ed2347de4425b24b016b657f639";
 		String requestUri = "/v3/payments/request";
-		String nonce = UUID.randomUUID().toString();
-		String signature = Encrypt.encrypt(ChannelSecret, ChannelSecret + requestUri + jsonBody + nonce);
+		String nonce2 = UUID.randomUUID().toString();
+		String signature = Encrypt.encrypt(ChannelSecret, ChannelSecret + requestUri + jsonBody + nonce2);
 
 		// ============================================================================================================
 		RestTemplate restTemplate = new RestTemplate();
@@ -83,7 +106,7 @@ public class PayService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("X-LINE-ChannelId", "2005877664");
-		headers.set("X-LINE-Authorization-Nonce", nonce);
+		headers.set("X-LINE-Authorization-Nonce", nonce2);
 		headers.set("X-LINE-Authorization", signature);
 
 		HttpEntity<String> httpEntity = new HttpEntity<>(jsonBody, headers);
@@ -110,10 +133,16 @@ public class PayService {
 			transactionLP.setAmount(form.getAmount());
 			transactionLP.setOrderId(form.getOrderId());
 			transactionLP.setTransactionId(transactionId.toString());
-			transLPRepo.save(transactionLP);
+			transactionLP.setUserId(lpRequest.getUserId());
 
-			return paymentUrl;
-
+			TransactionLP byTransId = transLPRepo.findByOrderId(transactionLP.getOrderId());
+			System.out.println(transactionLP.getTransactionId());
+			if (byTransId != null) {
+				return paymentUrl;
+			} else {
+				transLPRepo.save(transactionLP);
+				return paymentUrl;
+			}
 		}
 		return null;
 	}
@@ -123,7 +152,7 @@ public class PayService {
 		if (order != null) {
 			System.out.println(order);
 			ConfirmData confirmData = new ConfirmData();
-			confirmData.setAmount(new BigDecimal(100));
+			confirmData.setAmount(new BigDecimal(order.getAmount()));
 			confirmData.setCurrency("TWD");
 
 			String jsonBody = objectMapper.writeValueAsString(confirmData);
@@ -150,12 +179,21 @@ public class PayService {
 
 			JSONObject response = new JSONObject(responseEntity.getBody());
 
-			System.out.println(response);
+			System.out.println("confirm response:" + response);
 
 			if (response != null && response.has("returnCode")) {
 				String returnCode = response.getString("returnCode");
 				if (returnCode.equals("0000")) {
-					processScucess(UUID.fromString(orderId));
+					
+					OrdersDTO ordersDTO = new OrdersDTO();
+					ordersDTO.setOrderId(orderId);
+					ordersDTO.setTotalAmounts(order.getAmount());
+					ordersDTO.setStatus(1);
+					ordersDTO.setUserId(order.getUserId());
+					
+					OrdersDTO order2 = odService.addOrder(ordersDTO);
+					System.out.println(order2);
+//					processScucess(UUID.fromString(orderId));
 					return returnCode;
 				}
 			} else {
@@ -165,19 +203,19 @@ public class PayService {
 		return "cant find order";
 	}
 
-	// 改狀態
-	public void processScucess(UUID orderId) {
-		Optional<Orders> order = odRepo.findById(orderId);
-		if (order.isPresent()) {
-			Orders orders = order.get();
-			if (orders.getStatus() == 0) {
-				orders.setStatus(1);
-				odRepo.save(orders);
-			} else {
-				System.out.println("status not 0");
-			}
-		} else {
-			System.out.println("order not exist");
-		}
-	}
+//	// 改狀態
+//	public void processScucess(UUID orderId) {
+//		Optional<Orders> order = odRepo.findById(orderId);
+//		if (order.isPresent()) {
+//			Orders orders = order.get();
+//			if (orders.getStatus() == 0) {
+//				orders.setStatus(1);
+//				odRepo.save(orders);
+//			} else {
+//				System.out.println("status not 0");
+//			}
+//		} else {
+//			System.out.println("order not exist");
+//		}
+//	}
 }

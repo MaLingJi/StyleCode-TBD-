@@ -38,4 +38,10 @@ public class OrdersDetails {
 	@JoinColumn(name = "product_id")
 	private Product product;
 
+	@Override
+	public String toString() {
+		return "OrdersDetails [id=" + id + ", quantity=" + quantity + ", orders=" + orders + ", product=" + product
+				+ "]";
+	}
+
 }

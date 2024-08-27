@@ -10,5 +10,5 @@ import com.outfit_share.entity.orders.OrdersDetails;
 
 public interface OrdersDetailsRepository extends JpaRepository<OrdersDetails, Integer>{
 	@Query("FROM OrdersDetails where orders.id=?1")
-	List<OrdersDetails> findByOrdersId(UUID orderId);
+	List<OrdersDetails> findByOrdersId(String orderId);
 } 

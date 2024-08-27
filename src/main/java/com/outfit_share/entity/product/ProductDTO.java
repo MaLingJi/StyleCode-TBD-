@@ -15,22 +15,16 @@ public class ProductDTO {
 	private Integer productId;
 
 	private String productName;
+	
+	private Integer price;//價錢
 
+	private String productDescription;//商品說明
+	
 	private Integer subcategoryId; // 只包含子分類ID，而不是整個Subcategory對象
 
 	private String subcategoryName; // 只包含子分類Name，而不是整個Subcategory對象
-
-	private Integer price;
-
-	private Integer stock;
-
-	private String size;
-
-	private String color;
-
-	private String productDescription;
-
-	private boolean onSale;
+	
+	private List<ProductDetailsDTO> productDetails;
 
 	private List<PimagesDTO> pimages; // 商品中的照片
 
@@ -38,14 +32,23 @@ public class ProductDTO {
 		this.productId = product.getProductId();
 		this.productName = product.getProductName();
 		this.price = product.getPrice();
-		this.stock = product.getStock();
-		this.size = product.getSize();
-		this.color = product.getColor();
 		this.productDescription = product.getProductDescription();
-		this.onSale = product.isOnSale();
+		
 		this.subcategoryId = product.getSubcategoryId().getSubcategoryId();
 		this.subcategoryName = product.getSubcategoryId().getSubcategoryName();
-
+		
+		
+		
+		if(product.getProductDetails() != null) {
+			this.productDetails = new ArrayList<>();
+			
+			for(ProductDetails productDetails : product.getProductDetails()) {
+				if(productDetails != null) {
+					this.productDetails.add(new ProductDetailsDTO(productDetails));
+				}
+			}
+		}
+		
 		if (product.getPimages() != null) {
 
 			this.pimages = new ArrayList<>();

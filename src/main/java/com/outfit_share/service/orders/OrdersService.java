@@ -36,26 +36,27 @@ public class OrdersService {
 	@Autowired
 	private ProductRepository pdRepo;
 
-	public OrdersDTO addOrder(@RequestBody Orders ordersRequest) {
-		List<Cart> cartList = cartRepo.findByUserId(ordersRequest.getUserDetail().getId());
+	public OrdersDTO addOrder(OrdersDTO ordersRequest) {
+		List<Cart> cartList = cartRepo.findByUserId(ordersRequest.getUserId());
 		
         // 檢查購物車是否為空
         if (cartList.isEmpty()) {
             return null;  // 購物車為空，直接返回 null
         }
         
-		//check stock and cartVol
-		for (Cart cart : cartList) {
-            if (cart.getVol() > cart.getProduct().getStock()) {
-                return null;
-            }
-        }
-		
+//		//check stock and cartVol
+//		for (Cart cart : cartList) {
+//            if (cart.getVol() > cart.getProduct().getStock()) {
+//                return null;
+//            }
+//        }
+//		
 		
 		Orders orders = new Orders();
 		orders.setTotalAmounts(ordersRequest.getTotalAmounts());
-
-		Optional<UserDetail> optional = udRepo.findById(ordersRequest.getUserDetail().getId());
+		orders.setId(ordersRequest.getOrderId());
+		orders.setStatus(ordersRequest.getStatus());
+		Optional<UserDetail> optional = udRepo.findById(ordersRequest.getUserId());
 		UserDetail userDetail = optional.get();	
 		orders.setUserDetail(userDetail);
 		Orders saveOrders = ordersRepository.save(orders);
@@ -74,7 +75,7 @@ public class OrdersService {
 			product.setStock(product.getStock()-cart.getVol());
 			pdRepo.save(product);
 		}
-		cartRepo.deleteByUsers(ordersRequest.getUserDetail().getId()); 
+		cartRepo.deleteByUsers(ordersRequest.getUserId()); 
 		
 		return new OrdersDTO(saveOrders);
 		
