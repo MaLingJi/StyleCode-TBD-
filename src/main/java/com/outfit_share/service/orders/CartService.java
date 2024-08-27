@@ -125,7 +125,7 @@ public class CartService {
 				cartRepository.save(result);
 				return result;
 			}
-			
+
 			if (result.getVol() - 1 > stock) {
 				result.setVol(result.getVol() - 1);
 				cartRepository.save(result);
@@ -150,6 +150,19 @@ public class CartService {
 		if (dbCart != null) {
 			cartRepository.delete(dbCart);
 			return "scucess";
+		}
+		return null;
+	}
+
+	public String checkStock(CartItemDTO checkRequest) {
+		List<CartItemDTO> items = checkRequest.getItems();
+		for (CartItemDTO item : items) {
+			Optional<Product> byId = proRepo.findById(item.getProductId());
+			if (byId.isPresent()) {
+				if (byId.get().getStock() >= item.getQuantity()) {
+					return "ok";
+				}
+			}
 		}
 		return null;
 	}

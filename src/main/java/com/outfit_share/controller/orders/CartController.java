@@ -52,7 +52,7 @@ public class CartController {
 	@DeleteMapping("/delete")
 	public String deleteCart(@RequestBody CartItemDTO cartRequest) {
 		String message = cartService.deleteByUserIdProductId(cartRequest.getUserId(), cartRequest.getProductId());
-		if(message=="scucess") {
+		if (message == "scucess") {
 			return "scucess";
 		}
 		return null;
@@ -74,6 +74,16 @@ public class CartController {
 					cartRequest.getCartId().getProductId());
 			return result;
 		}
+		return null;
+	}
+
+	@PostMapping("/checkStock")
+	public String checkStock(@RequestBody CartItemDTO checkRequest) {
+		String checkStock = cartService.checkStock(checkRequest);
+		if (checkStock != null) {
+			return "ok";
+		}
+
 		return null;
 	}
 

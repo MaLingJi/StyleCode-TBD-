@@ -36,7 +36,7 @@ public class OrdersService {
 	@Autowired
 	private ProductRepository pdRepo;
 
-	public OrdersDTO addOrder(@RequestBody OrdersDTO ordersRequest) {
+	public OrdersDTO addOrder(OrdersDTO ordersRequest) {
 		List<Cart> cartList = cartRepo.findByUserId(ordersRequest.getUserId());
 		
         // 檢查購物車是否為空
@@ -44,17 +44,18 @@ public class OrdersService {
             return null;  // 購物車為空，直接返回 null
         }
         
-		//check stock and cartVol
-		for (Cart cart : cartList) {
-            if (cart.getVol() > cart.getProduct().getStock()) {
-                return null;
-            }
-        }
-		
+//		//check stock and cartVol
+//		for (Cart cart : cartList) {
+//            if (cart.getVol() > cart.getProduct().getStock()) {
+//                return null;
+//            }
+//        }
+//		
 		
 		Orders orders = new Orders();
 		orders.setTotalAmounts(ordersRequest.getTotalAmounts());
-
+		orders.setId(ordersRequest.getOrderId());
+		orders.setStatus(ordersRequest.getStatus());
 		Optional<UserDetail> optional = udRepo.findById(ordersRequest.getUserId());
 		UserDetail userDetail = optional.get();	
 		orders.setUserDetail(userDetail);

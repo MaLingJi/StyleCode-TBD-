@@ -26,7 +26,7 @@ public class OrdersDetailsService {
 	
 	
 	//改使用DTO作為回傳物件
-	public List<OrdersDetailsDTO> findOdByOrderId(UUID orderId) {
+	public List<OrdersDetailsDTO> findOdByOrderId(String orderId) {
 		List<OrdersDetails> ordersDetails = odRepo.findByOrdersId(orderId);
 		List<OrdersDetailsDTO> dtoList = new ArrayList<>();
 		

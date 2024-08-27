@@ -11,14 +11,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class OrdersDTO {
-	private UUID id;
+	private String orderId;
 	private Integer totalAmounts;
 	private Integer status;
 	private Integer userId;
 	private Date orderDate;
 	
 	public OrdersDTO(Orders orders) {
-		this.id=orders.getId();
+		this.orderId=orders.getId();
 		this.totalAmounts=orders.getTotalAmounts();
 		this.status=orders.getStatus();
 		this.orderDate=orders.getOrderDate();

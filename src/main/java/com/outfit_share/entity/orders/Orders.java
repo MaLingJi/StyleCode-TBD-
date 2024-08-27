@@ -34,9 +34,8 @@ import lombok.Setter;
 @Table(name = "orders")
 public class Orders {
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "id")
-	private UUID id;
+	private String id;
 
 	@Column(name = "totalAmounts")
 	private Integer totalAmounts;

@@ -61,7 +61,7 @@ public class OrderController {
 	//客戶角度看他得訂單詳情
 	//改使用DTO作為回傳物件  OK
 	@GetMapping("/findOd/{ordersId}")
-	public List<OrdersDetailsDTO> findOdByOrdersId(@PathVariable(value = "ordersId") UUID ordersId){
+	public List<OrdersDetailsDTO> findOdByOrdersId(@PathVariable(value = "ordersId") String ordersId){
 		return odService.findOdByOrderId(ordersId);
 	}
 	// --------------------------------background controller
@@ -88,7 +88,12 @@ public class OrderController {
 	public List<OrdersDTO> findByStatus(@PathVariable  Integer status) {
 		return ordersService.findByStatus(status);
 	}
-
+	
+	
+	
+	
+	
+	
 	// findOrderDetailsByStatus 抓訂單詳情分析用待補
 	
 }
