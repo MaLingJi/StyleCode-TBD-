@@ -19,4 +19,8 @@ public class CreditCardService {
     public List<CreditCards> findCards(Integer userId) {
         return creditCardsRepo.findByUserDetailId(userId);
     }
+
+    public void deleteById(Integer userId) {
+        creditCardsRepo.deleteById(userId);
+    }
 }

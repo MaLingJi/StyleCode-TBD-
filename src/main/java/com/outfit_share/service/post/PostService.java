@@ -2,13 +2,16 @@ package com.outfit_share.service.post;
 
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.outfit_share.entity.post.Post;
+import com.outfit_share.entity.post.PostDTO;
 import com.outfit_share.repository.post.PostRepository;
 
 @Service
@@ -42,8 +45,18 @@ public class PostService {
 		return null;
 	}
 	
-	public List<Post> findAllPost(){
-		return postRepo.findAll();
+	// public List<Post> findAllPost(){
+	// 	return postRepo.findAll();
+	// }
+	public List<PostDTO> findAllPost() {
+		List<Post> list = postRepo.findAll();
+		List<PostDTO> dtoList = new ArrayList<>();
+		for (Post post : list) {
+			// Hibernate.initialize(post.getUserDetail());
+			PostDTO postDTO = new PostDTO(post);
+			dtoList.add(postDTO);
+		}
+		return dtoList;
 	}
 	
 	@Transactional

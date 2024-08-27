@@ -1,7 +1,6 @@
 package com.outfit_share.entity.orders;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,13 +24,20 @@ public class TransactionLP {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
+	
     private String transactionId;
+    
     private String orderId;
+    
     private Integer amount;
+    
+    private Integer userId;
+
 	@Override
 	public String toString() {
 		return "TransactionLP [id=" + id + ", transactionId=" + transactionId + ", orderId=" + orderId + ", amount="
-				+ amount + "]";
+				+ amount + ", userId=" + userId + "]";
 	}
+	
     
 }
