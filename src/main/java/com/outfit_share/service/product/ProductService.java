@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.outfit_share.entity.product.Product;
 import com.outfit_share.entity.product.ProductDTO;
 import com.outfit_share.entity.product.ProductDetails;
+import com.outfit_share.entity.product.ProductDetailsDTO;
 import com.outfit_share.repository.product.ProductDetailsRepository;
 import com.outfit_share.repository.product.ProductRepository;
 
@@ -76,7 +77,7 @@ public class ProductService {
 		}
 
 //	修改商品
-	public ProductDTO updateProduct(Integer id, Product product, List<ProductDetails> details) {
+	public ProductDTO updateProduct(Integer id, Product product, List<ProductDetails> details , Boolean onSale) {
 		Optional<Product> optional = productRepository.findById(id);
 
 		if (optional.isPresent()) {
@@ -112,6 +113,10 @@ public class ProductService {
 				}
 				if (updatedDetail.getColor() != null) {
 					existingDetail.setColor(updatedDetail.getColor());
+				}
+				
+				if(onSale != null) {
+					existingDetail.setOnSale(onSale);
 				}
 
 				// 檢查庫存並更新狀態
@@ -150,12 +155,18 @@ public class ProductService {
 			ProductDetails updatedDetail =  checkStockAndUpdateStatus(detail);
 			productDetailsRepository.save(updatedDetail);
 			
+			
+			 if (newStock == 0) {
+	                // 發送通知，表明商品已下架
+	                System.out.println("商品 " + product.getProductName() + " 的 " + detail.getColor() + " " + detail.getSize() + " 已售罄并下架");
+	            }
+			 
 			return new ProductDTO(product);
 		}
 		throw new IllegalArgumentException("商品不存在");
 	}
 
-//	刪除商品
+//	刪除該ID內的全部商品
 	public ProductDTO deleteProduct(Integer id) {
 		Optional<Product> optional = productRepository.findById(id);
 
@@ -168,6 +179,20 @@ public class ProductService {
 		return null;
 	}
 
+	
+//	刪除該商品詳情
+	public ProductDetailsDTO deleteDetails(Integer id) {
+		Optional<ProductDetails> optional = productDetailsRepository.findById(id);
+		
+		if(optional.isPresent()) {
+			ProductDetails details = optional.get();
+			ProductDetailsDTO detailsDTO = new ProductDetailsDTO(details);
+			productDetailsRepository.deleteById(id);
+			return detailsDTO;
+		}
+		return null;
+	}
+	
 //	查詢單筆商品
 	public ProductDTO findProductById(Integer id) {
 		Optional<Product> optional = productRepository.findById(id);
