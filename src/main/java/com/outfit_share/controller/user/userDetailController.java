@@ -39,7 +39,7 @@ public class userDetailController {
     public String showDetail(@PathVariable("id") Integer userId, @RequestHeader("Authorization") String token)
             throws JsonProcessingException {
         JSONObject responseJson = new JSONObject();
-
+        System.out.println(userId);
         // 驗證user
         if (!jwtUtil.isUser(userId, token)) {
             responseJson.put("success", false);
@@ -57,6 +57,7 @@ public class userDetailController {
         userDetailJson.put("createdTime", createTime);
         userDetailJson.put("updatedTime", updateTime);
 
+        responseJson.put("success", true);
         responseJson.put("userDetail", userDetailJson);
 
         return responseJson.toString();
