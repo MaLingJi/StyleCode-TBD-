@@ -53,6 +53,7 @@ public class OrdersService {
 		orders.setTotalAmounts(ordersRequest.getTotalAmounts());
 		orders.setId(ordersRequest.getOrderId());
 		orders.setStatus(ordersRequest.getStatus());
+		orders.setPayment_method(1);
 		Optional<UserDetail> optional = udRepo.findById(ordersRequest.getUserId());
 		UserDetail userDetail = optional.get();	
 		orders.setUserDetail(userDetail);
@@ -87,7 +88,7 @@ public class OrdersService {
 		List<OrdersDTO> ordersDTOList = new ArrayList<>();
 
 		for (Orders order : result) {
-			Hibernate.initialize(order.getUserDetail());
+//			Hibernate.initialize(order.getUserDetail());
 			OrdersDTO ordersDTO = new OrdersDTO(order);
 			ordersDTOList.add(ordersDTO);
 		}
