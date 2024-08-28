@@ -38,7 +38,7 @@ public class ProductController {
    }
    
    //在已有的商品編號底下 可以新增其他商品 例:可以新增 其他顏色和尺寸
-   @PostMapping("/admin/{productId}/details")
+   @PostMapping("/admin/{productId}/productDetails")
    public ResponseEntity<ProductDTO> addProductDetails(@PathVariable Integer productId, @RequestBody List<ProductDetails> newDetails) {
        ProductDTO updatedProduct = productService.addProductDetails(productId, newDetails);
        return ResponseEntity.ok(updatedProduct);
@@ -56,20 +56,30 @@ public class ProductController {
     // }
 
 
-    // 更新商品
+    // 修改商品
     // 只更新商品資訊 /admin/products/{id}
-    // 更新商品資訊並改變商品狀態 || 只改變商品狀態 /admin/products/{id}?onSale=true
+    // 修改商品資訊並改變商品狀態
     @PutMapping("/admin/products/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Integer id,
-    		@RequestBody Product product,
-    		@RequestParam(required = false) Boolean onSale) {
+    public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody Product product) {
     	
-          ProductDTO updateProduct = productService.updateProduct(id, product, product.getProductDetails() ,onSale);
+          ProductDTO updateProduct = productService.updateProduct(id, product);
           if(updateProduct != null) {
         	  return ResponseEntity.ok(updateProduct);
           }
           										// 單純回傳 404
           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    
+    // 修改商品詳情 	
+    //修改商品資訊並修改商品狀態 || 只改變商品狀態  /admin/productDetails{id}?onSale=true
+    @PutMapping("/admin/productDetails/{id}")
+    public ResponseEntity<?> updateDetails(@PathVariable Integer id ,@RequestBody ProductDetails details, @RequestParam(required = false) Boolean onSale){
+    	ProductDetailsDTO detailsDTO = productService.updateDetails(id, details, onSale);
+    	if(detailsDTO != null) {
+    		return ResponseEntity.ok(detailsDTO);
+    	}
+    	
+    	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     
 
@@ -81,7 +91,7 @@ public class ProductController {
     }
     
     //刪除商品詳情
-    @DeleteMapping("/admim/productDetails/{id}")
+    @DeleteMapping("/admin/productDetails/{id}")
     public ProductDetailsDTO deleteDetails(@PathVariable Integer id) {
     	return productService.deleteDetails(id);
     }
