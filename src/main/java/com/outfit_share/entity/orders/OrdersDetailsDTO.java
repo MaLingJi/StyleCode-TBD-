@@ -1,4 +1,4 @@
-package com.outfit_share.entity.orders;
+	package com.outfit_share.entity.orders;
 
 import java.util.UUID;
 
@@ -13,15 +13,11 @@ public class OrdersDetailsDTO {
     private Integer id;
     private Integer quantity;
     private String ordersId;
-    private Integer productId; 
+    private Integer productDetailsId; 
     private String productName;
     private Integer price;
-	@Override
-	public String toString() {
-		return "OrdersDetailsDTO [id=" + id + ", quantity=" + quantity + ", ordersId=" + ordersId + ", productId="
-				+ productId + ", productName=" + productName + ", price=" + price + "]";
-	}
-    
+
+	
 
 //    // 構造函數
 //    public OrdersDetailsDTO(OrdersDetails ordersDetails) {

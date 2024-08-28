@@ -17,11 +17,11 @@ import lombok.Setter;
 
 public class CartId {
 	private Integer userId;
-	private Integer productId;
+	private Integer productDetailsId;
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(productId, userId);
+		return Objects.hash(productDetailsId, userId);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class CartId {
 		if (getClass() != obj.getClass())
 			return false;
 		CartId other = (CartId) obj;
-		return Objects.equals(productId, other.productId) && Objects.equals(userId, other.userId);
+		return Objects.equals(productDetailsId, other.productDetailsId) && Objects.equals(userId, other.userId);
 	}
 
 }

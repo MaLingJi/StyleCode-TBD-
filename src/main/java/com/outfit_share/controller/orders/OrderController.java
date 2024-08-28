@@ -69,7 +69,7 @@ public class OrderController {
 	//刪除訂單
 	//改使用DTO作為回傳物件  OK
 	@DeleteMapping("/admin/delete/{orderId}")
-	public OrdersDTO deleteByOrderId(@PathVariable(value = "orderId") UUID orderId) {
+	public OrdersDTO deleteByOrderId(@PathVariable(value = "orderId") String orderId) {
 		OrdersDTO result = ordersService.deleteOrders(orderId);
 		result.setStatus(2);
 		return result;

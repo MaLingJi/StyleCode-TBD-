@@ -85,4 +85,17 @@ public class SubcategoryService {
 	        return dtolist;
 	 }
 	
+	 //搜尋全部子分類
+	 public List<SubcategoryDTO> findAllSubcategories(){
+		 
+		 List<Subcategory> list = subcategoryRepository.findAll();
+		 List<SubcategoryDTO> dtolist = new ArrayList<>();
+		 
+		 for(Subcategory subcategory : list) {
+			 Hibernate.initialize(subcategory.getSubcategoryId());
+			 SubcategoryDTO dto = new SubcategoryDTO(subcategory);
+			 dtolist.add(dto);
+		 }
+		 return dtolist;
+	 }
 }
