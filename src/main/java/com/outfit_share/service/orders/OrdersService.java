@@ -1,5 +1,7 @@
 package com.outfit_share.service.orders;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -143,6 +145,16 @@ public class OrdersService {
 		List<OrdersDTO> dtoList = new ArrayList<OrdersDTO>();
 		for (Orders order : list) {
 			Hibernate.initialize(order.getUserDetail());
+			OrdersDTO ordersDTO = new OrdersDTO(order);
+			dtoList.add(ordersDTO);
+		}
+		return dtoList;
+	}
+	
+	public List<OrdersDTO> findByDate(LocalDateTime startDate, LocalDateTime endDate){
+		List<Orders> byDate = ordersRepository.findByDate(startDate, endDate);
+		List<OrdersDTO> dtoList = new ArrayList<OrdersDTO>();
+		for (Orders order : byDate) {
 			OrdersDTO ordersDTO = new OrdersDTO(order);
 			dtoList.add(ordersDTO);
 		}

@@ -56,11 +56,10 @@ public class Orders {
 	private Date updated_at;
 
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE",timezone = "GMT+8")
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "orderDate")
-	private Date orderDate;
-	
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "order_date")
+    private LocalDateTime orderDate;
+
 	
 	@ManyToOne
 	@JoinColumn(name="user_id")
@@ -76,7 +75,7 @@ public class Orders {
 	@PrePersist
 	public void onCreate() {
 		if (orderDate == null) {
-			orderDate = new Date();
+			orderDate = LocalDateTime.now();
 		}
 		if(status == null) {
 			this.status = 0;
