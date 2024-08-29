@@ -1,5 +1,6 @@
 package com.outfit_share.service.orders;
 
+import java.io.Console;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import com.outfit_share.entity.orders.Cart;
 import com.outfit_share.entity.orders.Orders;
 import com.outfit_share.entity.orders.OrdersDTO;
 import com.outfit_share.entity.orders.OrdersDetails;
+import com.outfit_share.entity.orders.OrdersDetailsDTO;
 import com.outfit_share.entity.product.Product;
 import com.outfit_share.entity.product.ProductDetails;
 import com.outfit_share.entity.users.UserDetail;
@@ -154,9 +156,28 @@ public class OrdersService {
 	
 	public List<OrdersDTO> findByDate(LocalDateTime startDate, LocalDateTime endDate){
 		List<Orders> byDate = ordersRepository.findByDate(startDate, endDate);
+		
 		List<OrdersDTO> dtoList = new ArrayList<OrdersDTO>();
+		
 		for (Orders order : byDate) {
+			List<OrdersDetails> ordersDetails = order.getOrdersDetails();
+			List<OrdersDetailsDTO> orderDetailsDTO = new ArrayList<OrdersDetailsDTO>();
+			
+	
+			for(OrdersDetails od:ordersDetails) {
+				OrdersDetailsDTO odDTO = new OrdersDetailsDTO();
+				odDTO.setProductDetailsId(od.getProductDetails().getProductDetailsId());
+				System.out.println(od.getQuantity());
+				odDTO.setQuantity(od.getQuantity()); // 為NULL
+				odDTO.setCatogoryId(od.getProductDetails().getProductId().getSubcategoryId().getCategory().getCategoryId());
+				odDTO.setCatogoryName(od.getProductDetails().getProductId().getSubcategoryId().getCategory().getCategoryName());
+				odDTO.setProductDetailsId(od.getProductDetails().getProductDetailsId());
+				odDTO.setProductName(od.getProductDetails().getProductId().getProductName());
+				System.out.println("DTO quantity before adding to list: " + odDTO.getQuantity());
+				orderDetailsDTO.add(odDTO);
+			}
 			OrdersDTO ordersDTO = new OrdersDTO(order);
+			ordersDTO.setOrdersDetails(orderDetailsDTO);
 			dtoList.add(ordersDTO);
 		}
 		return dtoList;
