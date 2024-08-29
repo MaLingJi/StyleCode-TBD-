@@ -35,10 +35,15 @@ public class OrdersDetailsService {
 			OrdersDetailsDTO odDto = new OrdersDetailsDTO();
 			odDto.setId(od.getId());
 			odDto.setOrdersId(od.getOrders().getId());
+			odDto.setPaymentMethod(od.getOrders().getPayment_method());
 			odDto.setPrice(od.getProductDetails().getProductId().getPrice());
 			odDto.setProductDetailsId(od.getProductDetails().getProductDetailsId());
 			odDto.setProductName(od.getProductDetails().getProductId().getProductName());
 			odDto.setQuantity(od.getQuantity());
+			odDto.setSubcatogoryId(od.getProductDetails().getProductId().getSubcategoryId().getSubcategoryId());
+			odDto.setSubcatogoryName(od.getProductDetails().getProductId().getSubcategoryId().getSubcategoryName());
+			odDto.setCatogoryId(od.getProductDetails().getProductId().getSubcategoryId().getCategory().getCategoryId());
+			odDto.setCatogoryName(od.getProductDetails().getProductId().getSubcategoryId().getCategory().getCategoryName());
 			dtoList.add(odDto);
 		}
 		

@@ -16,8 +16,11 @@ public class OrdersDetailsDTO {
     private Integer productDetailsId; 
     private String productName;
     private Integer price;
-
-	
+    private Integer subcatogoryId;
+    private String subcatogoryName;
+    private Integer catogoryId;
+    private String catogoryName;
+	private Integer paymentMethod;
 
 //    // 構造函數
 //    public OrdersDetailsDTO(OrdersDetails ordersDetails) {
