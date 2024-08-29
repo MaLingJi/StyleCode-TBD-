@@ -63,13 +63,17 @@ public class UsersService {
         return null;
     }
 
-    public boolean changePassword(String userEmail, String oldPwd, String newPwd) {
-        Users dbUser = this.login(userEmail, oldPwd);
-        if (dbUser != null && newPwd != null && newPwd.length() != 0) {
-            String encodedPwd = pwdEncoder.encode(newPwd);
-            dbUser.setPwd(encodedPwd);
-            uRepo.save(dbUser);
-            return true;
+    public boolean changePassword(Integer userId, String oldPwd, String newPwd) {
+        Optional<Users> optional = uRepo.findById(userId);
+        if (optional.isPresent()) {
+            Users dbUser = optional.get();
+            String dbPwd = dbUser.getPwd();
+            boolean result = pwdEncoder.matches(oldPwd, dbPwd);
+            if (result) {
+                String encodedPwd = pwdEncoder.encode(newPwd);
+                dbUser.setPwd(encodedPwd);
+                return true;
+            }
         }
         return false;
     }

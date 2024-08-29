@@ -2,6 +2,9 @@ package com.outfit_share.service.users;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
@@ -47,7 +50,7 @@ public class UserDetailService {
         uDetail.setUsers(users);
         uDetail.setUserName("user");
         uDetail.setCreatedTime(new Date());
-        uDetail.setUserPhoto(saveDirPath + "user.png");
+        uDetail.setUserPhoto("user.png");
         uDetail.setDiscountPoints(0);
         return udRepo.save(uDetail);
     }
@@ -81,18 +84,25 @@ public class UserDetailService {
             // 取得副檔名
             String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
 
-            // 取得時間
+            // 取得時間戳
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm");
             String timestamp = dateFormat.format(new Date());
 
             // 使檔名為user-20240821-0000.副檔名
             String fileName = dbUserDetail.getUserName() + "-" + timestamp + fileExtension;
 
-            File saveFilePath = new File(saveDirPath, fileName);
-            multipartFile.transferTo(saveFilePath);
+            // 使用 Path 來建立目錄和處理檔案路徑
+            Path uploadPath = Paths.get(saveDirPath);
 
-            String filePath = saveFilePath.getAbsolutePath();
-            dbUserDetail.setUserPhoto(filePath);
+            // 確保目錄存在，若不存在則建立
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            // 組合檔案的完整路徑
+            Path filePath = uploadPath.resolve(fileName);
+            multipartFile.transferTo(filePath.toFile());
+
+            dbUserDetail.setUserPhoto(fileName);
             return udRepo.save(dbUserDetail);
         }
         return null;

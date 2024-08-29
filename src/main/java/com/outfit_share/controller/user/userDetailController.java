@@ -116,8 +116,11 @@ public class userDetailController {
             responseJson.put("message", "沒有權限");
             return responseJson.toString();
         }
-        uDetailService.updateUserImage(userId, multipartFile);
-        return "success";
+        UserDetail updateUserImage = uDetailService.updateUserImage(userId, multipartFile);
+        responseJson.put("success", true);
+        responseJson.put("newPhotoName", updateUserImage.getUserPhoto());
+        responseJson.put("message", "更新成功");
+        return responseJson.toString();
     }
 
 }
