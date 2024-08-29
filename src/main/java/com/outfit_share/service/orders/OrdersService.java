@@ -16,10 +16,12 @@ import com.outfit_share.entity.orders.Orders;
 import com.outfit_share.entity.orders.OrdersDTO;
 import com.outfit_share.entity.orders.OrdersDetails;
 import com.outfit_share.entity.product.Product;
+import com.outfit_share.entity.product.ProductDetails;
 import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.repository.orders.CartRepository;
 import com.outfit_share.repository.orders.OrdersDetailsRepository;
 import com.outfit_share.repository.orders.OrdersRepository;
+import com.outfit_share.repository.product.ProductDetailsRepository;
 import com.outfit_share.repository.product.ProductRepository;
 import com.outfit_share.repository.users.UserDetailRepository;
 
@@ -35,27 +37,21 @@ public class OrdersService {
 	private OrdersDetailsRepository odRepo;
 	@Autowired
 	private ProductRepository pdRepo;
+	@Autowired
+	private ProductDetailsRepository pdDetailRepo;
 
-	public OrdersDTO addOrder(@RequestBody Orders ordersRequest) {
-		List<Cart> cartList = cartRepo.findByUserId(ordersRequest.getUserDetail().getId());
+	public OrdersDTO addOrder(OrdersDTO ordersRequest) {
+		List<Cart> cartList = cartRepo.findByUserId(ordersRequest.getUserId());
 		
         // 檢查購物車是否為空
         if (cartList.isEmpty()) {
             return null;  // 購物車為空，直接返回 null
         }
-        
-		//check stock and cartVol
-		for (Cart cart : cartList) {
-            if (cart.getVol() > cart.getProduct().getStock()) {
-                return null;
-            }
-        }
-		
-		
 		Orders orders = new Orders();
 		orders.setTotalAmounts(ordersRequest.getTotalAmounts());
-
-		Optional<UserDetail> optional = udRepo.findById(ordersRequest.getUserDetail().getId());
+		orders.setId(ordersRequest.getOrderId());
+		orders.setStatus(ordersRequest.getStatus());
+		Optional<UserDetail> optional = udRepo.findById(ordersRequest.getUserId());
 		UserDetail userDetail = optional.get();	
 		orders.setUserDetail(userDetail);
 		Orders saveOrders = ordersRepository.save(orders);
@@ -64,17 +60,15 @@ public class OrdersService {
 			//save orderDetails
 			OrdersDetails ordersDetails = new OrdersDetails();
 			ordersDetails.setOrders(orders);
-			ordersDetails.setProduct(cart.getProduct());// need to update
+			ordersDetails.setProductDetails(cart.getProductDetails());// need to update
 			ordersDetails.setQuantity(cart.getVol());
 			odRepo.save(ordersDetails);
 			//change stock
-			Integer productId = cart.getProduct().getProductId();
-			Optional<Product> optional2 = pdRepo.findById(productId);
-			Product product = optional2.get();
-			product.setStock(product.getStock()-cart.getVol());
-			pdRepo.save(product);
+			ProductDetails pd = cart.getProductDetails();
+			pd.setStock(pd.getStock()-cart.getVol());
+			pdDetailRepo.save(pd);
 		}
-		cartRepo.deleteByUsers(ordersRequest.getUserDetail().getId()); 
+		cartRepo.deleteByUsers(ordersRequest.getUserId()); 
 		
 		return new OrdersDTO(saveOrders);
 		
@@ -99,17 +93,6 @@ public class OrdersService {
 		return ordersDTOList;
 	}
 
-	// 改使用DTO作為回傳物件 另種寫法
-//		public List<OrdersDTO> findByUserId(Integer Id){
-//			List<Orders> result = ordersRepository.findByUserId(Id);
-//			return result.stream()
-//					.map(od->{
-//						Hibernate.initialize(od.getUserDetail());
-//						return new OrdersDTO(od);
-//					})
-//					.collect(Collectors.toList());
-//			
-//		}
 
 	public List<OrdersDTO> findByUserIdAndStatus(Integer userId, Integer status) {
 		List<Orders> result = ordersRepository.findByUserIdAndStatus(userId, status);
@@ -124,7 +107,7 @@ public class OrdersService {
 	}
 
 	// 改使用DTO作為回傳物件
-	public OrdersDTO deleteOrders(UUID orderId) {
+	public OrdersDTO deleteOrders(String orderId) {
 		Optional<Orders> optionalOrder = ordersRepository.findById(orderId);
 
 		if (optionalOrder.isPresent()) {
@@ -136,7 +119,7 @@ public class OrdersService {
 		return null;
 	}
 
-	public Orders findByOrderId(UUID orderId) {
+	public Orders findByOrderId(String orderId) {
 		Optional<Orders> optional = ordersRepository.findById(orderId);
 		if (optional != null) {
 			return optional.get();

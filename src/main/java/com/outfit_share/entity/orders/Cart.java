@@ -2,6 +2,7 @@ package com.outfit_share.entity.orders;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.outfit_share.entity.product.Product;
+import com.outfit_share.entity.product.ProductDetails;
 import com.outfit_share.entity.users.Users;
 
 import jakarta.persistence.Column;
@@ -30,9 +31,10 @@ public class Cart {
 	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@MapsId("productId")
-	@JoinColumn(name="product_id")
-	private Product product;
+	@MapsId("productDetailsId")
+	@JoinColumn(name="productDetails_id")
+	
+	private ProductDetails productDetails;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("userId")

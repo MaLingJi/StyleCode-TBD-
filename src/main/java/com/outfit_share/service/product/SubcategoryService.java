@@ -3,18 +3,19 @@ package com.outfit_share.service.product;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.outfit_share.entity.product.Categories;
 import com.outfit_share.entity.product.Subcategory;
 import com.outfit_share.entity.product.SubcategoryDTO;
+import com.outfit_share.repository.product.CategoriesRepository;
 import com.outfit_share.repository.product.SubcategoryRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import lombok.Setter;
 
 @Service
 @Transactional
@@ -24,10 +25,23 @@ public class SubcategoryService {
 	@Autowired
 	private SubcategoryRepository subcategoryRepository;
 	
+	@Autowired
+	private CategoriesRepository categoriesRepository;
+	
 //	新增子分類
 	public SubcategoryDTO saveSubcategory(Subcategory subcategory){
+		
+		 if (subcategory.getCategory() == null || subcategory.getCategory().getCategoryId() == null) {
+	            throw new IllegalArgumentException("Category must be set");
+	        }
+		 Categories category = categoriesRepository.findById(subcategory.getCategory().getCategoryId())
+		            .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+		 
+		subcategory.setCategory(category);
+		
 		Subcategory result = subcategoryRepository.save(subcategory);
 		return new SubcategoryDTO(result);
+		
 		
 	}
 	
@@ -37,8 +51,11 @@ public class SubcategoryService {
 		
 		if(optional.isPresent()) {
 			Subcategory result = optional.get();
-			result.setCategory(subcategory.getCategory());
+			
 			result.setSubcategoryName(subcategory.getSubcategoryName());
+			
+			Subcategory updatedsubcategory = subcategoryRepository.save(result);
+			return new SubcategoryDTO(updatedsubcategory);
 		}
 		return null;
 	}
@@ -85,4 +102,17 @@ public class SubcategoryService {
 	        return dtolist;
 	 }
 	
+	 //搜尋全部子分類
+	 public List<SubcategoryDTO> findAllSubcategories(){
+		 
+		 List<Subcategory> list = subcategoryRepository.findAll();
+		 List<SubcategoryDTO> dtolist = new ArrayList<>();
+		 
+		 for(Subcategory subcategory : list) {
+			 Hibernate.initialize(subcategory.getSubcategoryId());
+			 SubcategoryDTO dto = new SubcategoryDTO(subcategory);
+			 dtolist.add(dto);
+		 }
+		 return dtolist;
+	 }
 }

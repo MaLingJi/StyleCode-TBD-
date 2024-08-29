@@ -7,6 +7,7 @@ import java.util.Date;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -114,28 +115,7 @@ public class userDetailController {
             responseJson.put("message", "沒有權限");
             return responseJson.toString();
         }
-        UserDetail existingProfile = uDetailService.findDetailById(userId);
-
-        String originalFileName = multipartFile.getOriginalFilename();
-        // 取得副檔名
-        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-
-        // 取得時間
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm");
-        String timestamp = dateFormat.format(new Date());
-
-        // 使檔名為user-20240821-0000.副檔名
-        String fileName = existingProfile.getUserName() + "-" + timestamp + fileExtension;
-
-        String saveDirPath = "c:/";// 照片儲存區
-
-        File saveFilePath = new File(saveDirPath, fileName);
-        multipartFile.transferTo(saveFilePath);
-
-        String filePath = saveFilePath.getAbsolutePath();
-        existingProfile.setUserPhoto(filePath);
-        uDetailService.saveDetail(existingProfile);
-
+        uDetailService.updateUserImage(userId, multipartFile);
         return "success";
     }
 

@@ -31,8 +31,8 @@ public class CategoriesController {
 
     // 更新分類名稱
     @PutMapping("/admin/categories/{id}")
-    public CategoriesDTO updateCategoriesById(@PathVariable Integer id, @RequestBody String categoryName) {
-        return categoriesService.updateCategories(id, categoryName);
+    public CategoriesDTO updateCategoriesById(@PathVariable Integer id, @RequestBody Categories category) {
+        return categoriesService.updateCategories(id, category.getCategoryName());
     }
 
     // 刪除分類
