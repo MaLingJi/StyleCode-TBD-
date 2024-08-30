@@ -85,7 +85,7 @@ public class PayService {
 
 		RedirectUrls redirectUrls = new RedirectUrls();
 
-		redirectUrls.setConfirmUrl("http://localhost:5174/checkPaying?orderId=" + form.getOrderId());
+		redirectUrls.setConfirmUrl("http://localhost:5173/checkPaying?orderId=" + form.getOrderId());
 
 		redirectUrls.setCancelUrl("https://claude.ai/chat/641fb415-2ef0-4a44-83e6-f8497e7519e5");
 

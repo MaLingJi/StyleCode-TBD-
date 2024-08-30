@@ -33,7 +33,7 @@ public class Pimages {
 	@JoinColumn(name = "product_id" , nullable = false)
 	private Product productId;//商品的ID
 	
-	@Column(name = "image_name" ,unique = true , nullable = false)
+	@Column(name = "image_name", nullable = false)
 	private String imageName;//照片名字
 	
 	@Column(name = "img_url" , nullable = false)
