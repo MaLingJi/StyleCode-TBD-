@@ -20,9 +20,15 @@ public class JwtConfig implements WebMvcConfigurer {
         InterceptorRegistration reg = registry.addInterceptor(jwtInterceptor);
 
         // 加入需要攔截的Patterns
+<<<<<<< HEAD
         reg.addPathPatterns("**/**/admin/**")
                 .addPathPatterns("/member/**");
 //                .addPathPatterns("/pay/**");
+=======
+        reg.addPathPatterns("/admin/**");
+//                .addPathPatterns("/member/**")
+//                .addPathPatterns("/pay/**")
+>>>>>>> origin/MLJ
 //                .addPathPatterns("/order/admin/**")
 //                .addPathPatterns("/order/**");
         reg.excludePathPatterns("/pay/linePayConfirm");
