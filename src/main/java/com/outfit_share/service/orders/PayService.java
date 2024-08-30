@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -51,8 +52,10 @@ public class PayService {
 	private OrdersRepository odRepo;
 	@Autowired
 	private OrdersService odService;
+	@Value("${domain.url}")
+	private String domainURL;
 	public String requestPayment(LinePayDTO lpRequest) throws JsonProcessingException {
-		// Request API
+		
 		System.out.println(lpRequest);
 
 		CheckoutPaymentRequestForm form = new CheckoutPaymentRequestForm();
@@ -85,7 +88,7 @@ public class PayService {
 
 		RedirectUrls redirectUrls = new RedirectUrls();
 
-		redirectUrls.setConfirmUrl("http://localhost:5174/checkPaying?orderId=" + form.getOrderId());
+		redirectUrls.setConfirmUrl(domainURL+"checkPaying?orderId=" + form.getOrderId());
 
 		redirectUrls.setCancelUrl("https://claude.ai/chat/641fb415-2ef0-4a44-83e6-f8497e7519e5");
 
