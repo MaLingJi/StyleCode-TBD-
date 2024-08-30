@@ -14,6 +14,9 @@ import com.outfit_share.util.JsonWebTokenUtility;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 public class UsersController {
@@ -61,11 +64,12 @@ public class UsersController {
         String userEmail = reqJsonObj.isNull("userEmail") ? null : reqJsonObj.getString("userEmail");
         String userPwd = reqJsonObj.isNull("userPwd") ? null : reqJsonObj.getString("userPwd");
 
-        if (userEmail == null || userEmail.length() == 0 || userPwd == null || userPwd.length() == 0) {
-            responseJson.put("success", false);
-            responseJson.put("message", "請輸入帳號密碼");
-            return responseJson.toString();
-        }
+        // if (userEmail == null || userEmail.length() == 0 || userPwd == null ||
+        // userPwd.length() == 0) {
+        // responseJson.put("success", false);
+        // responseJson.put("message", "請輸入帳號密碼");
+        // return responseJson.toString();
+        // }
 
         Users dbUser = uService.login(userEmail, userPwd);
 
@@ -87,6 +91,31 @@ public class UsersController {
             responseJson.put("permissions", dbUser.getPermissions());
         }
 
+        return responseJson.toString();
+    }
+
+    @PutMapping("changePassword/{userId}")
+    public String putMethodName(@PathVariable Integer userId, @RequestBody String json,
+            @RequestHeader("Authorization") String token) {
+        JSONObject responseJson = new JSONObject();
+        JSONObject reqJsonObj = new JSONObject(json);
+        // 驗證user
+        if (!jwtUtil.isUser(userId, token)) {
+            responseJson.put("success", false);
+            responseJson.put("message", "沒有權限");
+            return responseJson.toString();
+        }
+        String oldPwd = reqJsonObj.isNull("oldPwd") ? null : reqJsonObj.getString("oldPwd");
+        String newPwd = reqJsonObj.isNull("newPwd") ? null : reqJsonObj.getString("newPwd");
+
+        boolean result = uService.changePassword(userId, oldPwd, newPwd);
+        if (result) {
+            responseJson.put("success", true);
+            responseJson.put("message", "更新成功");
+        } else {
+            responseJson.put("success", false);
+            responseJson.put("message", "更新失敗");
+        }
         return responseJson.toString();
     }
 }
