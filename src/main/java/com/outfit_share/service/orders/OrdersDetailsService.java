@@ -35,31 +35,19 @@ public class OrdersDetailsService {
 			OrdersDetailsDTO odDto = new OrdersDetailsDTO();
 			odDto.setId(od.getId());
 			odDto.setOrdersId(od.getOrders().getId());
+			odDto.setPaymentMethod(od.getOrders().getPayment_method());
 			odDto.setPrice(od.getProductDetails().getProductId().getPrice());
 			odDto.setProductDetailsId(od.getProductDetails().getProductDetailsId());
 			odDto.setProductName(od.getProductDetails().getProductId().getProductName());
 			odDto.setQuantity(od.getQuantity());
+//			odDto.setSubcatogoryId(od.getProductDetails().getProductId().getSubcategoryId().getSubcategoryId());
+//			odDto.setSubcatogoryName(od.getProductDetails().getProductId().getSubcategoryId().getSubcategoryName());
+//			odDto.setCatogoryId(od.getProductDetails().getProductId().getSubcategoryId().getCategory().getCategoryId());
+//			odDto.setCatogoryName(od.getProductDetails().getProductId().getSubcategoryId().getCategory().getCategoryName());
 			dtoList.add(odDto);
 		}
 		
 		return dtoList;
-//		for(OrdersDetails od : ordersDetails) {
-//			Hibernate.initialize(od.getOrders());
-//			Hibernate.initialize(od.getProduct());
-//			OrdersDetailsDTO ordersDTO = new OrdersDetailsDTO(od);
-//			dtoList.add(ordersDTO);
-//		}
-//		return dtoList;
 
-//      改使用DTO作為回傳物件 另種寫法
-//		return ordersDetails.stream()
-//				.map(OrdersDetailsDTO::new)
-//		           .collect(Collectors.toList());
-//                .map(od -> {
-//                    Hibernate.initialize(od.getOrders());
-//                    Hibernate.initialize(od.getProduct());
-//                    return new OrdersDetailsDTO(od);
-//                })
-//                .collect(Collectors.toList());
 	}
 }

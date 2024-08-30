@@ -1,7 +1,7 @@
 package com.outfit_share.repository.orders;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +17,7 @@ public interface OrdersRepository extends JpaRepository<Orders, String> {
 
 	@Query("FROM Orders WHERE status = ?1")
 	List<Orders> findByStatus(Integer status);
+	
+	@Query("FROM Orders WHERE orderDate BETWEEN ?1 AND ?2")
+	List<Orders> findByDate (LocalDateTime startDate,LocalDateTime endDate);
 }

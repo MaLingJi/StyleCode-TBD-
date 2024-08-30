@@ -1,6 +1,6 @@
 	package com.outfit_share.entity.orders;
 
-import java.util.UUID;
+
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,8 +16,13 @@ public class OrdersDetailsDTO {
     private Integer productDetailsId; 
     private String productName;
     private Integer price;
-
+	private Integer paymentMethod;
 	
+    private Integer subcatogoryId;
+    private String subcatogoryName;
+    private Integer catogoryId;
+    private String catogoryName;
+
 
 //    // 構造函數
 //    public OrdersDetailsDTO(OrdersDetails ordersDetails) {
