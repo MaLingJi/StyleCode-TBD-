@@ -46,7 +46,7 @@ public class ProductDetails {
 	private String color;//顏色
 	
 	@Column(name = "onSale" , nullable = false)
-	private boolean onSale;//商品狀態(1上架or0下架)
+	private Boolean onSale;//商品狀態(1上架or0下架)
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "productDetails")
 	private List<OrdersDetails> ordersDetails;

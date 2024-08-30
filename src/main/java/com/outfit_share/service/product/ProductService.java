@@ -33,6 +33,11 @@ public class ProductService {
 		if (details.getStock() <= 0) {
 			details.setOnSale(false);
 		}
+		
+		if(details.getStock() > 0) {
+			details.setOnSale(true);
+		}
+		
 		return details;
 	}
 
@@ -102,7 +107,7 @@ public class ProductService {
 	}
 
 	// 修改商品詳情
-	public ProductDetailsDTO updateDetails(Integer id, ProductDetails details, Boolean onSale) {
+	public ProductDetailsDTO updateDetails(Integer id, ProductDetails details) {
 		Optional<ProductDetails> optional = productDetailsRepository.findById(id);
 
 
@@ -118,8 +123,8 @@ public class ProductService {
 					if (details.getColor() != null) {
 						existingDetail.setColor(details.getColor());
 					}
-					if (onSale != null) {
-						existingDetail.setOnSale(details.isOnSale());
+					if (details.getOnSale() != null) {
+						existingDetail.setOnSale(details.getOnSale());
 					}
 
 					// 檢查庫存並更新狀態
@@ -139,7 +144,7 @@ public class ProductService {
 			Product product = optional.get();
 			ProductDetails detail = detailOpt.get();
 
-			if (!detail.isOnSale()) {
+			if (!detail.getOnSale()) {
 				throw new IllegalStateException("此商品目前不可購買");
 			}
 

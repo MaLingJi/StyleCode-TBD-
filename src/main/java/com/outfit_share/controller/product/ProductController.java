@@ -73,8 +73,8 @@ public class ProductController {
     // 修改商品詳情 	
     //修改商品資訊並修改商品狀態 || 只改變商品狀態  /admin/productDetails{id}?onSale=true
     @PutMapping("/admin/productDetails/{id}")
-    public ResponseEntity<?> updateDetails(@PathVariable Integer id ,@RequestBody ProductDetails details, @RequestParam(required = false) Boolean onSale){
-    	ProductDetailsDTO detailsDTO = productService.updateDetails(id, details, onSale);
+    public ResponseEntity<?> updateDetails(@PathVariable Integer id ,@RequestBody ProductDetails details){
+    	ProductDetailsDTO detailsDTO = productService.updateDetails(id, details);
     	if(detailsDTO != null) {
     		return ResponseEntity.ok(detailsDTO);
     	}
