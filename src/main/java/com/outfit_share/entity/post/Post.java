@@ -22,7 +22,11 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "post")
 public class Post {
@@ -62,7 +66,7 @@ public class Post {
     private String contentText;
 
     @Column(name = "share_id")
-    private int shareId;
+    private Integer shareId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss EEEE")
     @Temporal(TemporalType.TIMESTAMP)
@@ -96,7 +100,7 @@ public class Post {
     }
 
     public Post(Integer postId, UserDetail userDetail, String contentType, String postTitle, String contentText,
-            int shareId,
+    Integer shareId,
             Date createdAt, Date deletedAt) {
         this.postId = postId;
         this.userDetail = userDetail;
@@ -108,68 +112,68 @@ public class Post {
         this.deletedAt = deletedAt;
     }
 
-    public Integer getPostId() {
-        return postId;
-    }
+    // public Integer getPostId() {
+    //     return postId;
+    // }
 
-    public void setPostId(Integer postId) {
-        this.postId = postId;
-    }
+    // public void setPostId(Integer postId) {
+    //     this.postId = postId;
+    // }
 
-    public UserDetail getUserDetail() {
-        return userDetail;
-    }
+    // public UserDetail getUserDetail() {
+    //     return userDetail;
+    // }
 
-    public void setUserDetail(UserDetail userDetail) {
-        this.userDetail = userDetail;
-    }
+    // public void setUserDetail(UserDetail userDetail) {
+    //     this.userDetail = userDetail;
+    // }
 
-    public String getContentType() {
-        return contentType;
-    }
+    // public String getContentType() {
+    //     return contentType;
+    // }
 
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
+    // public void setContentType(String contentType) {
+    //     this.contentType = contentType;
+    // }
 
-    public String getPostTitle() {
-        return postTitle;
-    }
+    // public String getPostTitle() {
+    //     return postTitle;
+    // }
 
-    public void setPostTitle(String postTitle) {
-        this.postTitle = postTitle;
-    }
+    // public void setPostTitle(String postTitle) {
+    //     this.postTitle = postTitle;
+    // }
 
-    public String getContentText() {
-        return contentText;
-    }
+    // public String getContentText() {
+    //     return contentText;
+    // }
 
-    public void setContentText(String contentText) {
-        this.contentText = contentText;
-    }
+    // public void setContentText(String contentText) {
+    //     this.contentText = contentText;
+    // }
 
-    public int getShareId() {
-        return shareId;
-    }
+    // public Integer getShareId() {
+    //     return shareId;
+    // }
 
-    public void setShareId(int shareId) {
-        this.shareId = shareId;
-    }
+    // public void setShareId(Integer shareId) {
+    //     this.shareId = shareId;
+    // }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
+    // public Date getCreatedAt() {
+    //     return createdAt;
+    // }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+    // public void setCreatedAt(Date createdAt) {
+    //     this.createdAt = createdAt;
+    // }
 
-    public Date getDeletedAt() {
-        return deletedAt;
-    }
+    // public Date getDeletedAt() {
+    //     return deletedAt;
+    // }
 
-    public void setDeletedAt(Date deletedAt) {
-        this.deletedAt = deletedAt;
-    }
+    // public void setDeletedAt(Date deletedAt) {
+    //     this.deletedAt = deletedAt;
+    // }
 
 }
