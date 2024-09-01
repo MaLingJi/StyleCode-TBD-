@@ -1,7 +1,7 @@
 package com.outfit_share.entity.post;
 
+import java.util.ArrayList;
 import java.util.Date;
-
 import java.util.List;
 
 import lombok.Getter;
@@ -26,11 +26,12 @@ public class PostDTO {
     private String userName;
     private String userPhoto;
 
-    private List<CollectionsDTO> collections;
-    private List<CommentDTO> comments;
-    private List<ImagesDTO> images;
-    private List<LikesDTO> likes;
-    private List<PostTagsDTO> postTags;
+    // 初始化為空列表
+    private List<CollectionsDTO> collections = new ArrayList<>();
+    private List<CommentDTO> comments = new ArrayList<>(); 
+    private List<ImagesDTO> images = new ArrayList<>();
+    private List<LikesDTO> likes = new ArrayList<>(); 
+    private List<PostTagsDTO> postTags = new ArrayList<>(); 
 
     public PostDTO(Post post) {
         this.postId = post.getPostId();

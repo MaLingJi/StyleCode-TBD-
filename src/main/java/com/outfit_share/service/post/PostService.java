@@ -48,10 +48,14 @@ public class PostService {
 	// public List<Post> findAllPost(){
 	// 	return postRepo.findAll();
 	// }
+	
 	public List<PostDTO> findAllPost() {
 		List<Post> list = postRepo.findAll();
 		List<PostDTO> dtoList = new ArrayList<>();
 		for (Post post : list) {
+			if (post.getImages() == null) {
+	            post.setImages(new ArrayList<>()); // 初始化為空列表
+		}
 			// Hibernate.initialize(post.getUserDetail());
 			PostDTO postDTO = new PostDTO(post);
 			dtoList.add(postDTO);

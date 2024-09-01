@@ -1,5 +1,6 @@
 package com.outfit_share.entity.post;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,9 +44,9 @@ public class Post {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
     private List<Comment> comment;
-
+   
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
-    private List<Images> images;
+    private List<Images> images = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
     private List<Likes> likes;
