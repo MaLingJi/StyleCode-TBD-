@@ -81,4 +81,11 @@ public class PimagesController {
 	public PimagesDTO getCoverPhoto(@PathVariable Integer productId) {
 		return pimagesService.findCoverPhoto(productId);
 	}
+	
+	
+	//移入時換照片
+	@GetMapping("/{productId}/images/hover")
+	public PimagesDTO getHoverImage(@PathVariable Integer productId, @RequestParam String imageName) {
+	    return pimagesService.findImageByProductIdAndImageName(productId, imageName);
+	}
 }

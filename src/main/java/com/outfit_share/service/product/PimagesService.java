@@ -156,5 +156,12 @@ public class PimagesService {
 		Pimages coverPhoto = pimagesRepository.findTopOneProductImage(productId);
 		return coverPhoto != null ? new PimagesDTO(coverPhoto) : null;
 	}
+	
+//	移入時換照片
+	public PimagesDTO findImageByProductIdAndImageName(Integer productId, String imageName) {
+	    Pimages image = pimagesRepository.findByProductIdProductIdAndImageName(productId, imageName);
+	    return image != null ? new PimagesDTO(image) : null;
+	}
+
 
 }
