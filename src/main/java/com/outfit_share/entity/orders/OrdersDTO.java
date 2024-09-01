@@ -34,4 +34,11 @@ public class OrdersDTO {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "OrdersDTO [orderId=" + orderId + ", totalAmounts=" + totalAmounts + ", status=" + status + ", userId="
+				+ userId + ", orderDate=" + orderDate + ", paymentMethod=" + paymentMethod + ", ordersDetails="
+				+ ordersDetails + "]";
+	}
+
 }

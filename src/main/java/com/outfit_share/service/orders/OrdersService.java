@@ -173,13 +173,13 @@ public class OrdersService {
 				odDTO.setCatogoryName(od.getProductDetails().getProductId().getSubcategoryId().getCategory().getCategoryName());
 				odDTO.setProductDetailsId(od.getProductDetails().getProductDetailsId());
 				odDTO.setProductName(od.getProductDetails().getProductId().getProductName());
-				System.out.println("DTO quantity before adding to list: " + odDTO.getQuantity());
 				orderDetailsDTO.add(odDTO);
 			}
 			OrdersDTO ordersDTO = new OrdersDTO(order);
 			ordersDTO.setOrdersDetails(orderDetailsDTO);
 			dtoList.add(ordersDTO);
 		}
+		System.out.println(dtoList);
 		return dtoList;
 	}
 }

@@ -88,7 +88,7 @@ public class CartService {
 			dto.setUserId(cart.getCartId().getUserId());
 			dto.setProductDetailsId(cart.getCartId().getProductDetailsId());
 			dto.setQuantity(cart.getVol());
-			
+			dto.setProductId(cart.getProductDetails().getProductId().getProductId());
 			Optional<ProductDetails> optional = prodetailsRepo.findById(cart.getCartId().getProductDetailsId());
 			if (optional.isPresent()) {
 				Product product = optional.get().getProductId();
