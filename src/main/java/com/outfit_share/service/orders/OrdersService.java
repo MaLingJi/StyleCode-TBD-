@@ -103,7 +103,6 @@ public class OrdersService {
 		List<Orders> result = ordersRepository.findByUserIdAndStatus(userId, status);
 		List<OrdersDTO> ordersDTOList = new ArrayList<>();
 		for (Orders order : result) {
-			Hibernate.initialize(order.getUserDetail());
 			OrdersDTO ordersDTO = new OrdersDTO(order);
 			ordersDTOList.add(ordersDTO);
 		}
