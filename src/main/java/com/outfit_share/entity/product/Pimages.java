@@ -39,6 +39,6 @@ public class Pimages {
 	@Column(name = "img_url" , nullable = false)
 	private String imgUrl;//照片URL
 	
-	@Column(name = "image_type")
-    private String imageType;  // 有滑鼠移入移出事件測試，切換不同的圖片	
+//	@Column(name = "image_type")
+//    private String imageType;  // 有滑鼠移入移出事件測試，切換不同的圖片	
 }
