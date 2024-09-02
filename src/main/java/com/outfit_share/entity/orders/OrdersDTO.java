@@ -19,6 +19,8 @@ public class OrdersDTO {
 	private Integer userId;
 	private LocalDateTime orderDate;
 	private Integer paymentMethod;
+	
+	
 	private List<OrdersDetailsDTO> ordersDetails;
 
 	public OrdersDTO(Orders orders) {

@@ -52,8 +52,16 @@ public class PayService {
 	private OrdersRepository odRepo;
 	@Autowired
 	private OrdersService odService;
+	
 	@Value("${domain.url}")
 	private String domainURL;
+	
+	@Value("${channelId}")
+	private String channelId;
+	
+	@Value("${channelSecret}")
+	private String channelSecret;
+	
 	public String requestPayment(LinePayDTO lpRequest) throws JsonProcessingException {
 		
 		System.out.println(lpRequest);
@@ -98,7 +106,7 @@ public class PayService {
 
 		String jsonBody = objectMapper.writeValueAsString(form);
 
-		String ChannelSecret = "6b4e7ed2347de4425b24b016b657f639";
+		String ChannelSecret = channelSecret;
 		String requestUri = "/v3/payments/request";
 		String nonce2 = UUID.randomUUID().toString();
 		String signature = Encrypt.encrypt(ChannelSecret, ChannelSecret + requestUri + jsonBody + nonce2);
@@ -108,7 +116,7 @@ public class PayService {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set("X-LINE-ChannelId", "2005877664");
+		headers.set("X-LINE-ChannelId", channelId);
 		headers.set("X-LINE-Authorization-Nonce", nonce2);
 		headers.set("X-LINE-Authorization", signature);
 
@@ -159,7 +167,7 @@ public class PayService {
 			confirmData.setCurrency("TWD");
 
 			String jsonBody = objectMapper.writeValueAsString(confirmData);
-			String ChannelSecret = "6b4e7ed2347de4425b24b016b657f639";
+			String ChannelSecret = channelSecret;
 			String transactionId = order.getTransactionId();
 			System.out.println(transactionId);
 			String requestUri = "/v3/payments/" + transactionId + "/confirm";
@@ -206,19 +214,16 @@ public class PayService {
 		return "cant find order";
 	}
 
-//	// 改狀態
-//	public void processScucess(UUID orderId) {
-//		Optional<Orders> order = odRepo.findById(orderId);
-//		if (order.isPresent()) {
-//			Orders orders = order.get();
-//			if (orders.getStatus() == 0) {
-//				orders.setStatus(1);
-//				odRepo.save(orders);
-//			} else {
-//				System.out.println("status not 0");
-//			}
-//		} else {
-//			System.out.println("order not exist");
-//		}
-//	}
+	
+	public String refund() {
+		
+		String ChannelSecret = "6b4e7ed2347de4425b24b016b657f639";
+		String requestUri = "/v3/payments/2024090202187238510/refund";
+		String nonce2 = UUID.randomUUID().toString();
+		String signature = Encrypt.encrypt(ChannelSecret, ChannelSecret + requestUri  + nonce2);
+		System.out.println("nonce :"+ nonce2);
+		System.out.println("signature :" + signature);
+		return null;
+	}
+
 }

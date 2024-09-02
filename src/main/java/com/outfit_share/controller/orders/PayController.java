@@ -46,4 +46,11 @@ public class PayController {
 
 		return ResponseEntity.ok(response);
 	}
+	
+	
+	@GetMapping("/refund")
+	public String refund() {
+		payService.refund();
+		return null;
+	}
 }
