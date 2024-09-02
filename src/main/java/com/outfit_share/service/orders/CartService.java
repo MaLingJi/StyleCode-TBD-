@@ -1,5 +1,6 @@
 package com.outfit_share.service.orders;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -43,7 +44,7 @@ public class CartService {
 					dbCart.setVol(dbCart.getVol() + vol);
 					return dbCart;
 				}
-
+				
 				Optional<Users> optional = usersRepo.findById(userId);
 				Users users = optional.get();
 
@@ -159,19 +160,24 @@ public class CartService {
 			cartRepository.delete(dbCart);
 			return "scucess";
 		}
-		return null;
+		return null; 
 	}
 
 	public String checkStock(CartItemDTO checkRequest) {
 		List<CartItemDTO> items = checkRequest.getItems();
 		for (CartItemDTO item : items) {
+			System.out.println("item :"+item);
+			System.out.println("item.getProductDetailsId :"+item.getProductDetailsId());
+			System.out.println("item.getQuantity :"+item.getQuantity());
+			
 			Optional<ProductDetails> byId = prodetailsRepo.findById(item.getProductDetailsId());
+			System.out.println("byId.get().getStock() :"+byId.get().getStock());
 			if (byId.isPresent()) {
-				if (byId.get().getStock() >= item.getQuantity()) {
-					return "ok";
+				if (byId.get().getStock() < item.getQuantity()) {
+					return null;
 				}
 			}
 		}
-		return null;
+		return "ok";
 	}
 }

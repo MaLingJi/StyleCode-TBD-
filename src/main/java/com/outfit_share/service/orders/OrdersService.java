@@ -19,6 +19,7 @@ import com.outfit_share.entity.orders.Orders;
 import com.outfit_share.entity.orders.OrdersDTO;
 import com.outfit_share.entity.orders.OrdersDetails;
 import com.outfit_share.entity.orders.OrdersDetailsDTO;
+import com.outfit_share.entity.orders.RefundDTO;
 import com.outfit_share.entity.product.Product;
 import com.outfit_share.entity.product.ProductDetails;
 import com.outfit_share.entity.users.UserDetail;
@@ -46,37 +47,37 @@ public class OrdersService {
 
 	public OrdersDTO addOrder(OrdersDTO ordersRequest) {
 		List<Cart> cartList = cartRepo.findByUserId(ordersRequest.getUserId());
-		
-        // 檢查購物車是否為空
-        if (cartList.isEmpty()) {
-            return null;  // 購物車為空，直接返回 null
-        }
+
+		// 檢查購物車是否為空
+		if (cartList.isEmpty()) {
+			return null; // 購物車為空，直接返回 null
+		}
 		Orders orders = new Orders();
 		orders.setTotalAmounts(ordersRequest.getTotalAmounts());
 		orders.setId(ordersRequest.getOrderId());
 		orders.setStatus(ordersRequest.getStatus());
 		orders.setPayment_method(1);
 		Optional<UserDetail> optional = udRepo.findById(ordersRequest.getUserId());
-		UserDetail userDetail = optional.get();	
+		UserDetail userDetail = optional.get();
 		orders.setUserDetail(userDetail);
 		Orders saveOrders = ordersRepository.save(orders);
-		
+
 		for (Cart cart : cartList) {
-			//save orderDetails
+			// save orderDetails
 			OrdersDetails ordersDetails = new OrdersDetails();
 			ordersDetails.setOrders(orders);
 			ordersDetails.setProductDetails(cart.getProductDetails());// need to update
 			ordersDetails.setQuantity(cart.getVol());
 			odRepo.save(ordersDetails);
-			//change stock
+			// change stock
 			ProductDetails pd = cart.getProductDetails();
-			pd.setStock(pd.getStock()-cart.getVol());
+			pd.setStock(pd.getStock() - cart.getVol());
 			pdDetailRepo.save(pd);
 		}
-		cartRepo.deleteByUsers(ordersRequest.getUserId()); 
-		
+		cartRepo.deleteByUsers(ordersRequest.getUserId());
+
 		return new OrdersDTO(saveOrders);
-		
+
 	}
 
 	public OrdersDTO saveOrders(Orders orders) {
@@ -97,7 +98,6 @@ public class OrdersService {
 
 		return ordersDTOList;
 	}
-
 
 	public List<OrdersDTO> findByUserIdAndStatus(Integer userId, Integer status) {
 		List<Orders> result = ordersRepository.findByUserIdAndStatus(userId, status);
@@ -123,10 +123,10 @@ public class OrdersService {
 		return null;
 	}
 
-	public Orders findByOrderId(String orderId) {
+	public OrdersDTO findByOrderId(String orderId) {
 		Optional<Orders> optional = ordersRepository.findById(orderId);
 		if (optional != null) {
-			return optional.get();
+			return new OrdersDTO(optional.get());
 		}
 		return null;
 	}
@@ -152,24 +152,25 @@ public class OrdersService {
 		}
 		return dtoList;
 	}
-	
-	public List<OrdersDTO> findByDate(LocalDateTime startDate, LocalDateTime endDate){
+
+	public List<OrdersDTO> findByDate(LocalDateTime startDate, LocalDateTime endDate) {
 		List<Orders> byDate = ordersRepository.findByDate(startDate, endDate);
-		
+
 		List<OrdersDTO> dtoList = new ArrayList<OrdersDTO>();
-		
+
 		for (Orders order : byDate) {
 			List<OrdersDetails> ordersDetails = order.getOrdersDetails();
 			List<OrdersDetailsDTO> orderDetailsDTO = new ArrayList<OrdersDetailsDTO>();
-			
-	
-			for(OrdersDetails od:ordersDetails) {
+
+			for (OrdersDetails od : ordersDetails) {
 				OrdersDetailsDTO odDTO = new OrdersDetailsDTO();
 				odDTO.setProductDetailsId(od.getProductDetails().getProductDetailsId());
 				System.out.println(od.getQuantity());
 				odDTO.setQuantity(od.getQuantity()); // 為NULL
-				odDTO.setCatogoryId(od.getProductDetails().getProductId().getSubcategoryId().getCategory().getCategoryId());
-				odDTO.setCatogoryName(od.getProductDetails().getProductId().getSubcategoryId().getCategory().getCategoryName());
+				odDTO.setCatogoryId(
+						od.getProductDetails().getProductId().getSubcategoryId().getCategory().getCategoryId());
+				odDTO.setCatogoryName(
+						od.getProductDetails().getProductId().getSubcategoryId().getCategory().getCategoryName());
 				odDTO.setProductDetailsId(od.getProductDetails().getProductDetailsId());
 				odDTO.setProductName(od.getProductDetails().getProductId().getProductName());
 				orderDetailsDTO.add(odDTO);
@@ -180,5 +181,22 @@ public class OrdersService {
 		}
 		System.out.println(dtoList);
 		return dtoList;
+	}
+
+	public RefundDTO addRefund(RefundDTO refundRequest) {
+		String orderId = refundRequest.getOrderId();
+
+		Optional<Orders> order = ordersRepository.findById(orderId);
+		if (order.isPresent()) {
+			Orders orders = order.get();
+			orders.setRefundStatus("申請中");
+			orders.setApplyRefundDate(LocalDateTime.now());
+			orders.setRefundReason(refundRequest.getRefundReason());
+			ordersRepository.save(orders);
+			RefundDTO refundDTO = new RefundDTO(orders);
+			return refundDTO;
+		}
+
+		return null;
 	}
 }
