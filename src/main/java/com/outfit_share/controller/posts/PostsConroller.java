@@ -30,7 +30,7 @@ public class PostsConroller {
 	}
 
 	@GetMapping("/{id}")
-	public Post findPostById(@PathVariable("id") Integer postId) {
+	public PostDTO findPostById(@PathVariable("id") Integer postId) {
 		return postService.findPostById(postId);
 	}
 

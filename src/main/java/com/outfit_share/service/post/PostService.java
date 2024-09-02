@@ -25,11 +25,11 @@ public class PostService {
 		return postRepo.save(post);
 	}
 	
-	public Post findPostById(Integer postId) {
+	public PostDTO findPostById(Integer postId) {
 		Optional<Post> optional = postRepo.findById(postId);
 		
 		if(optional.isPresent()) {
-			return optional.get();
+			return new PostDTO(optional.get());
 		}
 		return null;
 	}
