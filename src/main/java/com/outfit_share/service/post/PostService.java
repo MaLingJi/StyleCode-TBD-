@@ -16,16 +16,14 @@ import com.outfit_share.entity.post.PostTagsDTO;
 import com.outfit_share.entity.post.PostTagsId;
 import com.outfit_share.entity.post.Tags;
 import com.outfit_share.repository.post.PostRepository;
-<<<<<<< HEAD
 import org.springframework.data.domain.PageRequest;
 import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-=======
 import com.outfit_share.repository.post.PostTagsRepository;
 import com.outfit_share.repository.post.TagsRepository;
 import com.outfit_share.repository.users.UserDetailRepository;
->>>>>>> origin/MLJ
 
 @Service
 public class PostService {
@@ -156,11 +154,19 @@ public class PostService {
 		return postRepo.findPostByTypeAndKeyword(contentType, keyword);
 	}
 	
-	 public List<PostDTO> findLatestPosts(int limit) {
-	        PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
-	        List<Post> latestPosts = postRepo.findAll(pageRequest).getContent();
-	        return latestPosts.stream()
-	                          .map(PostDTO::new)
-	                          .collect(Collectors.toList());
-	    }
+	//首頁輪播圖 前9篇文章的照片
+	public List<PostDTO> findLatestPosts(int limit) {
+	    PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+	    List<Post> latestPosts = postRepo.findAll(pageRequest).getContent();
+	    return latestPosts.stream()
+	        .map(post -> {
+	            PostDTO dto = new PostDTO(post);
+	            // 假設 post 有一個 getImages() 方法返回圖片列表
+	            dto.setImageUrls(post.getImages().stream()
+	                .map(image -> image.getImgUrl())
+	                .collect(Collectors.toList()));
+	            return dto;
+	        })
+	        .collect(Collectors.toList());
+	}
 }
