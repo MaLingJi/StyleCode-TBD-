@@ -19,8 +19,7 @@ public class OrdersDTO {
 	private Integer userId;
 	private LocalDateTime orderDate;
 	private Integer paymentMethod;
-	
-	
+	private String refundReason;
 	private List<OrdersDetailsDTO> ordersDetails;
 
 	public OrdersDTO(Orders orders) {
@@ -29,7 +28,7 @@ public class OrdersDTO {
 		this.status = orders.getStatus();
 		this.orderDate = orders.getOrderDate();
 		this.paymentMethod = orders.getPayment_method();
-	
+		this.refundReason=orders.getRefundReason();
 	
 		if (orders.getUserDetail() != null) {
 			this.userId = orders.getUserDetail().getId();

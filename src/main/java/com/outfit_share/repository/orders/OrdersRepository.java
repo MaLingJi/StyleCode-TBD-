@@ -23,6 +23,10 @@ public interface OrdersRepository extends JpaRepository<Orders, String> {
 	@Query("FROM Orders WHERE status = ?1 ORDER BY orderDate DESC")
 	List<Orders> findByStatus(Integer status);
 	
-	@Query("FROM Orders WHERE orderDate BETWEEN ?1 AND ?2 ORDER BY orderDate DESC")
+	@Query("FROM Orders WHERE orderDate BETWEEN ?1 AND ?2 AND status = 1 ORDER BY orderDate DESC")
 	List<Orders> findByDate (LocalDateTime startDate,LocalDateTime endDate);
+	
+	@Query("FROM Orders WHERE refundStatus = ?1 ORDER BY orderDate DESC")
+	List<Orders> findByRefundStatus(Integer status);
+	
 }

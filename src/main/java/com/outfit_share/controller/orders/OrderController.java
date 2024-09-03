@@ -101,7 +101,7 @@ public class OrderController {
 	}
 
 	@PostMapping("/addRefund")
-	public RefundDTO addRefund(@RequestBody  RefundDTO refundRequest) {
+	public RefundDTO addRefund(@RequestBody RefundDTO refundRequest) {
 		RefundDTO refund = ordersService.addRefund(refundRequest);
 		if (refund != null) {
 			return refund;
@@ -109,17 +109,25 @@ public class OrderController {
 			return null;
 		}
 	}
-	
-	@GetMapping("/findOrderId/{orderId}")
+
+	@GetMapping("/findByOrderId/{orderId}")
 	public OrdersDTO findByOrderId2(@PathVariable String orderId) {
-	 OrdersDTO byOrderId = ordersService.findByOrderId(orderId);
-	 if (byOrderId!=null) {
-		return byOrderId;
+		OrdersDTO byOrderId = ordersService.findByOrderId(orderId);
+		if (byOrderId != null) {
+			return byOrderId;
+		}
+		return null;
+
 	}
-	 return null;
-	 
+
+	@GetMapping("/findByRefundStatus/{refundStatus}")
+	public List<OrdersDTO> findByRefundStatus(@PathVariable Integer refundStatus) {
+		List<OrdersDTO> byRefundStatus = ordersService.findByRefundStatus(refundStatus);
+		if (byRefundStatus != null) {
+			return byRefundStatus;
+		}
+		return null;
+
 	}
-	
-	
-	
+
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.outfit_share.entity.orders.OrdersDTO;
 import com.outfit_share.entity.orders.pay.LinePayDTO;
 import com.outfit_share.service.orders.PayService;
 
@@ -48,9 +49,12 @@ public class PayController {
 	}
 	
 	
-	@GetMapping("/refund")
-	public String refund() {
-		payService.refund();
+	@PostMapping("/agreeRefund")
+	public String agreeRefund(@RequestBody OrdersDTO refundRequest) {
+		String refund = payService.refund(refundRequest);
+		if(refund == "ok") {
+			return "ok";
+		}
 		return null;
 	}
 }

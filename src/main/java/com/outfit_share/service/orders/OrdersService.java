@@ -146,7 +146,6 @@ public class OrdersService {
 		List<Orders> list = ordersRepository.findByStatus(status);
 		List<OrdersDTO> dtoList = new ArrayList<OrdersDTO>();
 		for (Orders order : list) {
-			Hibernate.initialize(order.getUserDetail());
 			OrdersDTO ordersDTO = new OrdersDTO(order);
 			dtoList.add(ordersDTO);
 		}
@@ -189,7 +188,7 @@ public class OrdersService {
 		Optional<Orders> order = ordersRepository.findById(orderId);
 		if (order.isPresent()) {
 			Orders orders = order.get();
-			orders.setRefundStatus("申請中");
+			orders.setRefundStatus(1);
 			orders.setApplyRefundDate(LocalDateTime.now());
 			orders.setRefundReason(refundRequest.getRefundReason());
 			ordersRepository.save(orders);
@@ -198,5 +197,15 @@ public class OrdersService {
 		}
 
 		return null;
+	}
+	
+	public List<OrdersDTO> findByRefundStatus(Integer status) {
+		List<Orders> list = ordersRepository.findByRefundStatus(status);
+		List<OrdersDTO> dtoList = new ArrayList<OrdersDTO>();
+		for (Orders order : list) {
+			OrdersDTO ordersDTO = new OrdersDTO(order);
+			dtoList.add(ordersDTO);
+		}
+		return dtoList;
 	}
 }

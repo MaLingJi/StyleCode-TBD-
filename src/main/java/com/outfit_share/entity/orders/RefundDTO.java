@@ -13,7 +13,7 @@ import lombok.Setter;
 public class RefundDTO {
 	private String orderId;
 	private Integer refundAmounts;
-	private String refundStatus;
+	private Integer refundStatus;
 	private Integer userId;
 	private String refundReason;
 	private LocalDateTime applyRefundDate;

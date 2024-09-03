@@ -65,7 +65,7 @@ public class Orders {
 	private LocalDateTime reviewRefundDate;
 	
 	@Column(name="refundStatus")
-	private String refundStatus;
+	private Integer refundStatus;
 	
 	@Column(name="refundReason")
 	private String refundReason;
