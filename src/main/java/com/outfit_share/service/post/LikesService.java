@@ -26,7 +26,7 @@ public class LikesService {
 	private UserDetailRepository userDetailRepo;
 	
 	public Likes createLikes(Likes likes) {
-		Post post = postRepo.findById(likes.getPosts().getPostId()).orElse(null);
+		Post post = postRepo.findById(likes.getPost().getPostId()).orElse(null);
 		UserDetail userDetail = userDetailRepo.findById(likes.getUserDetail().getId()).orElse(null);
 		
 		if (post == null) {
@@ -36,7 +36,7 @@ public class LikesService {
 			throw new IllegalArgumentException("未找到用戶詳細信息");
 		}
 		
-		likes.setPosts(post);
+		likes.setPost(post);
 		likes.setUserDetail(userDetail);
 		
 		return likesRepo.save(likes);
