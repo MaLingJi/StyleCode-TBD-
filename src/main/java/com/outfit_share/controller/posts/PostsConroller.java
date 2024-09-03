@@ -60,4 +60,9 @@ public class PostsConroller {
 	}
 	// TODO: 要改成只有一個參數時也可搜尋，無參數時就findAll
 	// P.S.這邊我改成靠前端綁定來處理即可
+	
+    @GetMapping("/latest")
+    public List<PostDTO> getLatestPosts(@RequestParam(defaultValue = "9") int limit) {
+        return postService.findLatestPosts(limit);
+    }
 }

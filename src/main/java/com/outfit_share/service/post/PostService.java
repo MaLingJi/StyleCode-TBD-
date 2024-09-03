@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.outfit_share.entity.post.Post;
 import com.outfit_share.entity.post.PostDTO;
 import com.outfit_share.repository.post.PostRepository;
+import org.springframework.data.domain.PageRequest;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PostService {
@@ -77,4 +80,12 @@ public class PostService {
 	public List<Post> searchPostsByTypeAndKeyword(String contentType,String keyword){
 		return postRepo.findPostByTypeAndKeyword(contentType, keyword);
 	}
+	
+	 public List<PostDTO> findLatestPosts(int limit) {
+	        PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+	        List<Post> latestPosts = postRepo.findAll(pageRequest).getContent();
+	        return latestPosts.stream()
+	                          .map(PostDTO::new)
+	                          .collect(Collectors.toList());
+	    }
 }
