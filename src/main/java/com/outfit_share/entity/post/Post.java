@@ -57,6 +57,9 @@ public class Post {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
     private List<PostTags> postTags;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
+    private List<ProductTag> productTags;   
+
     @Column(name = "content_type")
     private String contentType;
 
@@ -112,69 +115,5 @@ public class Post {
         this.createdAt = createdAt;
         this.deletedAt = deletedAt;
     }
-
-    // public Integer getPostId() {
-    //     return postId;
-    // }
-
-    // public void setPostId(Integer postId) {
-    //     this.postId = postId;
-    // }
-
-    // public UserDetail getUserDetail() {
-    //     return userDetail;
-    // }
-
-    // public void setUserDetail(UserDetail userDetail) {
-    //     this.userDetail = userDetail;
-    // }
-
-    // public String getContentType() {
-    //     return contentType;
-    // }
-
-    // public void setContentType(String contentType) {
-    //     this.contentType = contentType;
-    // }
-
-    // public String getPostTitle() {
-    //     return postTitle;
-    // }
-
-    // public void setPostTitle(String postTitle) {
-    //     this.postTitle = postTitle;
-    // }
-
-    // public String getContentText() {
-    //     return contentText;
-    // }
-
-    // public void setContentText(String contentText) {
-    //     this.contentText = contentText;
-    // }
-
-    // public Integer getShareId() {
-    //     return shareId;
-    // }
-
-    // public void setShareId(Integer shareId) {
-    //     this.shareId = shareId;
-    // }
-
-    // public Date getCreatedAt() {
-    //     return createdAt;
-    // }
-
-    // public void setCreatedAt(Date createdAt) {
-    //     this.createdAt = createdAt;
-    // }
-
-    // public Date getDeletedAt() {
-    //     return deletedAt;
-    // }
-
-    // public void setDeletedAt(Date deletedAt) {
-    //     this.deletedAt = deletedAt;
-    // }
 
 }
