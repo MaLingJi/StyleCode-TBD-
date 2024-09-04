@@ -18,19 +18,19 @@ import com.outfit_share.entity.orders.pay.LinePayDTO;
 import com.outfit_share.service.orders.PayService;
 
 @RestController
-@RequestMapping("/pay")
+@RequestMapping
 public class PayController {
 	@Autowired
 	private PayService payService;
 
 	// 回傳付款網址到前端 若需要更多資訊再依需求改成回傳JSON
-	@PostMapping("/linePayRequest")
+	@PostMapping("/pay/linePayRequest")
 	public String LpRequest(@RequestBody LinePayDTO lpRequest) throws JsonProcessingException {
 		String paymentUrl = payService.requestPayment(lpRequest);
 		return paymentUrl;
 	}
 
-	@GetMapping("/linePayConfirm")
+	@GetMapping("/pay/linePayConfirm")
 	public ResponseEntity<?> linePayConfirm(@RequestParam(value = "orderId") String orderId)
 			throws JsonProcessingException {
 		String returnCode = payService.confirmPayment(orderId);
@@ -48,7 +48,7 @@ public class PayController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PostMapping("/agreeRefund")
+	@PostMapping("/admin/agreeRefund")
 	public String agreeRefund(@RequestBody OrdersDTO refundRequest) {
 		String refund = payService.refund(refundRequest);
 		if (refund == "ok") {
@@ -57,7 +57,7 @@ public class PayController {
 		return null;
 	}
 
-	@PostMapping("/rejectRefund")
+	@PostMapping("/admin/rejectRefund")
 	public String rejectRefund(@RequestBody OrdersDTO refundRequest) {
 		String refund = payService.rejectRefund(refundRequest);
 		if (refund == "ok") {

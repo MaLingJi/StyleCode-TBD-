@@ -28,7 +28,7 @@ import com.outfit_share.service.orders.OrdersService;
 import com.outfit_share.service.users.UserDetailService;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping
 public class OrderController {
 	@Autowired
 	private OrdersService ordersService;
@@ -39,7 +39,7 @@ public class OrderController {
 	@Autowired
 	private UserDetailService udService;
 
-	@PostMapping("/admin/add") // 待測試
+	@PostMapping("/order/add") // 待測試
 	// 新增訂單
 	public OrdersDTO addOrder(@RequestBody OrdersDTO ordersRequest) {
 		OrdersDTO order = ordersService.addOrder(ordersRequest);
@@ -51,7 +51,7 @@ public class OrderController {
 
 	// 客戶角度看他的訂單
 	// 改使用DTO作為回傳物件 OK
-	@GetMapping("/find/{userId}")
+	@GetMapping("/order/find/{userId}")
 	public List<OrdersDTO> findByUserId(@PathVariable(value = "userId") Integer userId,
 			@RequestParam(value = "status", required = false) Integer status) {
 		if (status != null) {
@@ -63,7 +63,7 @@ public class OrderController {
 
 	// 客戶角度看他得訂單詳情
 	// 改使用DTO作為回傳物件 OK
-	@GetMapping("/findOd/{ordersId}")
+	@GetMapping("/order/findOd/{ordersId}")
 	public List<OrdersDetailsDTO> findOdByOrdersId(@PathVariable(value = "ordersId") String ordersId) {
 		return odService.findOdByOrderId(ordersId);
 	}
@@ -92,7 +92,7 @@ public class OrderController {
 		return ordersService.findByStatus(status);
 	}
 
-	@GetMapping("/findByDate")
+	@GetMapping("/admin/findByDate")
 	public List<OrdersDTO> getOrdersByDateRange(
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
@@ -100,7 +100,7 @@ public class OrderController {
 		return orders;
 	}
 
-	@PostMapping("/addRefund")
+	@PostMapping("/order/addRefund")
 	public RefundDTO addRefund(@RequestBody RefundDTO refundRequest) {
 		RefundDTO refund = ordersService.addRefund(refundRequest);
 		if (refund != null) {
@@ -110,7 +110,7 @@ public class OrderController {
 		}
 	}
 
-	@GetMapping("/findByOrderId/{orderId}")
+	@GetMapping("/order/findByOrderId/{orderId}")
 	public OrdersDTO findByOrderId2(@PathVariable String orderId) {
 		OrdersDTO byOrderId = ordersService.findByOrderId(orderId);
 		if (byOrderId != null) {
@@ -120,7 +120,7 @@ public class OrderController {
 
 	}
 
-	@GetMapping("/findByRefundStatus/{refundStatus}")
+	@GetMapping("/admin/findByRefundStatus/{refundStatus}")
 	public List<OrdersDTO> findByRefundStatus(@PathVariable Integer refundStatus) {
 		List<OrdersDTO> byRefundStatus = ordersService.findByRefundStatus(refundStatus);
 		if (byRefundStatus != null) {
