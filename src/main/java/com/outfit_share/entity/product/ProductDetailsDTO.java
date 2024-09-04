@@ -19,7 +19,7 @@ public class ProductDetailsDTO {
     
     private String color;
     
-    private boolean onSale;
+    private Boolean onSale;
     
     
     private Integer productId;// 從 Product 實體獲取
@@ -36,7 +36,7 @@ public class ProductDetailsDTO {
         this.stock = productDetails.getStock();
         this.size = productDetails.getSize();
         this.color = productDetails.getColor();
-        this.onSale = productDetails.isOnSale();
+        this.onSale = productDetails.getOnSale();
         
         
         this.productId = productDetails.getProductId().getProductId();

@@ -33,12 +33,12 @@ public class Pimages {
 	@JoinColumn(name = "product_id" , nullable = false)
 	private Product productId;//商品的ID
 	
-	@Column(name = "image_name" ,unique = true , nullable = false)
+	@Column(name = "image_name", nullable = false)
 	private String imageName;//照片名字
 	
 	@Column(name = "img_url" , nullable = false)
 	private String imgUrl;//照片URL
 	
-	@Column(name = "image_type")
-    private String imageType;  // 有滑鼠移入移出事件測試，切換不同的圖片	
+//	@Column(name = "image_type")
+//    private String imageType;  // 有滑鼠移入移出事件測試，切換不同的圖片	
 }

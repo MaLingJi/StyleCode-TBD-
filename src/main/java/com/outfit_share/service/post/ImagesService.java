@@ -62,8 +62,8 @@ public class ImagesService {
             }
             Images images = new Images();
             // images.setImgurl(filePath.toString());
-            images.setImgurl(uniqueFileName);
-            images.setPostId(post);
+            images.setImgUrl(uniqueFileName);
+            images.setPost(post);
 
             savedImages.add(imagesRepo.save(images));
         }
@@ -103,7 +103,7 @@ public class ImagesService {
 
             // 更新圖片 URL
             // image.setImgurl(filePath.toString());
-            image.setImgurl(uniqueFileName);
+            image.setImgUrl(uniqueFileName);
             return imagesRepo.save(image);
         }
         return null;

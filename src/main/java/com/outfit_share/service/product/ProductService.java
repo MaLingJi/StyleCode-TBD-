@@ -28,56 +28,60 @@ public class ProductService {
 	@Autowired
 	private ProductDetailsRepository productDetailsRepository;
 
-
 // 	檢查庫存並更新商品狀態
 	private ProductDetails checkStockAndUpdateStatus(ProductDetails details) {
 		if (details.getStock() <= 0) {
 			details.setOnSale(false);
 		}
+
+		if (details.getStock() > 0) {
+			details.setOnSale(true);
+		}
+
 		return details;
 	}
 
 //	新增商品
-	  public ProductDTO saveProduct(Product product, List<ProductDetails> details) {
-		  
-	        if (details != null) {
-	            List<ProductDetails> updatedDetails = new ArrayList<>();
-	            for (ProductDetails detail : details) {
-	                detail.setProductId(product);
-	                checkStockAndUpdateStatus(detail);
-	                updatedDetails.add(detail);
-	            }
-	            product.setProductDetails(updatedDetails);
-	        }
-	        
-	        Product savedProduct = productRepository.save(product);
-	        return new ProductDTO(savedProduct);
-	    }
-	  
-//	  在已有的商品編號底下 可以新增其他商品 例:可以新增 其他顏色和尺寸
-	  public ProductDTO addProductDetails(Integer productId, List<ProductDetails> newDetails) {
-		    Optional<Product> optionalProduct = productRepository.findById(productId);
-		    
-		    if (optionalProduct.isPresent()) {
-		        Product product = optionalProduct.get();
-		        
-		        if (newDetails != null) {
-		            for (ProductDetails detail : newDetails) {
-		                detail.setProductId(product);
-		                checkStockAndUpdateStatus(detail);
-		                product.addProductDetail(detail);
-		            }
-		        }
-		        
-		        Product updatedProduct = productRepository.save(product);
-		        return new ProductDTO(updatedProduct);
-		    }
-		    
-		    throw new IllegalArgumentException("商品不存在");
+	public ProductDTO saveProduct(Product product, List<ProductDetails> details) {
+
+		if (details != null) {
+			List<ProductDetails> updatedDetails = new ArrayList<>();
+			for (ProductDetails detail : details) {
+				detail.setProductId(product);
+				checkStockAndUpdateStatus(detail);
+				updatedDetails.add(detail);
+			}
+			product.setProductDetails(updatedDetails);
 		}
 
+		Product savedProduct = productRepository.save(product);
+		return new ProductDTO(savedProduct);
+	}
+
+//	  在已有的商品編號底下 可以新增其他商品 例:可以新增 其他顏色和尺寸
+	public ProductDTO addProductDetails(Integer productId, List<ProductDetails> newDetails) {
+		Optional<Product> optionalProduct = productRepository.findById(productId);
+
+		if (optionalProduct.isPresent()) {
+			Product product = optionalProduct.get();
+
+			if (newDetails != null) {
+				for (ProductDetails detail : newDetails) {
+					detail.setProductId(product);
+					checkStockAndUpdateStatus(detail);
+					product.addProductDetail(detail);
+				}
+			}
+
+			Product updatedProduct = productRepository.save(product);
+			return new ProductDTO(updatedProduct);
+		}
+
+		throw new IllegalArgumentException("商品不存在");
+	}
+
 //	修改商品
-	public ProductDTO updateProduct(Integer id, Product product, List<ProductDetails> details , Boolean onSale) {
+	public ProductDTO updateProduct(Integer id, Product product) {
 		Optional<Product> optional = productRepository.findById(id);
 
 		if (optional.isPresent()) {
@@ -94,57 +98,55 @@ public class ProductService {
 			if (product.getProductDescription() != null) {
 				result.setProductDescription(product.getProductDescription());
 			}
+
 			productRepository.save(result);
-
-			if (details != null) {
-
-				for (ProductDetails updatedDetail : details) {
-					Optional<ProductDetails> existingDetailOpt = productDetailsRepository
-							.findById(updatedDetail.getProductDetailsId());
-					
-				if (existingDetailOpt.isPresent()) {
-					 ProductDetails existingDetail = existingDetailOpt.get();
-					 
-				if (updatedDetail.getStock() != null) {
-					existingDetail.setStock(updatedDetail.getStock());
-				}
-				if (updatedDetail.getSize() != null) {
-					existingDetail.setSize(updatedDetail.getSize());
-				}
-				if (updatedDetail.getColor() != null) {
-					existingDetail.setColor(updatedDetail.getColor());
-				}
-				
-				if(onSale != null) {
-					existingDetail.setOnSale(onSale);
-				}
-
-				// 檢查庫存並更新狀態
-				productDetailsRepository.save(checkStockAndUpdateStatus(existingDetail));
-
-				}
-				
-				}
-			}
 			return new ProductDTO(result);
 		}
 
 		return null;
 	}
 
+	// 修改商品詳情
+	public ProductDetailsDTO updateDetails(Integer id, ProductDetails details) {
+		Optional<ProductDetails> optional = productDetailsRepository.findById(id);
+
+		if (optional.isPresent()) {
+			ProductDetails existingDetail = optional.get();
+
+			if (details.getStock() != null) {
+				existingDetail.setStock(details.getStock());
+			}
+			if (details.getSize() != null) {
+				existingDetail.setSize(details.getSize());
+			}
+			if (details.getColor() != null) {
+				existingDetail.setColor(details.getColor());
+			}
+			if (details.getOnSale() != null) {
+				existingDetail.setOnSale(details.getOnSale());
+			}
+
+			// 檢查庫存並更新狀態
+			productDetailsRepository.save(checkStockAndUpdateStatus(existingDetail));
+
+			return new ProductDetailsDTO(existingDetail);
+		}
+		return null;
+	}
+
 //  處理商品購買
 	public ProductDTO purchaseProduct(Integer productId, Integer detailId, Integer quantity) {
 		Optional<Product> optional = productRepository.findById(productId);
-		 Optional<ProductDetails> detailOpt = productDetailsRepository.findById(detailId);
-		 
+		Optional<ProductDetails> detailOpt = productDetailsRepository.findById(detailId);
+
 		if (optional.isPresent() && detailOpt.isPresent()) {
 			Product product = optional.get();
 			ProductDetails detail = detailOpt.get();
-			
-			 if (!detail.isOnSale()) {
-	                throw new IllegalStateException("此商品目前不可購買");
-	            }
-			 
+
+			if (!detail.getOnSale()) {
+				throw new IllegalStateException("此商品目前不可購買");
+			}
+
 			int newStock = detail.getStock() - quantity;
 
 			if (newStock < 0) {
@@ -152,15 +154,15 @@ public class ProductService {
 			}
 
 			detail.setStock(newStock);
-			ProductDetails updatedDetail =  checkStockAndUpdateStatus(detail);
+			ProductDetails updatedDetail = checkStockAndUpdateStatus(detail);
 			productDetailsRepository.save(updatedDetail);
-			
-			
-			 if (newStock == 0) {
-	                // 發送通知，表明商品已下架
-	                System.out.println("商品 " + product.getProductName() + " 的 " + detail.getColor() + " " + detail.getSize() + " 已售罄并下架");
-	            }
-			 
+
+			if (newStock == 0) {
+				// 發送通知，表明商品已下架
+				System.out.println("商品 " + product.getProductName() + " 的 " + detail.getColor() + " " + detail.getSize()
+						+ " 已售罄并下架");
+			}
+
 			return new ProductDTO(product);
 		}
 		throw new IllegalArgumentException("商品不存在");
@@ -179,12 +181,11 @@ public class ProductService {
 		return null;
 	}
 
-	
 //	刪除該商品詳情
 	public ProductDetailsDTO deleteDetails(Integer id) {
 		Optional<ProductDetails> optional = productDetailsRepository.findById(id);
-		
-		if(optional.isPresent()) {
+
+		if (optional.isPresent()) {
 			ProductDetails details = optional.get();
 			ProductDetailsDTO detailsDTO = new ProductDetailsDTO(details);
 			productDetailsRepository.deleteById(id);
@@ -192,7 +193,7 @@ public class ProductService {
 		}
 		return null;
 	}
-	
+
 //	查詢單筆商品
 	public ProductDTO findProductById(Integer id) {
 		Optional<Product> optional = productRepository.findById(id);
@@ -205,20 +206,20 @@ public class ProductService {
 
 		return null;
 	}
-	
+
 //	查詢所有商品
-	public List<ProductDTO> findAllProduct(){
+	public List<ProductDTO> findAllProduct() {
 		List<Product> list = productRepository.findAll();
 		List<ProductDTO> dtolist = new ArrayList<>();
-		
-		for(Product product : list) {
+
+		for (Product product : list) {
 			Hibernate.initialize(product.getProductId());
 			ProductDTO productDTO = new ProductDTO(product);
 			dtolist.add(productDTO);
 		}
 		return dtolist;
 	}
-	
+
 //	搜尋子分類底下的所有商品
 	public List<ProductDTO> findProductsBySubcategoryId(Integer subcategoryId) {
 		List<Product> products = productRepository.findBySubcategoryId(subcategoryId);
@@ -262,8 +263,45 @@ public class ProductService {
 		return products.stream().map(ProductDTO::new).collect(Collectors.toList());
 	}
 
-    
-    
+	// 模糊搜尋方法
+	public List<ProductDTO> findProductsByName(String name) {
+		List<Product> products = productRepository.findByNameLikeQuery(name);
+		return products.stream().map(ProductDTO::new).collect(Collectors.toList());
+	}
+
+	// 價格排序方法
+	public List<ProductDTO> findAllProductsSortedByPrice(String direction) {
+		List<Product> products;
+		if ("ASC".equalsIgnoreCase(direction)) {
+			products = productRepository.findAllSortedByPriceAsc();
+		} else {
+			products = productRepository.findAllSortedByPriceDesc();
+		}
+		return products.stream().map(ProductDTO::new).collect(Collectors.toList());
+	}
+
+	// 按分類和價格排序
+	public List<ProductDTO> findProductsByCategoryIdSortedByPrice(Integer categoryId, String direction) {
+		List<Product> products;
+		if ("ASC".equalsIgnoreCase(direction)) {
+			products = productRepository.findByCategoryIdOrderByPriceAsc(categoryId);
+		} else {
+			products = productRepository.findByCategoryIdOrderByPriceDesc(categoryId);
+		}
+		return products.stream().map(ProductDTO::new).collect(Collectors.toList());
+	}
+
+	// 按子分類和價格排序
+	public List<ProductDTO> findProductsBySubcategoryIdSortedByPrice(Integer subcategoryId, String direction) {
+		List<Product> products;
+		if ("ASC".equalsIgnoreCase(direction)) {
+			products = productRepository.findBySubcategoryIdOrderByPriceAsc(subcategoryId);
+		} else {
+			products = productRepository.findBySubcategoryIdOrderByPriceDesc(subcategoryId);
+		}
+		return products.stream().map(ProductDTO::new).collect(Collectors.toList());
+	}
+
 //	模糊搜尋 && 價格由高到低||由低到高 && 全部商品
 	public List<ProductDTO> findProductsByNameAndSort(String name, String sort) {
 		List<Product> products = productRepository.findByNameAndSort(name, sort);

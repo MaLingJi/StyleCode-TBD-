@@ -14,7 +14,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "Images")
 public class Images {
@@ -36,9 +42,6 @@ public class Images {
     @Column(name = "deleted_at", nullable = true)
     private Date deletedAt;
 	
-	public Images() {
-	}
-
 	public Images(int imageId, Post post, String imgUrl) {
 		this.imageId = imageId;
 		this.post = post;
@@ -50,44 +53,16 @@ public class Images {
 		this.imgUrl = imgUrl;
 	}
 
-	public Post getPost() {
-		return post;
-	}
+	// public Post getPostId() {
+	// 	return post;
+	// }
 
-	public void setPost(Post post) {
-		this.post = post;
-	}
+	// public void setPostId(Post post) {
+	// 	this.post = post;
+	// }
 
-	public int getImageId() {
-		return imageId;
-	}
-
-	public void setImageId(int imageId) {
-		this.imageId = imageId;
-	}
-
-	public Post getPostId() {
-		return post;
-	}
-
-	public void setPostId(Post post) {
-		this.post = post;
-	}
-
-	public String getImgUrl() {
-		return imgUrl;
-	}
-
-	public void setImgurl(String imgUrl) {
-		this.imgUrl = imgUrl;
-	}
-
-	public Date getDeletedAt() {
-		return deletedAt;
-	}
-
-	public void setDeletedAt(Date deletedAt) {
-		this.deletedAt = deletedAt;
-	}
+	// public void setImgurl(String imgUrl) {
+	// 	this.imgUrl = imgUrl;
+	// }
 	
 }

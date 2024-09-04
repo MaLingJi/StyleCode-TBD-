@@ -25,7 +25,7 @@ public class LikesController {
 	
 	@PostMapping
 	public ResponseEntity<String> addLikes(@RequestBody Likes likes) {
-		Post post = likes.getPosts();
+		Post post = likes.getPost();
 	    UserDetail userDetail = likes.getUserDetail();
 	    // 手動創建 LikesId 並設置
 	    LikesId likesId = new LikesId(userDetail.getId(), post.getPostId());
