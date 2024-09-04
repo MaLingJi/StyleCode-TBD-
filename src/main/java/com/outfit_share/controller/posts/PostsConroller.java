@@ -31,13 +31,13 @@ public class PostsConroller {
 		return postService.createPost(post);
 	}
 
-	@PostMapping("/postwithtags")
+	@PostMapping("/post/postwithtags")
 	public ResponseEntity<PostDTO> createPost(@RequestBody PostCreationRequest request) {
 		PostDTO createdPost = postService.createPostWithTags(request.getPostDTO(), request.getTagNames());
 		return ResponseEntity.ok(createdPost);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/post/{id}")
 	public PostDTO findPostById(@PathVariable("id") Integer postId) {
 		return postService.findPostById(postId);
 	}
@@ -72,7 +72,7 @@ public class PostsConroller {
 	
 	
 	//首頁輪播圖 前9篇文章的照片
-    @GetMapping("/latest")
+    @GetMapping("/post/latest")
     public List<PostDTO> getLatestPosts(@RequestParam(defaultValue = "9") int limit) {
         return postService.findLatestPosts(limit);
     }
