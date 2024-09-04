@@ -1,6 +1,7 @@
 package com.outfit_share.service.orders;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -16,11 +17,13 @@ import com.outfit_share.entity.orders.Orders;
 import com.outfit_share.entity.orders.OrdersDTO;
 import com.outfit_share.entity.orders.OrdersDetails;
 import com.outfit_share.entity.product.Product;
+import com.outfit_share.entity.users.Notifications;
 import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.repository.orders.CartRepository;
 import com.outfit_share.repository.orders.OrdersDetailsRepository;
 import com.outfit_share.repository.orders.OrdersRepository;
 import com.outfit_share.repository.product.ProductRepository;
+import com.outfit_share.repository.users.NotificationsRepository;
 import com.outfit_share.repository.users.UserDetailRepository;
 
 @Service
@@ -35,49 +38,58 @@ public class OrdersService {
 	private OrdersDetailsRepository odRepo;
 	@Autowired
 	private ProductRepository pdRepo;
+	private NotificationsRepository notiRepo;
 
 	public OrdersDTO addOrder(@RequestBody Orders ordersRequest) {
 		List<Cart> cartList = cartRepo.findByUserId(ordersRequest.getUserDetail().getId());
-		
-        // 檢查購物車是否為空
-        if (cartList.isEmpty()) {
-            return null;  // 購物車為空，直接返回 null
-        }
-        
-		//check stock and cartVol
+
+		// 檢查購物車是否為空
+		if (cartList.isEmpty()) {
+			return null; // 購物車為空，直接返回 null
+		}
+
+		// check stock and cartVol
 		for (Cart cart : cartList) {
-            if (cart.getVol() > cart.getProduct().getStock()) {
-                return null;
-            }
-        }
-		
-		
+			if (cart.getVol() > cart.getProduct().getStock()) {
+				return null;
+			}
+		}
+
 		Orders orders = new Orders();
 		orders.setTotalAmounts(ordersRequest.getTotalAmounts());
 
 		Optional<UserDetail> optional = udRepo.findById(ordersRequest.getUserDetail().getId());
-		UserDetail userDetail = optional.get();	
+		UserDetail userDetail = optional.get();
 		orders.setUserDetail(userDetail);
 		Orders saveOrders = ordersRepository.save(orders);
-		
+
 		for (Cart cart : cartList) {
-			//save orderDetails
+			// save orderDetails
 			OrdersDetails ordersDetails = new OrdersDetails();
 			ordersDetails.setOrders(orders);
 			ordersDetails.setProduct(cart.getProduct());// need to update
 			ordersDetails.setQuantity(cart.getVol());
 			odRepo.save(ordersDetails);
-			//change stock
+			// change stock
 			Integer productId = cart.getProduct().getProductId();
 			Optional<Product> optional2 = pdRepo.findById(productId);
 			Product product = optional2.get();
-			product.setStock(product.getStock()-cart.getVol());
+			product.setStock(product.getStock() - cart.getVol());
 			pdRepo.save(product);
 		}
-		cartRepo.deleteByUsers(ordersRequest.getUserDetail().getId()); 
-		
+		cartRepo.deleteByUsers(ordersRequest.getUserDetail().getId());
+
+		// 創建新通知
+		Notifications notification = new Notifications();
+		notification.setMessage("您的" + saveOrders.getId() + "訂單已成立");
+		notification.setCreatedTime(new Date());
+		notification.setStatus(0);
+		notification.setType("shop");
+		notification.setUserDetail(userDetail);
+		notiRepo.save(notification);
+
 		return new OrdersDTO(saveOrders);
-		
+
 	}
 
 	public OrdersDTO saveOrders(Orders orders) {
@@ -100,16 +112,16 @@ public class OrdersService {
 	}
 
 	// 改使用DTO作為回傳物件 另種寫法
-//		public List<OrdersDTO> findByUserId(Integer Id){
-//			List<Orders> result = ordersRepository.findByUserId(Id);
-//			return result.stream()
-//					.map(od->{
-//						Hibernate.initialize(od.getUserDetail());
-//						return new OrdersDTO(od);
-//					})
-//					.collect(Collectors.toList());
-//			
-//		}
+	// public List<OrdersDTO> findByUserId(Integer Id){
+	// List<Orders> result = ordersRepository.findByUserId(Id);
+	// return result.stream()
+	// .map(od->{
+	// Hibernate.initialize(od.getUserDetail());
+	// return new OrdersDTO(od);
+	// })
+	// .collect(Collectors.toList());
+	//
+	// }
 
 	public List<OrdersDTO> findByUserIdAndStatus(Integer userId, Integer status) {
 		List<Orders> result = ordersRepository.findByUserIdAndStatus(userId, status);

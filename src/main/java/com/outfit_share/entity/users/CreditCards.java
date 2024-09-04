@@ -30,7 +30,7 @@ public class CreditCards {
     @Column(name = "card_number")
     private String cardNumber;
 
-    @DateTimeFormat(pattern = "yy/MM")
+    @DateTimeFormat(pattern = "MM/yy")
     @Temporal(TemporalType.DATE)
     @Column(name = "expiration_date")
     private Date expirationDate;
