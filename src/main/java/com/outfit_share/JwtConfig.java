@@ -28,14 +28,14 @@ public class JwtConfig implements WebMvcConfigurer {
         reg.excludePathPatterns("/pay/linePayConfirm");
     }
     
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://35.229.197.237:5173") // 允许的前端源
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-    }
+    // @Override
+    // public void addCorsMappings(CorsRegistry registry) {
+    //     registry.addMapping("/**")
+    //             .allowedOrigins("https://www.stylecode.online:5173/") // 允许的前端源
+    //             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+    //             .allowedHeaders("*")
+    //             .allowCredentials(true);
+    // }
     
     // @Override
     // public void addResourceHandlers(ResourceHandlerRegistry registry) {
