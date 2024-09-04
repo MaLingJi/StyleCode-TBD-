@@ -44,9 +44,6 @@ public class PostsConroller {
 
 	@GetMapping
 	public List<PostDTO> findAllPosts() {
-		// System.out.println("return type: " +
-		// postService.findAllPost().getClass().getSimpleName());
-		// System.out.println("return: " + postService.findAllPost());
 		return postService.findAllPost();
 	}
 
@@ -60,20 +57,15 @@ public class PostsConroller {
 		postService.deletePostById(postId);
 	}
 
-	// 模糊搜尋文章中分類 分享/討論 的標題
 	@GetMapping("/type")
 	public List<Post> searchPosts(
 			@RequestParam(value = "contentType", required = false) String contentType,
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		return postService.searchPostsByTypeAndKeyword(contentType, keyword);
 	}
-	// TODO: 要改成只有一個參數時也可搜尋，無參數時就findAll
-	// P.S.這邊我改成靠前端綁定來處理即可
-	
-	
-	//首頁輪播圖 前9篇文章的照片
-    @GetMapping("/latest")
-    public List<PostDTO> getLatestPosts(@RequestParam(defaultValue = "9") int limit) {
-        return postService.findLatestPosts(limit);
-    }
+
+	@GetMapping("/latest")
+	public List<PostDTO> getLatestPosts(@RequestParam(defaultValue = "9") int limit) {
+		return postService.findLatestPosts(limit);
+	}
 }

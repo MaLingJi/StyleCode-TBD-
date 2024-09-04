@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Setter
 @Getter
 @NoArgsConstructor
@@ -25,15 +24,16 @@ public class PostDTO {
     private Integer userId;
     private String userName;
     private String userPhoto;
-    
+
     private List<String> imageUrls;
 
     // 初始化為空列表
     private List<CollectionsDTO> collections = new ArrayList<>();
-    private List<CommentDTO> comments = new ArrayList<>(); 
+    private List<CommentDTO> comments = new ArrayList<>();
     private List<ImagesDTO> images = new ArrayList<>();
-    private List<LikesDTO> likes = new ArrayList<>(); 
-    private List<PostTagsDTO> postTags = new ArrayList<>(); 
+    private List<LikesDTO> likes = new ArrayList<>();
+    private List<PostTagsDTO> postTags = new ArrayList<>();
+    private List<ProductTagDTO> productTags = new ArrayList<>();
 
     public PostDTO(Post post) {
         this.postId = post.getPostId();
@@ -68,6 +68,10 @@ public class PostDTO {
 
         for (PostTags postTag : post.getPostTags()) {
             this.postTags.add(new PostTagsDTO(postTag));
+        }
+
+        for (ProductTag productTag : post.getProductTags()) {
+            this.productTags.add(new ProductTagDTO(productTag));
         }
     }
 }

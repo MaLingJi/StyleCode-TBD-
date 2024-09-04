@@ -11,4 +11,5 @@ public class PostCreationRequest {
 
     private PostDTO postDTO;
     private List<String> tagNames;
+    private List<ProductTagDTO> productTags;
 }
