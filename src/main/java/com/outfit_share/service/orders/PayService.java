@@ -82,7 +82,7 @@ public class PayService {
 
 		ProductPackageForm productPackageForm = new ProductPackageForm();
 		productPackageForm.setId(tempOrderId);
-		productPackageForm.setName("shop_name");
+		productPackageForm.setName("MDFK");
 		productPackageForm.setAmount(new BigDecimal(lpRequest.getTotalAmounts()));
 
 		List<ProductForm> pdList = new ArrayList<>();
