@@ -47,12 +47,20 @@ public class PayController {
 
 		return ResponseEntity.ok(response);
 	}
-	
-	
+
 	@PostMapping("/agreeRefund")
 	public String agreeRefund(@RequestBody OrdersDTO refundRequest) {
 		String refund = payService.refund(refundRequest);
-		if(refund == "ok") {
+		if (refund == "ok") {
+			return "ok";
+		}
+		return null;
+	}
+
+	@PostMapping("/rejectRefund")
+	public String rejectRefund(@RequestBody OrdersDTO refundRequest) {
+		String refund = payService.rejectRefund(refundRequest);
+		if (refund == "ok") {
 			return "ok";
 		}
 		return null;

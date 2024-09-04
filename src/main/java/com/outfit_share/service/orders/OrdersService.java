@@ -188,6 +188,7 @@ public class OrdersService {
 		Optional<Orders> order = ordersRepository.findById(orderId);
 		if (order.isPresent()) {
 			Orders orders = order.get();
+			orders.setStatus(2);
 			orders.setRefundStatus(1);
 			orders.setApplyRefundDate(LocalDateTime.now());
 			orders.setRefundReason(refundRequest.getRefundReason());
