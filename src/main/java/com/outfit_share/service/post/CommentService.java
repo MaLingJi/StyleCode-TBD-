@@ -81,5 +81,7 @@ public class CommentService {
 		}
 		return null;
 	}
-	
+	 public List<Comment> findCommentsByPostId(Integer postId) {
+	        return commentRepo.findByPost_PostId(postId);
+	    }
 }
