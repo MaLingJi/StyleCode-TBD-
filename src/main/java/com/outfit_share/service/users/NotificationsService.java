@@ -1,6 +1,7 @@
 package com.outfit_share.service.users;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,5 +21,15 @@ public class NotificationsService {
 
     public Notifications saveNotifications(Notifications notifications) {
         return notiRepo.save(notifications);
+    }
+
+    public Notifications updateStatus(Integer id, Integer status) {
+        Optional<Notifications> optional = notiRepo.findById(id);
+        if (optional.isPresent()) {
+            Notifications notifications = optional.get();
+            notifications.setStatus(status);
+            return notiRepo.save(notifications);
+        }
+        return null;
     }
 }

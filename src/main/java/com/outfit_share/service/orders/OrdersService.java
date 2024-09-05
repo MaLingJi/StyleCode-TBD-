@@ -4,6 +4,7 @@ import java.io.Console;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -22,12 +23,14 @@ import com.outfit_share.entity.orders.OrdersDetailsDTO;
 import com.outfit_share.entity.orders.RefundDTO;
 import com.outfit_share.entity.product.Product;
 import com.outfit_share.entity.product.ProductDetails;
+import com.outfit_share.entity.users.Notifications;
 import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.repository.orders.CartRepository;
 import com.outfit_share.repository.orders.OrdersDetailsRepository;
 import com.outfit_share.repository.orders.OrdersRepository;
 import com.outfit_share.repository.product.ProductDetailsRepository;
 import com.outfit_share.repository.product.ProductRepository;
+import com.outfit_share.repository.users.NotificationsRepository;
 import com.outfit_share.repository.users.UserDetailRepository;
 
 @Service
@@ -44,6 +47,8 @@ public class OrdersService {
 	private ProductRepository pdRepo;
 	@Autowired
 	private ProductDetailsRepository pdDetailRepo;
+	@Autowired
+	private NotificationsRepository notiRepo;
 
 	public OrdersDTO addOrder(OrdersDTO ordersRequest) {
 		List<Cart> cartList = cartRepo.findByUserId(ordersRequest.getUserId());
@@ -62,7 +67,9 @@ public class OrdersService {
 		orders.setUserDetail(userDetail);
 		Orders saveOrders = ordersRepository.save(orders);
 
+
 		for (Cart cart : cartList) {
+			// save orderDetails
 			// save orderDetails
 			OrdersDetails ordersDetails = new OrdersDetails();
 			ordersDetails.setOrders(orders);
@@ -76,7 +83,17 @@ public class OrdersService {
 		}
 		cartRepo.deleteByUsers(ordersRequest.getUserId());
 
+		// 創建新通知
+		Notifications notification = new Notifications();
+		notification.setMessage("您的" + saveOrders.getId() + "訂單已成立");
+		notification.setCreatedTime(new Date());
+		notification.setStatus(0);
+		notification.setType("shop");
+		notification.setUserDetail(userDetail);
+		notiRepo.save(notification);
+
 		return new OrdersDTO(saveOrders);
+
 
 	}
 
@@ -98,6 +115,18 @@ public class OrdersService {
 
 		return ordersDTOList;
 	}
+
+	// 改使用DTO作為回傳物件 另種寫法
+//		public List<OrdersDTO> findByUserId(Integer Id){
+//			List<Orders> result = ordersRepository.findByUserId(Id);
+//			return result.stream()
+//					.map(od->{
+//						Hibernate.initialize(od.getUserDetail());
+//						return new OrdersDTO(od);
+//					})
+//					.collect(Collectors.toList());
+//			
+//		}
 
 	public List<OrdersDTO> findByUserIdAndStatus(Integer userId, Integer status) {
 		List<Orders> result = ordersRepository.findByUserIdAndStatus(userId, status);
