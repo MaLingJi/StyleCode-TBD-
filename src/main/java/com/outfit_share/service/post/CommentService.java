@@ -3,12 +3,14 @@ package com.outfit_share.service.post;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.outfit_share.entity.post.Comment;
+import com.outfit_share.entity.post.CommentDTO;
 import com.outfit_share.entity.post.Post;
 import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.repository.post.CommentRepository;
@@ -29,21 +31,17 @@ public class CommentService {
 	
 	//依賴userDetailRepo和postRepo找尋文章中的postid,沒寫postid回傳為null
 	public Comment createComment(Comment comment) {
-		Post post = postRepo.findById(comment.getPost().getPostId()).orElse(null);
-	    UserDetail userDetail = userDetailRepo.findById(comment.getUserDetail().getId()).orElse(null);
+		Post post = postRepo.findById(comment.getPost().getPostId())
+	            .orElseThrow(() -> new IllegalArgumentException("找不到貼文"));
+	    UserDetail userDetail = userDetailRepo.findById(comment.getUserDetail().getId())
+	            .orElseThrow(() -> new IllegalArgumentException("未找到用戶詳細信息"));
 
-	    if (post == null) {
-	        throw new IllegalArgumentException("找不到貼文");
-	    }
-	    if (userDetail == null) {
-	        throw new IllegalArgumentException("未找到用戶詳細信息");
-	    }
-	        comment.setPost(post);
-	        comment.setUserDetail(userDetail);
-	        comment.setCreatedAt(new Date());
+	    comment.setPost(post);
+	    comment.setUserDetail(userDetail);
+	    comment.setCreatedAt(new Date());
 
-	        return commentRepo.save(comment);
-	    }
+	    return commentRepo.save(comment);
+	}
 	
 	public Comment findCommentById(Integer commentId) {
 		Optional<Comment> optional = commentRepo.findById(commentId);
@@ -54,7 +52,7 @@ public class CommentService {
 		return null;
 	}
 	
-	public List<Comment> findAllComments(){
+	public List<Comment> findAllComment(){
 		return commentRepo.findAll();
 	}
 	
@@ -81,5 +79,9 @@ public class CommentService {
 		}
 		return null;
 	}
-	
+	//獲取評論時 將Comment實體轉換為 CommentDTO
+	public List<CommentDTO> findAllComments(Integer postId) {
+	    List<Comment> comments = commentRepo.findByPost_PostId(postId);
+	    return comments.stream().map(CommentDTO::new).collect(Collectors.toList());
+	}
 }

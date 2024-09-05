@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.outfit_share.entity.post.Comment;
+import com.outfit_share.entity.post.CommentDTO;
 import com.outfit_share.service.post.CommentService;
 
 @RestController
@@ -33,8 +35,8 @@ public class CommentController {
 	}
 	
 	@GetMapping
-	public List<Comment> findAllComments(){
-		return comtService.findAllComments();
+	public List<CommentDTO> findAllComments(@RequestParam Integer postId) {
+	    return comtService.findAllComments(postId);
 	}
 	
 	@PutMapping("/{id}")
