@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping
 public class CartController {
 	@Autowired
 	private CartService cartService;
 
-	@PostMapping("/add")
+	@PostMapping("/member/cart/add")
 	public Cart addToCart(@RequestBody CartItemDTO cartRequest) {
 		Cart toCart = cartService.addToCart(cartRequest.getUserId(), cartRequest.getProductDetailsId(),
 				cartRequest.getQuantity());
@@ -31,13 +31,13 @@ public class CartController {
 		return null;
 	};
 
-	@GetMapping("/find/{id}")
+	@GetMapping("/cart/find/{id}")
 	public List<CartItemDTO> findCartById(@PathVariable(value = "id") Integer id) {
 		List<CartItemDTO> result = cartService.findByUserId(id);
 		return result;
 	}
 
-	@PutMapping("/update")
+	@PutMapping("/cart/update")
 	public Cart updateCartVol(@RequestBody CartItemDTO cartRequest) {
 		Cart updateVolCart = cartService.updateVol(cartRequest.getQuantity(), cartRequest.getProductDetailsId(),
 				cartRequest.getUserId());
@@ -48,7 +48,7 @@ public class CartController {
 		return null;
 	}
 
-	@DeleteMapping("/delete")
+	@DeleteMapping("/cart/delete")
 	public String deleteCart(@RequestBody CartItemDTO cartRequest) {
 		String message = cartService.deleteByUserIdProductId(cartRequest.getUserId(),
 				cartRequest.getProductDetailsId());
@@ -58,7 +58,7 @@ public class CartController {
 		return null;
 	}
 
-	@PostMapping("/addOneVol")
+	@PostMapping("/cart/addOneVol")
 	public Cart addVol(@RequestBody CartItemDTO cartRequest) {
 		Cart result = cartService.addOneVol(cartRequest.getUserId(), cartRequest.getProductDetailsId());
 		if (result != null) {
@@ -67,7 +67,7 @@ public class CartController {
 		return null;
 	}
 
-	@PostMapping("/minusOneVol")
+	@PostMapping("/cart/minusOneVol")
 	public Cart minusOneVol(@RequestBody CartItemDTO cartRequest) {
 
 		Cart result = cartService.minusOneVol(cartRequest.getUserId(), cartRequest.getProductDetailsId());
@@ -77,7 +77,7 @@ public class CartController {
 		return null;
 	}
 
-	@PostMapping("/checkStock")
+	@PostMapping("/cart/checkStock")
 	public String checkStock(@RequestBody CartItemDTO checkRequest) {
 		String checkStock = cartService.checkStock(checkRequest);
 		if (checkStock != null) {

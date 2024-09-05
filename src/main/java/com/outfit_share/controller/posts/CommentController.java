@@ -47,4 +47,8 @@ public class CommentController {
 		comtService.deleteCommentById(commentId);
 	}
 	
+	@GetMapping("/post/{postId}")
+    public List<Comment> findCommentsByPostId(@PathVariable("postId") Integer postId) {
+        return comtService.findCommentsByPostId(postId);
+    }
 }

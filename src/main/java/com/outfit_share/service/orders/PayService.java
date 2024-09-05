@@ -82,7 +82,7 @@ public class PayService {
 
 		ProductPackageForm productPackageForm = new ProductPackageForm();
 		productPackageForm.setId(tempOrderId);
-		productPackageForm.setName("shop_name");
+		productPackageForm.setName("MDFK");
 		productPackageForm.setAmount(new BigDecimal(lpRequest.getTotalAmounts()));
 
 		List<ProductForm> pdList = new ArrayList<>();
@@ -261,7 +261,7 @@ public class PayService {
 					Optional<Orders> byId = odRepo.findById(orderId);
 					if (byId.isPresent()) {
 						Orders orders = byId.get();
-						orders.setStatus(2);
+						orders.setStatus(3);
 						orders.setRefundStatus(2);
 						odRepo.save(orders);
 					}
@@ -276,5 +276,18 @@ public class PayService {
 		}
 
 		return "Unexpected error";
+	}
+
+	public String rejectRefund(OrdersDTO refundRequest) {
+		String orderId = refundRequest.getOrderId();
+		Optional<Orders> byId = odRepo.findById(orderId);
+		if (byId.isPresent()) {
+			Orders orders = byId.get();
+			orders.setStatus(1);
+			orders.setRefundStatus(2);
+			odRepo.save(orders);
+			return "ok";
+		}
+		return null;
 	}
 }

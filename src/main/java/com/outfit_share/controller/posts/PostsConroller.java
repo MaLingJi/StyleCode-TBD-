@@ -44,9 +44,6 @@ public class PostsConroller {
 
 	@GetMapping("/post")
 	public List<PostDTO> findAllPosts() {
-		// System.out.println("return type: " +
-		// postService.findAllPost().getClass().getSimpleName());
-		// System.out.println("return: " + postService.findAllPost());
 		return postService.findAllPost();
 	}
 

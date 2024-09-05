@@ -31,6 +31,21 @@ public class UserDetailService {
     @Autowired
     private UserDetailRepository udRepo;
 
+    private UserDetailDTO converEntityToDto(UserDetail user) {
+        UserDetailDTO userDetailDTO = new UserDetailDTO();
+        userDetailDTO.setUserId(user.getId());
+        userDetailDTO.setUserEmail(user.getUsers().getEmail());
+        userDetailDTO.setRealName(user.getRealName());
+        userDetailDTO.setUserName(user.getUserName());
+        userDetailDTO.setAddress(user.getAddress());
+        userDetailDTO.setPhone(user.getPhone());
+        userDetailDTO.setCreatedTime(user.getCreatedTime());
+        userDetailDTO.setUpdatedTime(user.getUpdatedTime());
+        userDetailDTO.setUserPhoto(user.getUserPhoto());
+        userDetailDTO.setDiscountPoints(user.getDiscountPoints());
+        return userDetailDTO;
+    }
+
     public UserDetailDTO findUserById(Integer userId) {
         UserDetail userDetail = udRepo.findById(userId).orElse(null);
         return converEntityToDto(userDetail);
@@ -53,21 +68,6 @@ public class UserDetailService {
         uDetail.setUserPhoto("user.png");
         uDetail.setDiscountPoints(0);
         return udRepo.save(uDetail);
-    }
-
-    private UserDetailDTO converEntityToDto(UserDetail user) {
-        UserDetailDTO userDetailDTO = new UserDetailDTO();
-        userDetailDTO.setUserId(user.getId());
-        userDetailDTO.setUserEmail(user.getUsers().getEmail());
-        userDetailDTO.setRealName(user.getRealName());
-        userDetailDTO.setUserName(user.getUserName());
-        userDetailDTO.setAddress(user.getAddress());
-        userDetailDTO.setPhone(user.getPhone());
-        userDetailDTO.setCreatedTime(user.getCreatedTime());
-        userDetailDTO.setUpdatedTime(user.getUpdatedTime());
-        userDetailDTO.setUserPhoto(user.getUserPhoto());
-        userDetailDTO.setDiscountPoints(user.getDiscountPoints());
-        return userDetailDTO;
     }
 
     public UserDetail saveDetail(UserDetail uDetail) {

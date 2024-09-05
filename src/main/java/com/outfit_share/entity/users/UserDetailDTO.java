@@ -6,6 +6,7 @@ public class UserDetailDTO {
 
     private Integer userId;
     private String userEmail;
+    private String permissions;
     private String userName;
     private String realName;
     private String address;
@@ -18,9 +19,12 @@ public class UserDetailDTO {
     public UserDetailDTO() {
     }
 
-    public UserDetailDTO(String userEmail, String userName, String realName, String address, String phone,
-            Date createdTime, Date updatedTime, String userPhoto, Integer discountPoints) {
+    public UserDetailDTO(Integer userId, String userEmail, String permissions, String userName, String realName,
+            String address, String phone, Date createdTime, Date updatedTime, String userPhoto,
+            Integer discountPoints) {
+        this.userId = userId;
         this.userEmail = userEmail;
+        this.permissions = permissions;
         this.userName = userName;
         this.realName = realName;
         this.address = address;
@@ -31,10 +35,10 @@ public class UserDetailDTO {
         this.discountPoints = discountPoints;
     }
 
-    public UserDetailDTO(Integer userId, String userEmail, String userName, String realName, String address,
+    public UserDetailDTO(String userEmail, String permissions, String userName, String realName, String address,
             String phone, Date createdTime, Date updatedTime, String userPhoto, Integer discountPoints) {
-        this.userId = userId;
         this.userEmail = userEmail;
+        this.permissions = permissions;
         this.userName = userName;
         this.realName = realName;
         this.address = address;
@@ -123,6 +127,14 @@ public class UserDetailDTO {
 
     public void setDiscountPoints(Integer discountPoints) {
         this.discountPoints = discountPoints;
+    }
+
+    public String getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String permissions) {
+        this.permissions = permissions;
     }
 
 }
