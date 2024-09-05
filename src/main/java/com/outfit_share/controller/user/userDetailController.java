@@ -123,4 +123,10 @@ public class userDetailController {
         return responseJson.toString();
     }
 
+    @GetMapping("/admin/todayregistrations")
+    public long getMethodName() {
+        System.out.println("今日人數??");
+        return uDetailService.getTodayRegistrationCount();
+    }
+
 }

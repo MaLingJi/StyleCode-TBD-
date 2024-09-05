@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,16 +34,18 @@ public class UsersService {
         return null;
     }
 
-    public List<UserDetailDTO> findAll() {
-        List<Users> userList = uRepo.findAll();
-        List<UserDetailDTO> userDTOList = new ArrayList<>();
-        if (userList != null && !userList.isEmpty()) {
-            for (Users user : userList) {
-                UserDetailDTO userDTO = converEntityToDto(user);
-                userDTOList.add(userDTO);
-            }
-        }
-        return userDTOList;
+    public Page<UserDetailDTO> findAll(Pageable pageable) {
+
+        Page<Users> userPage = uRepo.findAll(pageable);
+        // List<Users> userList = uRepo.findAll();
+        // List<UserDetailDTO> userDTOList = new ArrayList<>();
+        // if (userList != null && !userList.isEmpty()) {
+        // for (Users user : userList) {
+        // UserDetailDTO userDTO = converEntityToDto(user);
+        // userDTOList.add(userDTO);
+        // }
+        // }
+        return userPage.map(this::converEntityToDto);
     }
 
     public boolean checkEmail(String email) {

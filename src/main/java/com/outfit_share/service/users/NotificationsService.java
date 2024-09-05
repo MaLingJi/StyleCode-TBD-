@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.outfit_share.entity.users.Notifications;
@@ -16,7 +17,8 @@ public class NotificationsService {
     private NotificationsRepository notiRepo;
 
     public List<Notifications> findByUserId(Integer userId) {
-        return notiRepo.findByUserDetailId(userId);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdTime");
+        return notiRepo.findByUserDetailId(userId, sort);
     }
 
     public Notifications saveNotifications(Notifications notifications) {
