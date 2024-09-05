@@ -27,19 +27,4 @@ public class JwtConfig implements WebMvcConfigurer {
 //                .addPathPatterns("/order/**");
         reg.excludePathPatterns("/pay/linePayConfirm");
     }
-    
-    // @Override
-    // public void addCorsMappings(CorsRegistry registry) {
-    //     registry.addMapping("/**")
-    //             .allowedOrigins("https://www.stylecode.online:5173/") // 允许的前端源
-    //             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-    //             .allowedHeaders("*")
-    //             .allowCredentials(true);
-    // }
-    
-    // @Override
-    // public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    //     registry.addResourceHandler("/image/**")
-    //             .addResourceLocations("file:///home/a385500062appletw/StyleCode_Image/");
-    // }
 }
