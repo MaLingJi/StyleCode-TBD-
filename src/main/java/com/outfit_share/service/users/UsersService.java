@@ -1,5 +1,7 @@
 package com.outfit_share.service.users;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.outfit_share.entity.users.UserDetailDTO;
 import com.outfit_share.entity.users.Users;
 import com.outfit_share.repository.users.UsersRepository;
 
@@ -27,6 +30,18 @@ public class UsersService {
             return dbUser;
         }
         return null;
+    }
+
+    public List<UserDetailDTO> findAll() {
+        List<Users> userList = uRepo.findAll();
+        List<UserDetailDTO> userDTOList = new ArrayList<>();
+        if (userList != null && !userList.isEmpty()) {
+            for (Users user : userList) {
+                UserDetailDTO userDTO = converEntityToDto(user);
+                userDTOList.add(userDTO);
+            }
+        }
+        return userDTOList;
     }
 
     public boolean checkEmail(String email) {
@@ -78,4 +93,29 @@ public class UsersService {
         return false;
     }
 
+    public boolean updateUserPermissions(Integer id, String newRole) {
+        Users user = findUserById(id);
+        if (user != null) {
+            user.setPermissions(newRole);
+            uRepo.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    private UserDetailDTO converEntityToDto(Users user) {
+        UserDetailDTO userDetailDTO = new UserDetailDTO();
+        userDetailDTO.setUserId(user.getId());
+        userDetailDTO.setUserEmail(user.getEmail());
+        userDetailDTO.setPermissions(user.getPermissions());
+        userDetailDTO.setRealName(user.getUserDetail().getRealName());
+        userDetailDTO.setUserName(user.getUserDetail().getUserName());
+        userDetailDTO.setAddress(user.getUserDetail().getAddress());
+        userDetailDTO.setPhone(user.getUserDetail().getPhone());
+        userDetailDTO.setCreatedTime(user.getUserDetail().getCreatedTime());
+        userDetailDTO.setUpdatedTime(user.getUserDetail().getUpdatedTime());
+        userDetailDTO.setUserPhoto(user.getUserDetail().getUserPhoto());
+        userDetailDTO.setDiscountPoints(user.getUserDetail().getDiscountPoints());
+        return userDetailDTO;
+    }
 }

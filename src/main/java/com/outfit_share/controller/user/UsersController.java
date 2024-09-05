@@ -1,5 +1,7 @@
 package com.outfit_share.controller.user;
 
+import java.util.List;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -7,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.outfit_share.entity.users.UserDetailDTO;
 import com.outfit_share.entity.users.Users;
 import com.outfit_share.service.users.UserDetailService;
 import com.outfit_share.service.users.UsersService;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class UsersController {
@@ -117,5 +122,30 @@ public class UsersController {
             responseJson.put("message", "更新失敗");
         }
         return responseJson.toString();
+    }
+
+    @GetMapping("/admin/userback")
+    public ResponseEntity<List<UserDetailDTO>> getAllusers() {
+        List<UserDetailDTO> users = uService.findAll();
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @PutMapping("/admin/userback/{id}")
+    public ResponseEntity<String> changeRole(@PathVariable Integer id, @RequestBody String json) {
+
+        JSONObject reqJsonObj = new JSONObject(json);
+        String newRole = reqJsonObj.getString("role");
+        boolean updated = uService.updateUserPermissions(id, newRole);
+
+        if (updated) {
+            return new ResponseEntity<>("權限更新成功", HttpStatus.OK);
+
+        } else {
+
+            return new ResponseEntity<>("沒有找到使用者", HttpStatus.NOT_FOUND);
+        }
     }
 }
