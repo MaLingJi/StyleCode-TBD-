@@ -44,13 +44,13 @@ public class Post {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
     private List<Comment> comment;
-   
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
     private List<Images> images = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
     private List<Likes> likes;
-    
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
     private List<Collections> collections;
 
@@ -58,7 +58,7 @@ public class Post {
     private List<PostTags> postTags;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
-    private List<ProductTag> productTags;   
+    private List<ProductTag> productTags;
 
     @Column(name = "content_type")
     private String contentType;
@@ -104,7 +104,7 @@ public class Post {
     }
 
     public Post(Integer postId, UserDetail userDetail, String contentType, String postTitle, String contentText,
-    Integer shareId,
+            Integer shareId,
             Date createdAt, Date deletedAt) {
         this.postId = postId;
         this.userDetail = userDetail;
