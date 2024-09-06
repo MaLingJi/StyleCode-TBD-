@@ -158,7 +158,7 @@ public class CartService {
 		Cart dbCart = cartRepository.findByUserIdAndProductId(userId, productDetailsId);
 		if (dbCart != null) {
 			cartRepository.delete(dbCart);
-			return "ok";
+			return "scucess";
 		}
 		return null; 
 	}
