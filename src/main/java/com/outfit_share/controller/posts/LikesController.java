@@ -40,22 +40,22 @@ public class LikesController {
 		return ResponseEntity.ok("對你按讚");
 	}
 
-	@GetMapping("/{postId}/{userId}")
-	public ResponseEntity<String> findLikesById(@PathVariable Integer postId, @PathVariable Integer userId) {
-		Likes likes = likeservice.findLikesById(postId, userId);
+	@GetMapping("/{userId}/{postId}")
+	public ResponseEntity<String> findLikesById(@PathVariable Integer userId, @PathVariable Integer postId) {
+		Likes likes = likeservice.findLikesById(userId, postId);
 		if (likes == null) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok("對方對你點讚");// <likes>
 	}
 
-	@DeleteMapping("/{postId}/{userId}")
-	public ResponseEntity<String> deleteLikes(@PathVariable Integer postId, @PathVariable Integer userId) {
-		Likes likes = likeservice.findLikesById(postId, userId);
+	@DeleteMapping("/{userId}/{postId}")
+	public ResponseEntity<String> deleteLikes(@PathVariable Integer userId, @PathVariable Integer postId) {
+		Likes likes = likeservice.findLikesById(userId, postId);
 		if (likes == null) {
 			return ResponseEntity.notFound().build();
 		}
-		likeservice.deleteLikesById(postId, userId);
+		likeservice.deleteLikesById(userId, postId);
 		return ResponseEntity.ok("收回讚");
 	}
 

@@ -44,8 +44,8 @@ public class LikesService {
 
 	// 複合主鍵類型不是單個 Integer
 	// 尋找postId和userId 根據你的實際鍵值構建LikesId對象進行 找Id
-	public Likes findLikesById(Integer postId, Integer userId) {
-		LikesId likesId = new LikesId(postId, userId);
+	public Likes findLikesById(Integer userId,Integer postId)  {
+		LikesId likesId = new LikesId(userId, postId);
 		Optional<Likes> optional = likesRepo.findById(likesId);
 
 		if (optional.isPresent()) {
@@ -56,13 +56,13 @@ public class LikesService {
 
 	// 複合主鍵類型不是單個 Integer
 	// 尋找postId和userId 根據你的實際鍵值構建LikesId對象進行 刪除
-	public void deleteLikesById(Integer postId, Integer userId) {
-		LikesId likesId = new LikesId(postId, userId);
+	public void deleteLikesById(Integer userId, Integer postId) {
+		LikesId likesId = new LikesId(userId, postId);
 		likesRepo.deleteById(likesId);
 	}
 
-	public boolean toggleLikes(Integer postId,Integer userId) {
-		LikesId likesId = new LikesId(postId,userId);
+	public boolean toggleLikes(Integer userId,Integer postId) {
+		LikesId likesId = new LikesId(userId,postId);
 	    Optional<Likes> existingLike = likesRepo.findById(likesId);
 	    
 	    if (existingLike.isPresent()) {

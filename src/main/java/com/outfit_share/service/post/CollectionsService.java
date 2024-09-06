@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.outfit_share.entity.post.Collections;
 import com.outfit_share.entity.post.CollectionsId;
-import com.outfit_share.entity.post.Likes;
-import com.outfit_share.entity.post.LikesId;
 import com.outfit_share.entity.post.Post;
 import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.repository.post.CollectionsRepository;
@@ -44,8 +42,8 @@ public class CollectionsService {
 	}
 	//複合主鍵類型不是單個 Integer
 	//尋找postId和userId 根據你的實際鍵值構建CollectionsId對象進行 找Id
-	public Collections findCollectionsbyId(Integer postId, Integer userId) {
-		CollectionsId collectionsId = new CollectionsId(postId,userId);
+	public Collections findCollectionsbyId(Integer userId, Integer postId) {
+		CollectionsId collectionsId = new CollectionsId(userId,postId);
 		Optional<Collections> optional = collectsRepo.findById(collectionsId);
 		
 		if (optional.isPresent()) {
@@ -55,13 +53,13 @@ public class CollectionsService {
 	}
 	//複合主鍵類型不是單個 Integer
 	//尋找postId和userId 根據你的實際鍵值構建CollectionsId對象進行 刪除
-	public void deletecollectsById(Integer postId, Integer userId) {
-		CollectionsId collectionsId = new CollectionsId(postId, userId);
+	public void deletecollectsById(Integer userId, Integer postId) {
+		CollectionsId collectionsId = new CollectionsId(userId, postId);
 		collectsRepo.deleteById(collectionsId);
 	}
 	
-	public boolean toggleLikes(Integer postId,Integer userId) {
-		CollectionsId collectionsId = new CollectionsId(postId,userId);
+	public boolean toggleCollects(Integer userId,Integer postId) {
+		CollectionsId collectionsId = new CollectionsId(userId,postId);
 	    Optional<Collections> existingCollections = collectsRepo.findById(collectionsId);
 	    
 	    if (existingCollections.isPresent()) {

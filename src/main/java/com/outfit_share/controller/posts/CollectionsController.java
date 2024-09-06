@@ -49,20 +49,18 @@ public class CollectionsController {
 	    return ResponseEntity.ok("收藏成功");
 	}
 
-
-
-	@GetMapping("/{postId}/{userId}")
-	public ResponseEntity<String> findCollectionsById(@PathVariable Integer postId, @PathVariable Integer userId) {
-		Collections collections = collectservice.findCollectionsbyId(postId, userId);
+	@GetMapping("/{userId}/{postId}")
+	public ResponseEntity<String> findCollectionsById(@PathVariable Integer userId, @PathVariable Integer postId) {
+		Collections collections = collectservice.findCollectionsbyId(userId, postId);
 		if (collections == null) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok("貼文已收藏");//<collections>
 	}
 	
-	@DeleteMapping("/{postId}/{userId}")
-	public ResponseEntity<String> deleteCollections(@PathVariable Integer postId, @PathVariable Integer userId) {
-		Collections collections = collectservice.findCollectionsbyId(postId, userId);
+	@DeleteMapping("/{userId}/{postId}")
+	public ResponseEntity<String> deleteCollections(@PathVariable Integer userId, @PathVariable Integer postId) {
+		Collections collections = collectservice.findCollectionsbyId(userId, postId);
 		if (collections == null) {
 			return ResponseEntity.notFound().build();
 		}
@@ -72,8 +70,8 @@ public class CollectionsController {
 	
 	@PostMapping("/toggle")
 	public ResponseEntity<String> toggleLike(@RequestBody CollectionsDTO collectionsDTO) {
-		boolean iscollected = collectservice.toggleLikes(collectionsDTO.getUserId(), collectionsDTO.getPostId());
-		if (iscollected) {
+		boolean isCollected = collectservice.toggleCollects(collectionsDTO.getUserId(), collectionsDTO.getPostId());
+		if (isCollected) {
 			return ResponseEntity.ok("收藏成功");
 		} else {
 			return ResponseEntity.ok("收回收藏成功");

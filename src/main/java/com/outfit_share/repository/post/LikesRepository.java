@@ -9,5 +9,5 @@ import com.outfit_share.entity.post.LikesId;
 
 public interface LikesRepository extends JpaRepository<Likes, LikesId> {
 
-	 Optional<Likes> findByLikesId_UserIdAndLikesId_PostId(Integer postId, Integer userId);
+	 Optional<Likes> findByLikesId_UserIdAndLikesId_PostId(Integer userId, Integer postId);
 }
