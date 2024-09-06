@@ -1,9 +1,14 @@
 package com.outfit_share.controller.user;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -125,12 +130,26 @@ public class UsersController {
     }
 
     @GetMapping("/admin/userback")
-    public ResponseEntity<List<UserDetailDTO>> getAllusers() {
-        List<UserDetailDTO> users = uService.findAll();
-        if (users.isEmpty()) {
+    public ResponseEntity<Map<String, Object>> getAllusers(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<UserDetailDTO> userPage = uService.findAll(pageable);
+
+        Map<String, Object> userResponse = new HashMap<>();
+        userResponse.put("items", userPage.getContent());
+        userResponse.put("currentPage", userPage.getNumber());
+        userResponse.put("totalItems", userPage.getTotalElements());
+        userResponse.put("totalPages", userPage.getTotalPages());
+
+        if (userPage.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
+
+        // if (users.isEmpty()) {
+        // return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        // }
+        // return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PutMapping("/admin/userback/{id}")

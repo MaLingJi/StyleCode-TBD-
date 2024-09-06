@@ -107,4 +107,8 @@ public class UserDetailService {
         }
         return null;
     }
+
+    public long getTodayRegistrationCount() {
+        return udRepo.countTodayRegistrations();
+    }
 }
