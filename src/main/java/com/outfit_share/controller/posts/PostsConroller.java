@@ -47,6 +47,16 @@ public class PostsConroller {
 		return postService.findAllPost();
 	}
 
+	@PutMapping("/postwithtags/{postId}")
+	public ResponseEntity<PostDTO> updatePost(
+			@PathVariable Integer postId,
+			@RequestBody PostCreationRequest request) {
+
+		PostDTO updatedPost = postService.updatePostWithTags(postId, request.getPostDTO(), request.getTagNames());
+
+		return ResponseEntity.ok(updatedPost);
+	}
+
 	@PutMapping("/{id}")
 	public Post updatePost(@PathVariable("id") Integer postId, @RequestBody Post post) {
 		return postService.updatePost(postId, post);

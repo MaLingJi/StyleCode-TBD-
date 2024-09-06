@@ -164,6 +164,81 @@ public class PostService {
 	}
 
 	@Transactional
+	public PostDTO updatePostWithTags(Integer postId, PostDTO updatedPostDTO, List<String> updatedTagNames) {
+		// 查找現有的文章
+		Post post = postRepo.findById(postId)
+				.orElseThrow(() -> new RuntimeException("Post not found"));
+
+		// 更新文章內容
+		post.setContentType(updatedPostDTO.getContentType());
+		post.setPostTitle(updatedPostDTO.getPostTitle());
+		post.setContentText(updatedPostDTO.getContentText());
+		post.setShareId(updatedPostDTO.getShareId());
+
+		// 保存更新後的文章
+		post = postRepo.save(post);
+
+		// 處理標籤更新
+		// 刪除舊的標籤
+		postTagsRepository.deleteByPost(post);
+
+		// 創建並保存新的標籤
+		List<PostTags> postTagsList = new ArrayList<>();
+		for (String tagName : updatedTagNames) {
+			Tags tag = tagsRepository.findByName(tagName)
+					.orElseGet(() -> {
+						Tags newTag = new Tags();
+						newTag.setName(tagName);
+						return tagsRepository.save(newTag);
+					});
+
+			PostTagsId postTagsId = new PostTagsId(post.getPostId(), tag.getId());
+
+			PostTags postTag = new PostTags();
+			postTag.setPostTagsId(postTagsId);
+			postTag.setPost(post);
+			postTag.setTags(tag);
+
+			postTagsList.add(postTag);
+		}
+		postTagsRepository.saveAll(postTagsList);
+
+		// 處理 ProductTag 更新
+		// 刪除舊的 ProductTag
+		productTagRepository.deleteByPost(post);
+
+		// 創建並保存新的 ProductTag
+		List<ProductTag> productTagsList = new ArrayList<>();
+		for (ProductTagDTO productTagDTO : updatedPostDTO.getProductTags()) {
+			ProductTag productTag = new ProductTag();
+			productTag.setProductName(productTagDTO.getProductName());
+			productTag.setPost(post);
+			productTag.setSubcategory(subcategoryRepository.findById(productTagDTO.getSubcategoryId())
+					.orElseThrow(() -> new RuntimeException("Subcategory not found")));
+
+			productTagsList.add(productTag);
+		}
+		productTagRepository.saveAll(productTagsList);
+
+		// 更新後的 PostDTO 返回
+		updatedPostDTO.setPostId(post.getPostId());
+		updatedPostDTO.setCreatedAt(post.getCreatedAt());
+		updatedPostDTO.setDeletedAt(post.getDeletedAt());
+
+		updatedPostDTO.getPostTags().clear();
+		for (PostTags postTag : postTagsList) {
+			updatedPostDTO.getPostTags().add(new PostTagsDTO(postTag));
+		}
+
+		updatedPostDTO.getProductTags().clear();
+		for (ProductTag productTag : productTagsList) {
+			updatedPostDTO.getProductTags().add(new ProductTagDTO(productTag));
+		}
+
+		return updatedPostDTO;
+	}
+
+	@Transactional
 	public Post updatePost(Integer postId, Post newpost) {
 		Optional<Post> upoptional = postRepo.findById(postId);
 
