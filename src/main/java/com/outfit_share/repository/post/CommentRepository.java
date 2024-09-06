@@ -8,5 +8,5 @@ import com.outfit_share.entity.post.Comment;
 
 public interface CommentRepository extends JpaRepository<Comment, Integer>{
 	
-	List<Comment> findByPost_PostId(Integer postId);
+	 List<Comment> findByPost_PostId(Integer postId); 
 }
