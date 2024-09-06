@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.outfit_share.entity.post.Collections;
+import com.outfit_share.entity.post.CollectionsDTO;
 import com.outfit_share.entity.post.CollectionsId;
 import com.outfit_share.entity.post.Post;
 import com.outfit_share.entity.users.UserDetail;
@@ -67,5 +68,15 @@ public class CollectionsController {
 		}
 		collectservice.deletecollectsById(postId, userId);
 		return ResponseEntity.ok("取消收藏");
+	}
+	
+	@PostMapping("/toggle")
+	public ResponseEntity<String> toggleLike(@RequestBody CollectionsDTO collectionsDTO) {
+		boolean iscollected = collectservice.toggleLikes(collectionsDTO.getUserId(), collectionsDTO.getPostId());
+		if (iscollected) {
+			return ResponseEntity.ok("收藏成功");
+		} else {
+			return ResponseEntity.ok("收回收藏成功");
+		}
 	}
 }
