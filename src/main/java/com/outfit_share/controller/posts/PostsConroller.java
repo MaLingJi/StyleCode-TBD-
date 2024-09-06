@@ -33,7 +33,7 @@ public class PostsConroller {
 
 	@PostMapping("/postwithtags")
 	public ResponseEntity<PostDTO> createPost(@RequestBody PostCreationRequest request) {
-		PostDTO createdPost = postService.createPostWithTags(request.getPostDTO(), request.getTagNames());
+		PostDTO createdPost = postService.createPostWithTags(request.getPostDTO());
 		return ResponseEntity.ok(createdPost);
 	}
 
@@ -52,7 +52,8 @@ public class PostsConroller {
 			@PathVariable Integer postId,
 			@RequestBody PostCreationRequest request) {
 
-		PostDTO updatedPost = postService.updatePostWithTags(postId, request.getPostDTO(), request.getTagNames());
+		System.out.println("Received PostCreationRequest: " + request);
+		PostDTO updatedPost = postService.updatePostWithTags(postId, request.getPostDTO());
 
 		return ResponseEntity.ok(updatedPost);
 	}

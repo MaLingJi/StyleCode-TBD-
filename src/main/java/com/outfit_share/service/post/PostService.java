@@ -56,7 +56,7 @@ public class PostService {
 	}
 
 	@Transactional
-	public PostDTO createPostWithTags(PostDTO postDTO, List<String> tagNames) {
+	public PostDTO createPostWithTags(PostDTO postDTO) {
 		// 創建 Post 實體
 		Post post = new Post();
 		post.setContentType(postDTO.getContentType());
@@ -69,22 +69,18 @@ public class PostService {
 		// 保存 Post 實體到資料庫
 		post = postRepo.save(post);
 
-		// 處理標籤
+		// 處理 PostTags
 		List<PostTags> postTagsList = new ArrayList<>();
-		for (String tagName : tagNames) {
-			// 查詢標籤是否已存在
-			Tags tag = tagsRepository.findByName(tagName)
+		for (PostTagsDTO postTagsDTO : postDTO.getPostTags()) {
+			Tags tag = tagsRepository.findByName(postTagsDTO.getTagName())
 					.orElseGet(() -> {
-						// 如果標籤不存在，則創建一個新標籤
 						Tags newTag = new Tags();
-						newTag.setName(tagName);
+						newTag.setName(postTagsDTO.getTagName());
 						return tagsRepository.save(newTag);
 					});
 
-			// 創建 PostTagsId
 			PostTagsId postTagsId = new PostTagsId(post.getPostId(), tag.getId());
 
-			// 創建 PostTags 關聯
 			PostTags postTag = new PostTags();
 			postTag.setPostTagsId(postTagsId);
 			postTag.setPost(post);
@@ -92,11 +88,7 @@ public class PostService {
 
 			postTagsList.add(postTag);
 		}
-		System.out.println("文章標籤: " + postTagsList);
-		// 保存所有的 PostTags 關聯
 		postTagsRepository.saveAll(postTagsList);
-
-		System.out.println("productTags: " + postDTO.getProductTags());
 
 		// 處理 ProductTag
 		List<ProductTag> productTagsList = new ArrayList<>();
@@ -106,12 +98,8 @@ public class PostService {
 			productTag.setPost(post);
 			productTag.setSubcategory(subcategoryRepository.findById(productTagDTO.getSubcategoryId())
 					.orElseThrow(() -> new RuntimeException("Subcategory not found")));
-			System.out.println("---------------------------------------------");
-			System.out.println("productTag: " + productTag);
-			System.out.println("---------------------------------------------");
 			productTagsList.add(productTag);
 		}
-		// System.out.println("單品標籤: " + productTagsList);
 		productTagRepository.saveAll(productTagsList);
 
 		// 將所有關聯加回 PostDTO 返回
@@ -119,10 +107,12 @@ public class PostService {
 		postDTO.setCreatedAt(post.getCreatedAt());
 		postDTO.setDeletedAt(post.getDeletedAt());
 
+		postDTO.getPostTags().clear();
 		for (PostTags postTag : postTagsList) {
 			postDTO.getPostTags().add(new PostTagsDTO(postTag));
 		}
 
+		postDTO.getProductTags().clear();
 		for (ProductTag productTag : productTagsList) {
 			postDTO.getProductTags().add(new ProductTagDTO(productTag));
 		}
@@ -164,7 +154,7 @@ public class PostService {
 	}
 
 	@Transactional
-	public PostDTO updatePostWithTags(Integer postId, PostDTO updatedPostDTO, List<String> updatedTagNames) {
+	public PostDTO updatePostWithTags(Integer postId, PostDTO updatedPostDTO) {
 		// 查找現有的文章
 		Post post = postRepo.findById(postId)
 				.orElseThrow(() -> new RuntimeException("Post not found"));
@@ -179,29 +169,33 @@ public class PostService {
 		post = postRepo.save(post);
 
 		// 處理標籤更新
-		// 刪除舊的標籤
-		postTagsRepository.deleteByPost(post);
+		List<PostTagsDTO> updatedPostTagsDTOs = updatedPostDTO.getPostTags();
+		List<PostTags> postTagsList = new ArrayList<>(); // 將變數定義移到外部
 
-		// 創建並保存新的標籤
-		List<PostTags> postTagsList = new ArrayList<>();
-		for (String tagName : updatedTagNames) {
-			Tags tag = tagsRepository.findByName(tagName)
-					.orElseGet(() -> {
-						Tags newTag = new Tags();
-						newTag.setName(tagName);
-						return tagsRepository.save(newTag);
-					});
+		if (updatedPostTagsDTOs != null) {
+			// 刪除舊的標籤
+			postTagsRepository.deleteByPost(post);
 
-			PostTagsId postTagsId = new PostTagsId(post.getPostId(), tag.getId());
+			// 創建並保存新的標籤
+			for (PostTagsDTO postTagsDTO : updatedPostTagsDTOs) {
+				Tags tag = tagsRepository.findByName(postTagsDTO.getTagName())
+						.orElseGet(() -> {
+							Tags newTag = new Tags();
+							newTag.setName(postTagsDTO.getTagName());
+							return tagsRepository.save(newTag);
+						});
 
-			PostTags postTag = new PostTags();
-			postTag.setPostTagsId(postTagsId);
-			postTag.setPost(post);
-			postTag.setTags(tag);
+				PostTagsId postTagsId = new PostTagsId(post.getPostId(), tag.getId());
 
-			postTagsList.add(postTag);
+				PostTags postTag = new PostTags();
+				postTag.setPostTagsId(postTagsId);
+				postTag.setPost(post);
+				postTag.setTags(tag);
+
+				postTagsList.add(postTag);
+			}
+			postTagsRepository.saveAll(postTagsList);
 		}
-		postTagsRepository.saveAll(postTagsList);
 
 		// 處理 ProductTag 更新
 		// 刪除舊的 ProductTag
