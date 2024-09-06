@@ -4,9 +4,12 @@ import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+// import org.springframework.boot.configurationprocessor.json.JSONArray;
+// import org.springframework.boot.configurationprocessor.json.JSONException;
+// import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.outfit_share.entity.users.CreditCards;
@@ -55,7 +58,7 @@ public class CreditCardController {
             responseJson.put("cardList", array);
         } else {
             responseJson.put("success", true);
-            responseJson.put("cardList", null);
+            responseJson.put("cardList", array);
         }
         return responseJson.toString();
     }

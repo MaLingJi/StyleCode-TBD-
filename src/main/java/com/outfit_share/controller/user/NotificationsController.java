@@ -3,9 +3,9 @@ package com.outfit_share.controller.user;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.outfit_share.entity.users.Notifications;
@@ -28,8 +28,8 @@ public class NotificationsController {
 
     @GetMapping("/member/notifications/{userId}")
     public String getNotificationsList(@PathVariable("userId") Integer userId,
-            @RequestHeader("Authorization") String token)
-            throws JSONException {
+            @RequestHeader("Authorization") String token) throws JSONException {
+
         JSONObject responseJson = new JSONObject();
 
         // 驗證user
@@ -42,6 +42,7 @@ public class NotificationsController {
         List<Notifications> dbNotifications = notiService.findByUserId(userId);
         JSONArray array = new JSONArray();
         int unreadCount = 0;
+
         if (dbNotifications != null && !dbNotifications.isEmpty()) {
             for (Notifications notification : dbNotifications) {
                 JSONObject notificationJson = new JSONObject()
@@ -58,11 +59,11 @@ public class NotificationsController {
                 }
             }
             responseJson.put("success", true);
-            responseJson.put("notificationList", array);
+            responseJson.put("notificationList", array);  // 确保 array 是一个 JSONArray
             responseJson.put("unreadCount", unreadCount);
         } else {
             responseJson.put("success", true);
-            responseJson.put("notificationList", null);
+            responseJson.put("notificationList", new JSONArray());  // 返回一个空的 JSONArray
         }
         return responseJson.toString();
     }
@@ -73,12 +74,20 @@ public class NotificationsController {
 
         try {
             Notifications updatedNoti = notiService.updateStatus(id, 1);
+
+            JSONObject notificationJson = new JSONObject()
+                    .put("Nid", updatedNoti.getId())
+                    .put("message", updatedNoti.getMessage())
+                    .put("type", updatedNoti.getType())
+                    .put("status", updatedNoti.getStatus())
+                    .put("createdTime", updatedNoti.getCreatedTime())
+                    .put("userId", updatedNoti.getUserDetail().getId());
+
             responseJson.put("success", true);
-            responseJson.put("notification", updatedNoti);
+            responseJson.put("notification", notificationJson);  // 将 updatedNoti 转换为 JSONObject
         } catch (RuntimeException e) {
             responseJson.put("success", false);
-            responseJson.put("notification", null);
-
+            responseJson.put("message", "Notification update failed");
         }
 
         return responseJson.toString();
