@@ -1,6 +1,8 @@
 package com.outfit_share.service.post;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.outfit_share.entity.post.Collections;
 import com.outfit_share.entity.post.CollectionsId;
 import com.outfit_share.entity.post.Post;
+import com.outfit_share.entity.post.PostDTO;
 import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.repository.post.CollectionsRepository;
 import com.outfit_share.repository.post.PostRepository;
@@ -80,4 +83,13 @@ public class CollectionsService {
 	        return true; // 表示新增了收藏
 	    }
 	}
+	
+	//按使用者 ID 尋找收藏貼文
+	public List<PostDTO> findCollectionsPostsByUserId(Integer userId) {		
+		List<Collections> collections = collectsRepo.findByUserDetail_Id(userId);
+	    return collections.stream()
+	                   .map(collection -> new PostDTO(collection.getPosts()))
+	                   .collect(Collectors.toList());
+	}
+
 }

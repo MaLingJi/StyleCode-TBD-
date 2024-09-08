@@ -20,7 +20,6 @@ import org.springframework.data.domain.PageRequest;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 import com.outfit_share.repository.post.PostTagsRepository;
 import com.outfit_share.repository.post.TagsRepository;
 import com.outfit_share.repository.users.UserDetailRepository;
@@ -168,5 +167,12 @@ public class PostService {
 	            return dto;
 	        })
 	        .collect(Collectors.toList());
+	}
+	//用戶ID 查詢該用戶的所有文章
+	public List<PostDTO> findPostsByUserId(Integer userId) {
+	    return postRepo.findByUserDetail_Id(userId)
+	                         .stream()
+	                         .map(post -> new PostDTO(post))
+	                         .collect(Collectors.toList());
 	}
 }

@@ -70,10 +70,16 @@ public class PostsConroller {
 	// TODO: 要改成只有一個參數時也可搜尋，無參數時就findAll
 	// P.S.這邊我改成靠前端綁定來處理即可
 	
-	
 	//首頁輪播圖 前9篇文章的照片
     @GetMapping("/latest")
     public List<PostDTO> getLatestPosts(@RequestParam(defaultValue = "9") int limit) {
         return postService.findLatestPosts(limit);
     }
+    
+    //用戶 ID 查詢該用戶的所有文章
+    @GetMapping("/user/{userId}")
+    public List<PostDTO> findPostsByUserId(@PathVariable("userId") Integer userId) {
+        return postService.findPostsByUserId(userId);
+    }
+
 }
