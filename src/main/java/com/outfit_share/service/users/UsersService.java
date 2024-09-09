@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,9 +35,9 @@ public class UsersService {
         return null;
     }
 
-    public Page<UserDetailDTO> findAll(Pageable pageable) {
+    public Page<UserDetailDTO> findAll(Specification<Users> spec, Pageable pageable) {
 
-        Page<Users> userPage = uRepo.findAll(pageable);
+        Page<Users> userPage = uRepo.findAll(spec, pageable);
         // List<Users> userList = uRepo.findAll();
         // List<UserDetailDTO> userDTOList = new ArrayList<>();
         // if (userList != null && !userList.isEmpty()) {
@@ -105,6 +106,10 @@ public class UsersService {
             return true;
         }
         return false;
+    }
+
+    public long countUsers() {
+        return uRepo.count();
     }
 
     private UserDetailDTO converEntityToDto(Users user) {

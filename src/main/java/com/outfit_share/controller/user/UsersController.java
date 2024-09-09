@@ -9,16 +9,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.entity.users.UserDetailDTO;
 import com.outfit_share.entity.users.Users;
 import com.outfit_share.service.users.UserDetailService;
 import com.outfit_share.service.users.UsersService;
 import com.outfit_share.util.JsonWebTokenUtility;
+
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -129,11 +135,35 @@ public class UsersController {
         return responseJson.toString();
     }
 
+    ////// 後台相關
     @GetMapping("/admin/userback")
     public ResponseEntity<Map<String, Object>> getAllusers(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int pageSize) {
-        Pageable pageable = PageRequest.of(page, pageSize);
-        Page<UserDetailDTO> userPage = uService.findAll(pageable);
+            @RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "asc") String sortOrder,
+            @RequestParam(defaultValue = "all") String permissions, @RequestParam(required = false) String search) {
+
+        Sort sort = Sort.by(sortOrder.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC,
+                "userDetail.createdTime");
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
+        Specification<Users> spec = (root, query, criteriabuilder) -> {
+            // 連接到 UserDetail
+            Join<Users, UserDetail> userDetailJoin = root.join("userDetail");
+
+            // 創建過濾條件
+            Predicate predicate = criteriabuilder.conjunction();
+            if (!"all".equalsIgnoreCase(permissions)) {
+                predicate = criteriabuilder.and(predicate, criteriabuilder.equal(root.get("permissions"), permissions));
+            }
+            System.out.println(search);
+            if (search != null && !search.isEmpty()) {
+                String likePattern = "%" + search.trim().toLowerCase() + "%";
+                Predicate emailPredicate = criteriabuilder.like(criteriabuilder.lower(root.get("email")), likePattern);
+                predicate = criteriabuilder.and(predicate, emailPredicate);
+            }
+            query.where(predicate);
+            return predicate;
+        };
+
+        Page<UserDetailDTO> userPage = uService.findAll(spec, pageable);
 
         Map<String, Object> userResponse = new HashMap<>();
         userResponse.put("items", userPage.getContent());
