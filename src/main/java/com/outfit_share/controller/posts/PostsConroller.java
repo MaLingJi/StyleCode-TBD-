@@ -33,7 +33,7 @@ public class PostsConroller {
 
 	@PostMapping("/post/postwithtags")
 	public ResponseEntity<PostDTO> createPost(@RequestBody PostCreationRequest request) {
-		PostDTO createdPost = postService.createPostWithTags(request.getPostDTO(), request.getTagNames());
+		PostDTO createdPost = postService.createPostWithTags(request.getPostDTO());
 		return ResponseEntity.ok(createdPost);
 	}
 
@@ -45,6 +45,17 @@ public class PostsConroller {
 	@GetMapping("/post")
 	public List<PostDTO> findAllPosts() {
 		return postService.findAllPost();
+	}
+
+	@PutMapping("/post/postwithtags/{postId}")
+	public ResponseEntity<PostDTO> updatePost(
+			@PathVariable Integer postId,
+			@RequestBody PostCreationRequest request) {
+
+		System.out.println("Received PostCreationRequest: " + request);
+		PostDTO updatedPost = postService.updatePostWithTags(postId, request.getPostDTO());
+
+		return ResponseEntity.ok(updatedPost);
 	}
 
 	@PutMapping("/post/{id}")
@@ -67,10 +78,16 @@ public class PostsConroller {
 	// TODO: 要改成只有一個參數時也可搜尋，無參數時就findAll
 	// P.S.這邊我改成靠前端綁定來處理即可
 	
-	
 	//首頁輪播圖 前9篇文章的照片
     @GetMapping("/post/latest")
     public List<PostDTO> getLatestPosts(@RequestParam(defaultValue = "9") int limit) {
         return postService.findLatestPosts(limit);
     }
+    
+    //用戶 ID 查詢該用戶的所有文章
+    @GetMapping("/post/user/{userId}")
+    public List<PostDTO> findPostsByUserId(@PathVariable("userId") Integer userId) {
+        return postService.findPostsByUserId(userId);
+    }
+
 }
