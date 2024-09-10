@@ -141,7 +141,7 @@ public class GoogleOAuth2 {
             cookie.setHttpOnly(true);
             cookie.setPath("/");
             response.addCookie(cookie);
-            return "redirect:" + "http://localhost:5173/LoginSuccess";
+            return "redirect:" + "https://stylecode.online/LoginSuccess";
         }
     }
 
