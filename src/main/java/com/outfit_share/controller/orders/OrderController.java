@@ -15,17 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.outfit_share.entity.orders.Cart;
-import com.outfit_share.entity.orders.Orders;
 import com.outfit_share.entity.orders.OrdersDTO;
-import com.outfit_share.entity.orders.OrdersDetails;
 import com.outfit_share.entity.orders.OrdersDetailsDTO;
 import com.outfit_share.entity.orders.RefundDTO;
-import com.outfit_share.entity.users.UserDetail;
-import com.outfit_share.service.orders.CartService;
 import com.outfit_share.service.orders.OrdersDetailsService;
 import com.outfit_share.service.orders.OrdersService;
-import com.outfit_share.service.users.UserDetailService;
 
 @RestController
 @RequestMapping
@@ -33,11 +27,7 @@ public class OrderController {
 	@Autowired
 	private OrdersService ordersService;
 	@Autowired
-	private CartService cartService;
-	@Autowired
 	private OrdersDetailsService odService;
-	@Autowired
-	private UserDetailService udService;
 
 	@PostMapping("/order/add") // 待測試
 	// 新增訂單

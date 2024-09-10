@@ -23,27 +23,27 @@ public class CommentController {
 
 	@Autowired
 	private CommentService comtService;
-	
+
 	@PostMapping
 	public Comment addComment(@RequestBody Comment comment) {
 		return comtService.createComment(comment);
 	}
-	
+
 	@GetMapping("/{id}")
 	public Comment findCommentById(@PathVariable("id") Integer commentId) {
 		return comtService.findCommentById(commentId);
 	}
-	
+
 	@GetMapping
 	public List<CommentDTO> findAllComments(@RequestParam Integer postId) {
-	    return comtService.findAllComments(postId);
+		return comtService.findAllComments(postId);
 	}
-	
+
 	@PutMapping("/{id}")
-	public Comment updateComment(@PathVariable("id") Integer commentId,@RequestBody Comment comment) {
+	public Comment updateComment(@PathVariable("id") Integer commentId, @RequestBody Comment comment) {
 		return comtService.upComment(commentId, comment);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public void deleteComment(@PathVariable("id") Integer commentId) {
 		comtService.deleteCommentById(commentId);
