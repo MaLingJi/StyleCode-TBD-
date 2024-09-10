@@ -1,11 +1,9 @@
 package com.outfit_share.service.orders;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,7 +25,6 @@ import com.outfit_share.entity.orders.CartItemDTO;
 import com.outfit_share.entity.orders.Orders;
 import com.outfit_share.entity.orders.OrdersDTO;
 import com.outfit_share.entity.orders.OrdersDetails;
-import com.outfit_share.entity.orders.OrdersDetailsDTO;
 import com.outfit_share.entity.orders.TransactionLP;
 import com.outfit_share.entity.orders.pay.CheckoutPaymentRequestForm;
 import com.outfit_share.entity.orders.pay.ConfirmData;
@@ -36,14 +33,16 @@ import com.outfit_share.entity.orders.pay.ProductForm;
 import com.outfit_share.entity.orders.pay.ProductPackageForm;
 import com.outfit_share.entity.orders.pay.RedirectUrls;
 import com.outfit_share.entity.product.ProductDetails;
+import com.outfit_share.entity.users.Notifications;
+import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.repository.orders.OrdersDetailsRepository;
 import com.outfit_share.repository.orders.OrdersRepository;
 import com.outfit_share.repository.orders.TransLPRepository;
 import com.outfit_share.repository.product.ProductDetailsRepository;
+import com.outfit_share.repository.users.NotificationsRepository;
 import com.outfit_share.util.Encrypt;
 
 import jakarta.transaction.Transactional;
-import lombok.extern.java.Log;
 
 @Service
 @Transactional
@@ -69,6 +68,9 @@ public class PayService {
 
 	@Value("${channelSecret}")
 	private String channelSecret;
+
+	@Autowired
+	private NotificationsRepository notiRepo;
 
 	public String requestPayment(LinePayDTO lpRequest) throws JsonProcessingException {
 
@@ -211,7 +213,7 @@ public class PayService {
 
 					OrdersDTO order2 = odService.addOrder(ordersDTO);
 					System.out.println(order2);
-//					processScucess(UUID.fromString(orderId));
+					// processScucess(UUID.fromString(orderId));
 					return returnCode;
 				}
 			} else {
@@ -264,6 +266,16 @@ public class PayService {
 						orders.setStatus(3);
 						orders.setRefundStatus(2);
 						odRepo.save(orders);
+
+						// 創建新通知
+						UserDetail orderOwner = orders.getUserDetail();
+						Notifications notification = new Notifications();
+						notification.setMessage("您的訂單" + orders.getId() + "退款已通過審核");
+						notification.setCreatedTime(new Date());
+						notification.setStatus(0);
+						notification.setType("shop");
+						notification.setUserDetail(orderOwner);
+						notiRepo.save(notification);
 					}
 					return "ok";
 				}
@@ -286,6 +298,16 @@ public class PayService {
 			orders.setStatus(1);
 			orders.setRefundStatus(2);
 			odRepo.save(orders);
+
+			// 創建新通知
+			UserDetail orderOwner = orders.getUserDetail();
+			Notifications notification = new Notifications();
+			notification.setMessage("您的訂單" + orders.getId() + "退款未通過審核");
+			notification.setCreatedTime(new Date());
+			notification.setStatus(0);
+			notification.setType("shop");
+			notification.setUserDetail(orderOwner);
+			notiRepo.save(notification);
 			return "ok";
 		}
 		return null;

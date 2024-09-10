@@ -1,6 +1,7 @@
 package com.outfit_share.service.users;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,8 +13,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.outfit_share.entity.users.Notifications;
+import com.outfit_share.entity.users.UserDetail;
 import com.outfit_share.entity.users.UserDetailDTO;
 import com.outfit_share.entity.users.Users;
+import com.outfit_share.repository.users.NotificationsRepository;
+import com.outfit_share.repository.users.UserDetailRepository;
 import com.outfit_share.repository.users.UsersRepository;
 
 @Service
@@ -25,6 +30,9 @@ public class UsersService {
 
     @Autowired
     private UsersRepository uRepo;
+
+    @Autowired
+    private NotificationsRepository notiRepo;
 
     public Users findUserById(Integer id) {
         Optional<Users> optional = uRepo.findById(id);
@@ -120,6 +128,17 @@ public class UsersService {
         if (user != null) {
             user.setPermissions(newRole);
             uRepo.save(user);
+
+            // 創建新通知
+            UserDetail userDetail = user.getUserDetail();
+            Notifications notification = new Notifications();
+            String permissionString = newRole.equals("Member") ? "一般會員" : "管理員";
+            notification.setMessage("您的權限已被更改為 : " + permissionString);
+            notification.setCreatedTime(new Date());
+            notification.setStatus(0);
+            notification.setType("shop");
+            notification.setUserDetail(userDetail);
+            notiRepo.save(notification);
             return true;
         }
         return false;
