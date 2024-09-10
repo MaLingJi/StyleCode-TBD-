@@ -84,4 +84,8 @@ public class CommentService {
 	    List<Comment> comments = commentRepo.findByPost_PostId(postId);
 	    return comments.stream().map(CommentDTO::new).collect(Collectors.toList());
 	}
+
+	public List<Comment> findCommentsByPostId(Integer postId) {
+		return commentRepo.findByPost_PostId(postId);
+	}
 }
