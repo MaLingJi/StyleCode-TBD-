@@ -70,6 +70,19 @@ public class UserDetailService {
         return udRepo.save(uDetail);
     }
 
+    public UserDetail googleCreate(Users user, String userName, String userPhoto) {
+
+        System.out.println("=============== userDetail Insert ===============");
+        UserDetail userDetail = new UserDetail();
+
+        userDetail.setUsers(user);
+        userDetail.setUserName(userName);
+        userDetail.setCreatedTime(new Date());
+        userDetail.setDiscountPoints(0);
+        userDetail.setUserPhoto(userPhoto);
+        return udRepo.save(userDetail);
+    }
+
     public UserDetail saveDetail(UserDetail uDetail) {
         return udRepo.save(uDetail);
     }

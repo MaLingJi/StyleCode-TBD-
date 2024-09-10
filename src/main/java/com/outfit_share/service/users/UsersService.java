@@ -57,6 +57,15 @@ public class UsersService {
         return false;
     }
 
+    public Users findByEmail(String email) {
+        Optional<Users> optional = uRepo.findByEmail(email);
+        if (optional.isPresent()) {
+            Users dbuser = optional.get();
+            return dbuser;
+        }
+        return null;
+    }
+
     public Users creatUsers(String userEmail, String userPwd) {
 
         // 將密碼加密
@@ -66,6 +75,14 @@ public class UsersService {
         users.setPwd(encodedPwd);
         users.setPermissions("Member");
         return uRepo.save(users);
+    }
+
+    public Users googleCreateUser(String userEmail) {
+        Users user = new Users();
+        user.setEmail(userEmail);
+        user.setPermissions("Member");
+
+        return uRepo.save(user);
     }
 
     public Users login(String loginUserEmail, String loginPwd) {
