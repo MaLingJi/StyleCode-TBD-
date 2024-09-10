@@ -25,6 +25,9 @@ import com.outfit_share.util.JsonWebTokenUtility;
 
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -196,5 +199,47 @@ public class UsersController {
 
             return new ResponseEntity<>("沒有找到使用者", HttpStatus.NOT_FOUND);
         }
+    }
+
+    // Google 登入後請求資料
+    @GetMapping("/user-info")
+    public Map<String, Object> getUserInfo(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        String userInfo = null;
+        Map<String, Object> response = new HashMap<>();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("auth_info".equals(cookie.getName())) {
+                    userInfo = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (userInfo != null) {
+            String[] parts = userInfo.split("\\|");
+            String token = parts[0];
+            Integer userId = Integer.parseInt(parts[1]);
+            String permissions = parts[2];
+
+            response.put("token", token);
+            response.put("userId", userId);
+            response.put("permissions", permissions);
+        }
+
+        return response;
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        // 清除 cookie
+        Cookie cookie = new Cookie("auth_info", null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // 設置cookie 過期時間為0
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().build();
     }
 }
