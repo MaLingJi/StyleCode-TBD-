@@ -22,9 +22,6 @@ public class JwtConfig implements WebMvcConfigurer {
         // 加入需要攔截的Patterns
         reg.addPathPatterns("**/**/admin/**")
                 .addPathPatterns("/member/**");
-//                .addPathPatterns("/pay/**");
-//                .addPathPatterns("/order/admin/**")
-//                .addPathPatterns("/order/**");
         reg.excludePathPatterns("/pay/linePayConfirm");
     }
     

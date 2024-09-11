@@ -31,6 +31,21 @@ public class UserDetailService {
     @Autowired
     private UserDetailRepository udRepo;
 
+    private UserDetailDTO converEntityToDto(UserDetail user) {
+        UserDetailDTO userDetailDTO = new UserDetailDTO();
+        userDetailDTO.setUserId(user.getId());
+        userDetailDTO.setUserEmail(user.getUsers().getEmail());
+        userDetailDTO.setRealName(user.getRealName());
+        userDetailDTO.setUserName(user.getUserName());
+        userDetailDTO.setAddress(user.getAddress());
+        userDetailDTO.setPhone(user.getPhone());
+        userDetailDTO.setCreatedTime(user.getCreatedTime());
+        userDetailDTO.setUpdatedTime(user.getUpdatedTime());
+        userDetailDTO.setUserPhoto(user.getUserPhoto());
+        userDetailDTO.setDiscountPoints(user.getDiscountPoints());
+        return userDetailDTO;
+    }
+
     public UserDetailDTO findUserById(Integer userId) {
         UserDetail userDetail = udRepo.findById(userId).orElse(null);
         return converEntityToDto(userDetail);
@@ -55,19 +70,17 @@ public class UserDetailService {
         return udRepo.save(uDetail);
     }
 
-    private UserDetailDTO converEntityToDto(UserDetail user) {
-        UserDetailDTO userDetailDTO = new UserDetailDTO();
-        userDetailDTO.setUserId(user.getId());
-        userDetailDTO.setUserEmail(user.getUsers().getEmail());
-        userDetailDTO.setRealName(user.getRealName());
-        userDetailDTO.setUserName(user.getUserName());
-        userDetailDTO.setAddress(user.getAddress());
-        userDetailDTO.setPhone(user.getPhone());
-        userDetailDTO.setCreatedTime(user.getCreatedTime());
-        userDetailDTO.setUpdatedTime(user.getUpdatedTime());
-        userDetailDTO.setUserPhoto(user.getUserPhoto());
-        userDetailDTO.setDiscountPoints(user.getDiscountPoints());
-        return userDetailDTO;
+    public UserDetail googleCreate(Users user, String userName, String userPhoto) {
+
+        System.out.println("=============== userDetail Insert ===============");
+        UserDetail userDetail = new UserDetail();
+
+        userDetail.setUsers(user);
+        userDetail.setUserName(userName);
+        userDetail.setCreatedTime(new Date());
+        userDetail.setDiscountPoints(0);
+        userDetail.setUserPhoto(userPhoto);
+        return udRepo.save(userDetail);
     }
 
     public UserDetail saveDetail(UserDetail uDetail) {
@@ -106,5 +119,9 @@ public class UserDetailService {
             return udRepo.save(dbUserDetail);
         }
         return null;
+    }
+
+    public long getTodayRegistrationCount() {
+        return udRepo.countTodayRegistrations();
     }
 }

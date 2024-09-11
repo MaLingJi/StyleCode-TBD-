@@ -1,13 +1,24 @@
 package com.outfit_share.service.users;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.outfit_share.entity.users.Notifications;
+import com.outfit_share.entity.users.UserDetail;
+import com.outfit_share.entity.users.UserDetailDTO;
 import com.outfit_share.entity.users.Users;
+import com.outfit_share.repository.users.NotificationsRepository;
+import com.outfit_share.repository.users.UserDetailRepository;
 import com.outfit_share.repository.users.UsersRepository;
 
 @Service
@@ -20,6 +31,9 @@ public class UsersService {
     @Autowired
     private UsersRepository uRepo;
 
+    @Autowired
+    private NotificationsRepository notiRepo;
+
     public Users findUserById(Integer id) {
         Optional<Users> optional = uRepo.findById(id);
         if (optional.isPresent()) {
@@ -29,12 +43,35 @@ public class UsersService {
         return null;
     }
 
+    public Page<UserDetailDTO> findAll(Specification<Users> spec, Pageable pageable) {
+
+        Page<Users> userPage = uRepo.findAll(spec, pageable);
+        // List<Users> userList = uRepo.findAll();
+        // List<UserDetailDTO> userDTOList = new ArrayList<>();
+        // if (userList != null && !userList.isEmpty()) {
+        // for (Users user : userList) {
+        // UserDetailDTO userDTO = converEntityToDto(user);
+        // userDTOList.add(userDTO);
+        // }
+        // }
+        return userPage.map(this::converEntityToDto);
+    }
+
     public boolean checkEmail(String email) {
         Optional<Users> dbUser = uRepo.findByEmail(email);
         if (dbUser.isPresent()) {
             return true;
         }
         return false;
+    }
+
+    public Users findByEmail(String email) {
+        Optional<Users> optional = uRepo.findByEmail(email);
+        if (optional.isPresent()) {
+            Users dbuser = optional.get();
+            return dbuser;
+        }
+        return null;
     }
 
     public Users creatUsers(String userEmail, String userPwd) {
@@ -46,6 +83,14 @@ public class UsersService {
         users.setPwd(encodedPwd);
         users.setPermissions("Member");
         return uRepo.save(users);
+    }
+
+    public Users googleCreateUser(String userEmail) {
+        Users user = new Users();
+        user.setEmail(userEmail);
+        user.setPermissions("Member");
+
+        return uRepo.save(user);
     }
 
     public Users login(String loginUserEmail, String loginPwd) {
@@ -78,4 +123,44 @@ public class UsersService {
         return false;
     }
 
+    public boolean updateUserPermissions(Integer id, String newRole) {
+        Users user = findUserById(id);
+        if (user != null) {
+            user.setPermissions(newRole);
+            uRepo.save(user);
+
+            // 創建新通知
+            UserDetail userDetail = user.getUserDetail();
+            Notifications notification = new Notifications();
+            String permissionString = newRole.equals("Member") ? "一般會員" : "管理員";
+            notification.setMessage("您的權限已被更改為 : " + permissionString);
+            notification.setCreatedTime(new Date());
+            notification.setStatus(0);
+            notification.setType("shop");
+            notification.setUserDetail(userDetail);
+            notiRepo.save(notification);
+            return true;
+        }
+        return false;
+    }
+
+    public long countUsers() {
+        return uRepo.count();
+    }
+
+    private UserDetailDTO converEntityToDto(Users user) {
+        UserDetailDTO userDetailDTO = new UserDetailDTO();
+        userDetailDTO.setUserId(user.getId());
+        userDetailDTO.setUserEmail(user.getEmail());
+        userDetailDTO.setPermissions(user.getPermissions());
+        userDetailDTO.setRealName(user.getUserDetail().getRealName());
+        userDetailDTO.setUserName(user.getUserDetail().getUserName());
+        userDetailDTO.setAddress(user.getUserDetail().getAddress());
+        userDetailDTO.setPhone(user.getUserDetail().getPhone());
+        userDetailDTO.setCreatedTime(user.getUserDetail().getCreatedTime());
+        userDetailDTO.setUpdatedTime(user.getUserDetail().getUpdatedTime());
+        userDetailDTO.setUserPhoto(user.getUserDetail().getUserPhoto());
+        userDetailDTO.setDiscountPoints(user.getUserDetail().getDiscountPoints());
+        return userDetailDTO;
+    }
 }

@@ -14,6 +14,8 @@ import com.outfit_share.entity.post.PostDTO;
 import com.outfit_share.entity.post.PostTags;
 import com.outfit_share.entity.post.PostTagsDTO;
 import com.outfit_share.entity.post.PostTagsId;
+import com.outfit_share.entity.post.ProductTag;
+import com.outfit_share.entity.post.ProductTagDTO;
 import com.outfit_share.entity.post.Tags;
 import com.outfit_share.repository.post.PostRepository;
 import org.springframework.data.domain.PageRequest;
@@ -21,10 +23,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
 import com.outfit_share.repository.post.PostTagsRepository;
+import com.outfit_share.repository.post.ProductTagRepository;
 import com.outfit_share.repository.post.TagsRepository;
+import com.outfit_share.repository.product.SubcategoryRepository;
 import com.outfit_share.repository.users.UserDetailRepository;
 
 @Service
+@Transactional
 public class PostService {
 
 	@Autowired
@@ -39,12 +44,19 @@ public class PostService {
 	@Autowired
 	private UserDetailRepository userDetailRepository;
 
+	@Autowired
+	private ProductTagRepository productTagRepository;
+
+	@Autowired
+	private SubcategoryRepository subcategoryRepository;
+
 	public Post createPost(Post post) {
 		post.setCreatedAt(new Date());
 		return postRepo.save(post);
 	}
 
-	public PostDTO createPostWithTags(PostDTO postDTO, List<String> tagNames) {
+	@Transactional
+	public PostDTO createPostWithTags(PostDTO postDTO) {
 		// 創建 Post 實體
 		Post post = new Post();
 		post.setContentType(postDTO.getContentType());
@@ -57,22 +69,18 @@ public class PostService {
 		// 保存 Post 實體到資料庫
 		post = postRepo.save(post);
 
-		// 處理標籤
+		// 處理 PostTags
 		List<PostTags> postTagsList = new ArrayList<>();
-		for (String tagName : tagNames) {
-			// 查詢標籤是否已存在
-			Tags tag = tagsRepository.findByName(tagName)
+		for (PostTagsDTO postTagsDTO : postDTO.getPostTags()) {
+			Tags tag = tagsRepository.findByName(postTagsDTO.getTagName())
 					.orElseGet(() -> {
-						// 如果標籤不存在，則創建一個新標籤
 						Tags newTag = new Tags();
-						newTag.setName(tagName);
+						newTag.setName(postTagsDTO.getTagName());
 						return tagsRepository.save(newTag);
 					});
 
-			// 創建 PostTagsId
 			PostTagsId postTagsId = new PostTagsId(post.getPostId(), tag.getId());
 
-			// 創建 PostTags 關聯
 			PostTags postTag = new PostTags();
 			postTag.setPostTagsId(postTagsId);
 			postTag.setPost(post);
@@ -80,17 +88,33 @@ public class PostService {
 
 			postTagsList.add(postTag);
 		}
-
-		// 保存所有的 PostTags 關聯
 		postTagsRepository.saveAll(postTagsList);
+
+		// 處理 ProductTag
+		List<ProductTag> productTagsList = new ArrayList<>();
+		for (ProductTagDTO productTagDTO : postDTO.getProductTags()) {
+			ProductTag productTag = new ProductTag();
+			productTag.setProductName(productTagDTO.getProductName());
+			productTag.setPost(post);
+			productTag.setSubcategory(subcategoryRepository.findById(productTagDTO.getSubcategoryId())
+					.orElseThrow(() -> new RuntimeException("Subcategory not found")));
+			productTagsList.add(productTag);
+		}
+		productTagRepository.saveAll(productTagsList);
 
 		// 將所有關聯加回 PostDTO 返回
 		postDTO.setPostId(post.getPostId());
 		postDTO.setCreatedAt(post.getCreatedAt());
 		postDTO.setDeletedAt(post.getDeletedAt());
 
+		postDTO.getPostTags().clear();
 		for (PostTags postTag : postTagsList) {
 			postDTO.getPostTags().add(new PostTagsDTO(postTag));
+		}
+
+		postDTO.getProductTags().clear();
+		for (ProductTag productTag : productTagsList) {
+			postDTO.getProductTags().add(new ProductTagDTO(productTag));
 		}
 
 		return postDTO;
@@ -116,10 +140,6 @@ public class PostService {
 		return null;
 	}
 
-	// public List<Post> findAllPost(){
-	// return postRepo.findAll();
-	// }
-
 	public List<PostDTO> findAllPost() {
 		List<Post> list = postRepo.findAll();
 		List<PostDTO> dtoList = new ArrayList<>();
@@ -127,11 +147,89 @@ public class PostService {
 			if (post.getImages() == null) {
 				post.setImages(new ArrayList<>()); // 初始化為空列表
 			}
-			// Hibernate.initialize(post.getUserDetail());
 			PostDTO postDTO = new PostDTO(post);
 			dtoList.add(postDTO);
 		}
 		return dtoList;
+	}
+
+	@Transactional
+	public PostDTO updatePostWithTags(Integer postId, PostDTO updatedPostDTO) {
+		// 查找現有的文章
+		Post post = postRepo.findById(postId)
+				.orElseThrow(() -> new RuntimeException("Post not found"));
+
+		// 更新文章內容
+		post.setContentType(updatedPostDTO.getContentType());
+		post.setPostTitle(updatedPostDTO.getPostTitle());
+		post.setContentText(updatedPostDTO.getContentText());
+		post.setShareId(updatedPostDTO.getShareId());
+
+		// 保存更新後的文章
+		post = postRepo.save(post);
+
+		// 處理標籤更新
+		List<PostTagsDTO> updatedPostTagsDTOs = updatedPostDTO.getPostTags();
+		List<PostTags> postTagsList = new ArrayList<>(); // 將變數定義移到外部
+
+		if (updatedPostTagsDTOs != null) {
+			// 刪除舊的標籤
+			postTagsRepository.deleteByPost(post);
+
+			// 創建並保存新的標籤
+			for (PostTagsDTO postTagsDTO : updatedPostTagsDTOs) {
+				Tags tag = tagsRepository.findByName(postTagsDTO.getTagName())
+						.orElseGet(() -> {
+							Tags newTag = new Tags();
+							newTag.setName(postTagsDTO.getTagName());
+							return tagsRepository.save(newTag);
+						});
+
+				PostTagsId postTagsId = new PostTagsId(post.getPostId(), tag.getId());
+
+				PostTags postTag = new PostTags();
+				postTag.setPostTagsId(postTagsId);
+				postTag.setPost(post);
+				postTag.setTags(tag);
+
+				postTagsList.add(postTag);
+			}
+			postTagsRepository.saveAll(postTagsList);
+		}
+
+		// 處理 ProductTag 更新
+		// 刪除舊的 ProductTag
+		productTagRepository.deleteByPost(post);
+
+		// 創建並保存新的 ProductTag
+		List<ProductTag> productTagsList = new ArrayList<>();
+		for (ProductTagDTO productTagDTO : updatedPostDTO.getProductTags()) {
+			ProductTag productTag = new ProductTag();
+			productTag.setProductName(productTagDTO.getProductName());
+			productTag.setPost(post);
+			productTag.setSubcategory(subcategoryRepository.findById(productTagDTO.getSubcategoryId())
+					.orElseThrow(() -> new RuntimeException("Subcategory not found")));
+
+			productTagsList.add(productTag);
+		}
+		productTagRepository.saveAll(productTagsList);
+
+		// 更新後的 PostDTO 返回
+		updatedPostDTO.setPostId(post.getPostId());
+		updatedPostDTO.setCreatedAt(post.getCreatedAt());
+		updatedPostDTO.setDeletedAt(post.getDeletedAt());
+
+		updatedPostDTO.getPostTags().clear();
+		for (PostTags postTag : postTagsList) {
+			updatedPostDTO.getPostTags().add(new PostTagsDTO(postTag));
+		}
+
+		updatedPostDTO.getProductTags().clear();
+		for (ProductTag productTag : productTagsList) {
+			updatedPostDTO.getProductTags().add(new ProductTagDTO(productTag));
+		}
+
+		return updatedPostDTO;
 	}
 
 	@Transactional
@@ -140,33 +238,28 @@ public class PostService {
 
 		if (upoptional.isPresent()) {
 			Post post = upoptional.get();
-			post.setContentText(newpost.getContentText());// 內容
-			// post.setPostTitle(newpost.getPostTitle());//標題是否可變更?
-			// post.setContentType(newpost.getContentType());//文章型態(分享.討論)可切換變更?
+			post.setContentText(newpost.getContentText());
 			return postRepo.save(post);
 		}
 		return null;
 	}
 
-	// 封裝查詢邏輯
 	public List<Post> searchPostsByTypeAndKeyword(String contentType, String keyword) {
 		return postRepo.findPostByTypeAndKeyword(contentType, keyword);
 	}
-	
-	//首頁輪播圖 前9篇文章的照片
+
 	public List<PostDTO> findLatestPosts(int limit) {
-	    PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
-	    List<Post> latestPosts = postRepo.findAll(pageRequest).getContent();
-	    return latestPosts.stream()
-	        .map(post -> {
-	            PostDTO dto = new PostDTO(post);
-	            // 假設 post 有一個 getImages() 方法返回圖片列表
-	            dto.setImageUrls(post.getImages().stream()
-	                .map(image -> image.getImgUrl())
-	                .collect(Collectors.toList()));
-	            return dto;
-	        })
-	        .collect(Collectors.toList());
+		PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+		List<Post> latestPosts = postRepo.findAll(pageRequest).getContent();
+		return latestPosts.stream()
+				.map(post -> {
+					PostDTO dto = new PostDTO(post);
+					dto.setImageUrls(post.getImages().stream()
+							.map(image -> image.getImgUrl())
+							.collect(Collectors.toList()));
+					return dto;
+				})
+				.collect(Collectors.toList());
 	}
 	//用戶ID 查詢該用戶的所有文章
 	public List<PostDTO> findPostsByUserId(Integer userId) {

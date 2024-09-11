@@ -33,7 +33,7 @@ public class PostsConroller {
 
 	@PostMapping("/postwithtags")
 	public ResponseEntity<PostDTO> createPost(@RequestBody PostCreationRequest request) {
-		PostDTO createdPost = postService.createPostWithTags(request.getPostDTO(), request.getTagNames());
+		PostDTO createdPost = postService.createPostWithTags(request.getPostDTO());
 		return ResponseEntity.ok(createdPost);
 	}
 
@@ -44,10 +44,18 @@ public class PostsConroller {
 
 	@GetMapping
 	public List<PostDTO> findAllPosts() {
-		// System.out.println("return type: " +
-		// postService.findAllPost().getClass().getSimpleName());
-		// System.out.println("return: " + postService.findAllPost());
 		return postService.findAllPost();
+	}
+
+	@PutMapping("/postwithtags/{postId}")
+	public ResponseEntity<PostDTO> updatePost(
+			@PathVariable Integer postId,
+			@RequestBody PostCreationRequest request) {
+
+		System.out.println("Received PostCreationRequest: " + request);
+		PostDTO updatedPost = postService.updatePostWithTags(postId, request.getPostDTO());
+
+		return ResponseEntity.ok(updatedPost);
 	}
 
 	@PutMapping("/{id}")
@@ -60,7 +68,6 @@ public class PostsConroller {
 		postService.deletePostById(postId);
 	}
 
-	// 模糊搜尋文章中分類 分享/討論 的標題
 	@GetMapping("/type")
 	public List<Post> searchPosts(
 			@RequestParam(value = "contentType", required = false) String contentType,
