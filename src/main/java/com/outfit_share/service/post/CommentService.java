@@ -97,6 +97,12 @@ public class CommentService {
 	// 獲取評論時 將Comment實體轉換為 CommentDTO
 	public List<CommentDTO> findAllComments(Integer postId) {
 		List<Comment> comments = commentRepo.findByPost_PostId(postId);
-		return comments.stream().map(CommentDTO::new).collect(Collectors.toList());
+	    return comments.stream().map(comment -> {
+	            CommentDTO dto = new CommentDTO(comment);
+	            dto.setUserName(comment.getUserDetail().getUserName());
+	            dto.setUserPhoto(comment.getUserDetail().getUserPhoto());
+	            return dto;
+	        })
+	        .collect(Collectors.toList());
 	}
 }
