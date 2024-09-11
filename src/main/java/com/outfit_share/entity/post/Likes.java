@@ -32,4 +32,10 @@ public class Likes {
     @MapsId("userId")
     @JoinColumn(name="user_id")
     private UserDetail userDetail;
+    
+    public Likes(Post post, UserDetail userDetail) {
+        this.likesId = new LikesId(post.getPostId(), userDetail.getId());
+        this.post = post;
+        this.userDetail = userDetail;
+    }
 }

@@ -8,6 +8,7 @@ public class CommentDTO {
     private Integer postId;
     private Integer userId;
     private String userName;
+    private String userPhoto;
     private String commentText;
     private Date createdAt;
     private Date deletedAt;
@@ -27,9 +28,11 @@ public class CommentDTO {
         if (comment.getUserDetail() != null) {
             this.userId = comment.getUserDetail().getId();  // 確保 UserDetail 實體已初始化
             this.userName = comment.getUserDetail().getUserName();  // 確保 UserDetail 實體已初始化
+            this.userPhoto = comment.getUserDetail().getUserPhoto(); // 或取用戶頭像
         } else {
             this.userId = null; // 或設預設值
             this.userName = null; // 或設預設值
+            this.userPhoto = null; // 或設預設值
         }
 
         this.commentText = comment.getComment();
@@ -92,5 +95,13 @@ public class CommentDTO {
 
     public void setDeletedAt(Date deletedAt) {
         this.deletedAt = deletedAt;
+    }
+    
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
     }
 }
