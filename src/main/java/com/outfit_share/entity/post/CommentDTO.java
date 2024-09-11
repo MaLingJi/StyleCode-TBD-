@@ -17,9 +17,21 @@ public class CommentDTO {
 
     public CommentDTO(Comment comment) {
         this.commentId = comment.getCommentId();
-        this.postId = comment.getPost().getPostId();  // 確保 Post 實體已初始化
-        this.userId = comment.getUserDetail().getId();  // 確保 UserDetail 實體已初始化
-        this.userName = comment.getUserDetail().getUserName();  // 確保 UserDetail 實體已初始化
+        
+        if (comment.getPost() != null) {
+            this.postId = comment.getPost().getPostId();  // 確保 Post 實體已初始化
+        } else {
+            this.postId = null; // 或設預設值
+        }
+
+        if (comment.getUserDetail() != null) {
+            this.userId = comment.getUserDetail().getId();  // 確保 UserDetail 實體已初始化
+            this.userName = comment.getUserDetail().getUserName();  // 確保 UserDetail 實體已初始化
+        } else {
+            this.userId = null; // 或設預設值
+            this.userName = null; // 或設預設值
+        }
+
         this.commentText = comment.getComment();
         this.createdAt = comment.getCreatedAt();
         this.deletedAt = comment.getDeletedAt();

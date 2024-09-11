@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.outfit_share.entity.orders.CartItemDTO;
 import com.outfit_share.entity.orders.Orders;
 import com.outfit_share.entity.orders.OrdersDTO;
+import com.outfit_share.entity.orders.OrdersDetails;
 import com.outfit_share.entity.orders.OrdersDetailsDTO;
 import com.outfit_share.entity.orders.TransactionLP;
 import com.outfit_share.entity.orders.pay.CheckoutPaymentRequestForm;
@@ -33,8 +35,11 @@ import com.outfit_share.entity.orders.pay.LinePayDTO;
 import com.outfit_share.entity.orders.pay.ProductForm;
 import com.outfit_share.entity.orders.pay.ProductPackageForm;
 import com.outfit_share.entity.orders.pay.RedirectUrls;
+import com.outfit_share.entity.product.ProductDetails;
+import com.outfit_share.repository.orders.OrdersDetailsRepository;
 import com.outfit_share.repository.orders.OrdersRepository;
 import com.outfit_share.repository.orders.TransLPRepository;
+import com.outfit_share.repository.product.ProductDetailsRepository;
 import com.outfit_share.util.Encrypt;
 
 import jakarta.transaction.Transactional;
@@ -51,8 +56,22 @@ public class PayService {
 	private OrdersRepository odRepo;
 	@Autowired
 	private OrdersService odService;
+	@Autowired
+	private OrdersDetailsRepository ordersDetailsRepo;
+	@Autowired
+	private ProductDetailsRepository pdRepo;
+
+	@Value("${domain.url}")
+	private String domainURL;
+
+	@Value("${channelId}")
+	private String channelId;
+
+	@Value("${channelSecret}")
+	private String channelSecret;
+
 	public String requestPayment(LinePayDTO lpRequest) throws JsonProcessingException {
-		// Request API
+
 		System.out.println(lpRequest);
 
 		CheckoutPaymentRequestForm form = new CheckoutPaymentRequestForm();
@@ -65,7 +84,6 @@ public class PayService {
 		productPackageForm.setId(tempOrderId);
 		productPackageForm.setName("shop_name");
 		productPackageForm.setAmount(new BigDecimal(lpRequest.getTotalAmounts()));
-
 
 		List<ProductForm> pdList = new ArrayList<>();
 
@@ -85,7 +103,7 @@ public class PayService {
 
 		RedirectUrls redirectUrls = new RedirectUrls();
 
-		redirectUrls.setConfirmUrl("http://localhost:5173/checkPaying?orderId=" + form.getOrderId());
+		redirectUrls.setConfirmUrl(domainURL + "checkPaying?orderId=" + form.getOrderId());
 
 		redirectUrls.setCancelUrl("https://claude.ai/chat/641fb415-2ef0-4a44-83e6-f8497e7519e5");
 
@@ -95,7 +113,7 @@ public class PayService {
 
 		String jsonBody = objectMapper.writeValueAsString(form);
 
-		String ChannelSecret = "6b4e7ed2347de4425b24b016b657f639";
+		String ChannelSecret = channelSecret;
 		String requestUri = "/v3/payments/request";
 		String nonce2 = UUID.randomUUID().toString();
 		String signature = Encrypt.encrypt(ChannelSecret, ChannelSecret + requestUri + jsonBody + nonce2);
@@ -105,7 +123,7 @@ public class PayService {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set("X-LINE-ChannelId", "2005877664");
+		headers.set("X-LINE-ChannelId", channelId);
 		headers.set("X-LINE-Authorization-Nonce", nonce2);
 		headers.set("X-LINE-Authorization", signature);
 
@@ -156,7 +174,7 @@ public class PayService {
 			confirmData.setCurrency("TWD");
 
 			String jsonBody = objectMapper.writeValueAsString(confirmData);
-			String ChannelSecret = "6b4e7ed2347de4425b24b016b657f639";
+			String ChannelSecret = channelSecret;
 			String transactionId = order.getTransactionId();
 			System.out.println(transactionId);
 			String requestUri = "/v3/payments/" + transactionId + "/confirm";
@@ -184,13 +202,13 @@ public class PayService {
 			if (response != null && response.has("returnCode")) {
 				String returnCode = response.getString("returnCode");
 				if (returnCode.equals("0000")) {
-					
+
 					OrdersDTO ordersDTO = new OrdersDTO();
 					ordersDTO.setOrderId(orderId);
 					ordersDTO.setTotalAmounts(order.getAmount());
 					ordersDTO.setStatus(1);
 					ordersDTO.setUserId(order.getUserId());
-					
+
 					OrdersDTO order2 = odService.addOrder(ordersDTO);
 					System.out.println(order2);
 //					processScucess(UUID.fromString(orderId));
@@ -203,19 +221,60 @@ public class PayService {
 		return "cant find order";
 	}
 
-//	// 改狀態
-//	public void processScucess(UUID orderId) {
-//		Optional<Orders> order = odRepo.findById(orderId);
-//		if (order.isPresent()) {
-//			Orders orders = order.get();
-//			if (orders.getStatus() == 0) {
-//				orders.setStatus(1);
-//				odRepo.save(orders);
-//			} else {
-//				System.out.println("status not 0");
-//			}
-//		} else {
-//			System.out.println("order not exist");
-//		}
-//	}
+	public String refund(OrdersDTO refundRequest) {
+		String orderId = refundRequest.getOrderId();
+		String transactionId = transLPRepo.findByOrderId(orderId).getTransactionId();
+		String requestUri = "/v3/payments/" + transactionId + "/refund";
+		String nonce = UUID.randomUUID().toString();
+
+		channelSecret = channelSecret.trim();
+		String requestBody = "{}";
+		String signature = Encrypt.encrypt(channelSecret, channelSecret + requestUri + requestBody + nonce);
+
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("X-LINE-ChannelId", channelId);
+		headers.set("X-LINE-Authorization-Nonce", nonce);
+		headers.set("X-LINE-Authorization", signature);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<String> httpEntity = new HttpEntity<>("{}", headers);
+		String fullUrl = "https://sandbox-api-pay.line.me" + requestUri;
+		try {
+			ResponseEntity<String> responseEntity = restTemplate.exchange(fullUrl, HttpMethod.POST, httpEntity,
+					String.class);
+
+			String responseBody = responseEntity.getBody();
+			System.out.println("Full response: " + responseBody);
+
+			JSONObject response = new JSONObject(responseBody);
+
+			if (response != null && response.has("returnCode")) {
+				String returnCode = response.getString("returnCode");
+				if (returnCode.equals("0000")) {
+					List<OrdersDetails> orderDetailsList = ordersDetailsRepo.findByOrdersId(orderId);
+					for (OrdersDetails od : orderDetailsList) {
+						ProductDetails productDetails = od.getProductDetails();
+						productDetails.setStock(productDetails.getStock() + od.getQuantity());
+						pdRepo.save(productDetails);
+					}
+					Optional<Orders> byId = odRepo.findById(orderId);
+					if (byId.isPresent()) {
+						Orders orders = byId.get();
+						orders.setStatus(2);
+						orders.setRefundStatus(2);
+						odRepo.save(orders);
+					}
+					return "ok";
+				}
+				return "Error code: " + returnCode + ", Message: " + response.optString("returnMessage");
+			}
+		} catch (Exception e) {
+			System.out.println("Exception occurred: " + e.getMessage());
+			e.printStackTrace();
+			return "Error: " + e.getMessage();
+		}
+
+		return "Unexpected error";
+	}
 }

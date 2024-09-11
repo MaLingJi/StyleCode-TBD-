@@ -33,11 +33,11 @@ public class ProductService {
 		if (details.getStock() <= 0) {
 			details.setOnSale(false);
 		}
-		
-		if(details.getStock() > 0) {
+
+		if (details.getStock() > 0) {
 			details.setOnSale(true);
 		}
-		
+
 		return details;
 	}
 
@@ -98,7 +98,7 @@ public class ProductService {
 			if (product.getProductDescription() != null) {
 				result.setProductDescription(product.getProductDescription());
 			}
-			
+
 			productRepository.save(result);
 			return new ProductDTO(result);
 		}
@@ -110,28 +110,27 @@ public class ProductService {
 	public ProductDetailsDTO updateDetails(Integer id, ProductDetails details) {
 		Optional<ProductDetails> optional = productDetailsRepository.findById(id);
 
+		if (optional.isPresent()) {
+			ProductDetails existingDetail = optional.get();
 
-				if (optional.isPresent()) {
-					ProductDetails existingDetail = optional.get();
+			if (details.getStock() != null) {
+				existingDetail.setStock(details.getStock());
+			}
+			if (details.getSize() != null) {
+				existingDetail.setSize(details.getSize());
+			}
+			if (details.getColor() != null) {
+				existingDetail.setColor(details.getColor());
+			}
+			if (details.getOnSale() != null) {
+				existingDetail.setOnSale(details.getOnSale());
+			}
 
-					if (details.getStock() != null) {
-						existingDetail.setStock(details.getStock());
-					}
-					if (details.getSize() != null) {
-						existingDetail.setSize(details.getSize());
-					}
-					if (details.getColor() != null) {
-						existingDetail.setColor(details.getColor());
-					}
-					if (details.getOnSale() != null) {
-						existingDetail.setOnSale(details.getOnSale());
-					}
+			// 檢查庫存並更新狀態
+			productDetailsRepository.save(checkStockAndUpdateStatus(existingDetail));
 
-					// 檢查庫存並更新狀態
-					productDetailsRepository.save(checkStockAndUpdateStatus(existingDetail));
-
-					return new ProductDetailsDTO(existingDetail);
-				}
+			return new ProductDetailsDTO(existingDetail);
+		}
 		return null;
 	}
 
@@ -260,6 +259,45 @@ public class ProductService {
 			products = productRepository.findByCategoryId(categoryId);
 		} else {
 			products = productRepository.findAll();
+		}
+		return products.stream().map(ProductDTO::new).collect(Collectors.toList());
+	}
+
+	// 模糊搜尋方法
+	public List<ProductDTO> findProductsByName(String name) {
+		List<Product> products = productRepository.findByNameLikeQuery(name);
+		return products.stream().map(ProductDTO::new).collect(Collectors.toList());
+	}
+
+	// 價格排序方法
+	public List<ProductDTO> findAllProductsSortedByPrice(String direction) {
+		List<Product> products;
+		if ("ASC".equalsIgnoreCase(direction)) {
+			products = productRepository.findAllSortedByPriceAsc();
+		} else {
+			products = productRepository.findAllSortedByPriceDesc();
+		}
+		return products.stream().map(ProductDTO::new).collect(Collectors.toList());
+	}
+
+	// 按分類和價格排序
+	public List<ProductDTO> findProductsByCategoryIdSortedByPrice(Integer categoryId, String direction) {
+		List<Product> products;
+		if ("ASC".equalsIgnoreCase(direction)) {
+			products = productRepository.findByCategoryIdOrderByPriceAsc(categoryId);
+		} else {
+			products = productRepository.findByCategoryIdOrderByPriceDesc(categoryId);
+		}
+		return products.stream().map(ProductDTO::new).collect(Collectors.toList());
+	}
+
+	// 按子分類和價格排序
+	public List<ProductDTO> findProductsBySubcategoryIdSortedByPrice(Integer subcategoryId, String direction) {
+		List<Product> products;
+		if ("ASC".equalsIgnoreCase(direction)) {
+			products = productRepository.findBySubcategoryIdOrderByPriceAsc(subcategoryId);
+		} else {
+			products = productRepository.findBySubcategoryIdOrderByPriceDesc(subcategoryId);
 		}
 		return products.stream().map(ProductDTO::new).collect(Collectors.toList());
 	}

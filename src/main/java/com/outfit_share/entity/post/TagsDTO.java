@@ -1,6 +1,7 @@
 package com.outfit_share.entity.post;
 
 import java.util.List;
+import java.util.ArrayList;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +13,7 @@ public class TagsDTO {
 
     private Integer id;
     private String name;
-    private List<PostTagsDTO> postTags;
+    private List<PostTagsDTO> postTags = new ArrayList<>();
 
     public TagsDTO(Tags tags) {
         this.id = tags.getId();

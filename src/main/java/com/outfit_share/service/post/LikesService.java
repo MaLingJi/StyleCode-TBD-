@@ -43,52 +43,43 @@ public class LikesService {
 
 	// 複合主鍵類型不是單個 Integer
 	// 尋找postId和userId 根據你的實際鍵值構建LikesId對象進行 找Id
-	public Likes findLikesById(Integer postId, Integer userId) {
-		LikesId likesId = new LikesId(postId, userId);
-		return likesRepo.findById(likesId).orElse(null);
+	public Likes findLikesById(Integer userId,Integer postId)  {
+		LikesId likesId = new LikesId(userId, postId);
+		Optional<Likes> optional = likesRepo.findById(likesId);
+
+		if (optional.isPresent()) {
+			return optional.get();
+		}
+		return null;
 	}
 
 	// 複合主鍵類型不是單個 Integer
 	// 尋找postId和userId 根據你的實際鍵值構建LikesId對象進行 刪除
-	public void deleteLikesById(Integer postId, Integer userId) {
-		LikesId likesId = new LikesId(postId, userId);
+	public void deleteLikesById(Integer userId, Integer postId) {
+		LikesId likesId = new LikesId(userId, postId);
 		likesRepo.deleteById(likesId);
 	}
 
-	public Likes save(Likes like) {
-		return likesRepo.save(like);
-	}
-
-	@Transactional
-    public void toggleLike(Integer postId, Integer userId) {
-        // 創建 LikesId 對象
-        LikesId likesId = new LikesId(postId, userId);
-
-        // 檢查是否存在
-        boolean exists = likesRepo.existsByLikesId(likesId);
-
-        if (exists) {
-            // 如果已經點讚，則取消點讚
-        	likesRepo.deleteById(likesId);
-        } else {
-            // 如果尚未點讚，則添加點讚
-
-            // 根據 postId 獲取 Post 實例
-            Post post = postRepo.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("無效的 postId: " + postId));
-
-            // 根據 userId 獲取 UserDetail 實例
-            UserDetail userDetail = userDetailRepo.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("無效的 userId: " + userId));
-
-            // 創建 Likes 實例
-            Likes like = new Likes();
-            like.setLikesId(likesId);
-            like.setPost(post);
-            like.setUserDetail(userDetail);
-
-            // 保存 Likes 實例
-            likesRepo.save(like);
-	        }
+	public boolean toggleLikes(Integer userId,Integer postId) {
+		LikesId likesId = new LikesId(userId,postId);
+	    Optional<Likes> existingLike = likesRepo.findById(likesId);
+	    
+	    if (existingLike.isPresent()) {
+	        // 如果找到按讚紀錄，則刪除按讚
+	        likesRepo.delete(existingLike.get());
+	        return false;
+	    } else {
+	        // 如果未找到按讚紀錄，則新增按讚
+	        Post post = postRepo.findById(postId).orElseThrow(() -> new RuntimeException("Post找不到"));
+	        UserDetail userDetail = userDetailRepo.findById(userId).orElseThrow(() -> new RuntimeException("User找不到"));
+	        
+	        Likes likes = new Likes();
+	        likes.setLikesId(likesId);
+	        likes.setPost(post);
+	        likes.setUserDetail(userDetail);
+	        
+	        likesRepo.save(likes);
+	        return true; // 表示新增了按讚
 	    }
+	}
 }

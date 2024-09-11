@@ -19,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -54,7 +55,20 @@ public class Orders {
 	
 	@Column(name = "updated_at")
 	private Date updated_at;
-
+	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@Column(name="applyRefund_at")
+	private LocalDateTime applyRefundDate;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@Column(name="reviewRefund_at")
+	private LocalDateTime reviewRefundDate;
+	
+	@Column(name="refundStatus")
+	private Integer refundStatus;
+	
+	@Column(name="refundReason")
+	private String refundReason;
 	
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "order_date")
@@ -69,8 +83,6 @@ public class Orders {
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "orders")
 	private List<OrdersDetails> ordersDetails;
 	
-	
-
 
 	@PrePersist
 	public void onCreate() {

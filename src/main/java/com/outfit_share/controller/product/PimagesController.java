@@ -25,31 +25,32 @@ public class PimagesController {
 	private PimagesService pimagesService;
 
 																													// 上傳新圖片
-																												//    @PostMapping("/admin/products/images/{productId}/create")
-																												//    public PimagesDTO uploadImage(@RequestParam("file") MultipartFile file,
-																												//    		@PathVariable Integer productId ) throws IOException {
-																												//        return pimagesService.savePimages(file, productId );
-																												//    }
+																												    @PostMapping("/admin/products/images/{productId}/create")
+																												    public PimagesDTO uploadImage(@RequestParam("file") MultipartFile file,
+																												    		@PathVariable Integer productId ) throws IOException {
+																												        return pimagesService.savePimages(file, productId );
+																												    }
+																												    
 	// 上傳新圖片 ，有滑鼠移入移出事件測試，切換不同的圖片
-	@PostMapping("/admin/products/images/{productId}/create")
-	public PimagesDTO uploadImage(@RequestParam("file") MultipartFile file, @PathVariable Integer productId,
-			@RequestParam(required = false) String imageType) throws IOException {
-		return pimagesService.savePimages(file, productId, imageType);
-	}
+//	@PostMapping("/admin/products/images/{productId}/create")
+//	public PimagesDTO uploadImage(@RequestParam("file") MultipartFile file, @PathVariable Integer productId,
+//			@RequestParam(required = false) String imageType) throws IOException {
+//		return pimagesService.savePimages(file, productId, imageType);
+//	}
 
 																													// 上傳多張圖片
-																												//    @PostMapping("/admin/products/images/multiple")
-																												//    public List<PimagesDTO> uploadMultipleImages(@RequestParam("file") MultipartFile[] files,
-																												//    		@PathVariable Integer productId ) throws IOException {
-																												//        return pimagesService.saveMultiplePimages(files, productId );
-																												//    }
+																												    @PostMapping("/admin/products/images/{productId}/multiple")
+																												    public List<PimagesDTO> uploadMultipleImages(@RequestParam("file") MultipartFile[] files,
+																												    		@PathVariable Integer productId ) throws IOException {
+																												        return pimagesService.saveMultiplePimages(files, productId );
+																												    }
 
 	// 上傳多張圖片，有滑鼠移入移出事件測試，切換不同的圖片
-	@PostMapping("/admin/products/images/{productId}/multiple")
-	public List<PimagesDTO> uploadMultipleImages(@RequestParam("file") MultipartFile[] file,
-			@PathVariable Integer productId, @RequestParam(required = false ,defaultValue = "default") String imageType) throws IOException {
-		return pimagesService.saveMultiplePimages(file, productId, imageType);
-	}
+//	@PostMapping("/admin/products/images/{productId}/multiple")
+//	public List<PimagesDTO> uploadMultipleImages(@RequestParam("file") MultipartFile[] file,
+//			@PathVariable Integer productId, @RequestParam(required = false ,defaultValue = "default") String imageType) throws IOException {
+//		return pimagesService.saveMultiplePimages(file, productId, imageType);
+//	}
 
 	// 更新圖片
 	@PutMapping("/admin/products/images/{productId}/{id}")
@@ -80,5 +81,12 @@ public class PimagesController {
 	@GetMapping("/{productId}/cover")
 	public PimagesDTO getCoverPhoto(@PathVariable Integer productId) {
 		return pimagesService.findCoverPhoto(productId);
+	}
+	
+	
+	//移入時換照片
+	@GetMapping("/{productId}/images/hover")
+	public PimagesDTO getHoverImage(@PathVariable Integer productId, @RequestParam String imageName) {
+	    return pimagesService.findImageByProductIdAndImageName(productId, imageName);
 	}
 }

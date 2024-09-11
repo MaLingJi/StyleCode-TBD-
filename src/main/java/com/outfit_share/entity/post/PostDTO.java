@@ -25,6 +25,8 @@ public class PostDTO {
     private Integer userId;
     private String userName;
     private String userPhoto;
+    
+    private List<String> imageUrls;
 
     // 初始化為空列表
     private List<CollectionsDTO> collections = new ArrayList<>();
