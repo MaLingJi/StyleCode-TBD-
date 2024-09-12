@@ -265,7 +265,7 @@ public class PostService {
 	//只取前9筆資料
 	public List<PostDTO> findMostLikedPosts(int limit) {
 		PageRequest pageRequest = PageRequest.of(0, limit);
-		List<Post> mostLikedPosts = postRepo.findMostLikedPosts(pageRequest);
+		List<Post> mostLikedPosts = postRepo.findMostLikedPosts("share", pageRequest);
 		return mostLikedPosts.stream().map(post -> {
 			PostDTO dto = new PostDTO(post);
 			dto.setImageUrls(post.getImages().stream().map(image -> image.getImgUrl()).collect(Collectors.toList()));
