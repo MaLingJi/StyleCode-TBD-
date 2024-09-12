@@ -22,6 +22,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 	List<Post> findLatestPostsByContentType(@Param("contentType") String contentType, Pageable pageable);
 	
 	//只取前9筆資料
-	@Query("FROM Post p WHERE p.deletedAt IS NULL ORDER BY SIZE(p.likes) DESC")
-	List<Post> findMostLikedPosts(Pageable pageable);
+	@Query("FROM Post p WHERE p.contentType = :contentType AND p.deletedAt IS NULL ORDER BY SIZE(p.likes) DESC")
+	List<Post> findMostLikedPosts(@Param("contentType") String contentType , Pageable pageable);
 }
