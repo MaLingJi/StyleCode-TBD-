@@ -1,11 +1,14 @@
 package com.outfit_share.service.post;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +21,6 @@ import com.outfit_share.entity.post.ProductTag;
 import com.outfit_share.entity.post.ProductTagDTO;
 import com.outfit_share.entity.post.Tags;
 import com.outfit_share.repository.post.PostRepository;
-import org.springframework.data.domain.PageRequest;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Sort;
 import com.outfit_share.repository.post.PostTagsRepository;
 import com.outfit_share.repository.post.ProductTagRepository;
 import com.outfit_share.repository.post.TagsRepository;
@@ -72,12 +71,11 @@ public class PostService {
 		// 處理 PostTags
 		List<PostTags> postTagsList = new ArrayList<>();
 		for (PostTagsDTO postTagsDTO : postDTO.getPostTags()) {
-			Tags tag = tagsRepository.findByName(postTagsDTO.getTagName())
-					.orElseGet(() -> {
-						Tags newTag = new Tags();
-						newTag.setName(postTagsDTO.getTagName());
-						return tagsRepository.save(newTag);
-					});
+			Tags tag = tagsRepository.findByName(postTagsDTO.getTagName()).orElseGet(() -> {
+				Tags newTag = new Tags();
+				newTag.setName(postTagsDTO.getTagName());
+				return tagsRepository.save(newTag);
+			});
 
 			PostTagsId postTagsId = new PostTagsId(post.getPostId(), tag.getId());
 
@@ -156,8 +154,7 @@ public class PostService {
 	@Transactional
 	public PostDTO updatePostWithTags(Integer postId, PostDTO updatedPostDTO) {
 		// 查找現有的文章
-		Post post = postRepo.findById(postId)
-				.orElseThrow(() -> new RuntimeException("Post not found"));
+		Post post = postRepo.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
 
 		// 更新文章內容
 		post.setContentType(updatedPostDTO.getContentType());
@@ -178,12 +175,11 @@ public class PostService {
 
 			// 創建並保存新的標籤
 			for (PostTagsDTO postTagsDTO : updatedPostTagsDTOs) {
-				Tags tag = tagsRepository.findByName(postTagsDTO.getTagName())
-						.orElseGet(() -> {
-							Tags newTag = new Tags();
-							newTag.setName(postTagsDTO.getTagName());
-							return tagsRepository.save(newTag);
-						});
+				Tags tag = tagsRepository.findByName(postTagsDTO.getTagName()).orElseGet(() -> {
+					Tags newTag = new Tags();
+					newTag.setName(postTagsDTO.getTagName());
+					return tagsRepository.save(newTag);
+				});
 
 				PostTagsId postTagsId = new PostTagsId(post.getPostId(), tag.getId());
 
@@ -248,24 +244,33 @@ public class PostService {
 		return postRepo.findPostByTypeAndKeyword(contentType, keyword);
 	}
 
-	public List<PostDTO> findLatestPosts(int limit) {
-		PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
-		List<Post> latestPosts = postRepo.findAll(pageRequest).getContent();
-		return latestPosts.stream()
-				.map(post -> {
-					PostDTO dto = new PostDTO(post);
-					dto.setImageUrls(post.getImages().stream()
-							.map(image -> image.getImgUrl())
-							.collect(Collectors.toList()));
-					return dto;
-				})
+
+	// 用戶ID 查詢該用戶的所有文章
+	public List<PostDTO> findPostsByUserId(Integer userId) {
+		return postRepo.findByUserDetail_Id(userId).stream().map(post -> new PostDTO(post))
 				.collect(Collectors.toList());
 	}
-	//用戶ID 查詢該用戶的所有文章
-	public List<PostDTO> findPostsByUserId(Integer userId) {
-	    return postRepo.findByUserDetail_Id(userId)
-	                         .stream()
-	                         .map(post -> new PostDTO(post))
-	                         .collect(Collectors.toList());
+
+	//只取分享區的 資料
+	public List<PostDTO> findLatestSharePosts(int limit) {
+		PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+		List<Post> latestPosts = postRepo.findLatestPostsByContentType("share", pageRequest);
+		return latestPosts.stream().map(post -> {
+			PostDTO dto = new PostDTO(post);
+			dto.setImageUrls(post.getImages().stream().map(image -> image.getImgUrl()).collect(Collectors.toList()));
+			return dto;
+		}).collect(Collectors.toList());
 	}
+
+	//只取前9筆資料
+	public List<PostDTO> findMostLikedPosts(int limit) {
+		PageRequest pageRequest = PageRequest.of(0, limit);
+		List<Post> mostLikedPosts = postRepo.findMostLikedPosts(pageRequest);
+		return mostLikedPosts.stream().map(post -> {
+			PostDTO dto = new PostDTO(post);
+			dto.setImageUrls(post.getImages().stream().map(image -> image.getImgUrl()).collect(Collectors.toList()));
+			return dto;
+		}).collect(Collectors.toList());
+	}
+
 }

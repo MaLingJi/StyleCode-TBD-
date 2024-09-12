@@ -48,9 +48,7 @@ public class PostsConroller {
 	}
 
 	@PutMapping("/postwithtags/{postId}")
-	public ResponseEntity<PostDTO> updatePost(
-			@PathVariable Integer postId,
-			@RequestBody PostCreationRequest request) {
+	public ResponseEntity<PostDTO> updatePost(@PathVariable Integer postId, @RequestBody PostCreationRequest request) {
 
 		System.out.println("Received PostCreationRequest: " + request);
 		PostDTO updatedPost = postService.updatePostWithTags(postId, request.getPostDTO());
@@ -69,24 +67,29 @@ public class PostsConroller {
 	}
 
 	@GetMapping("/type")
-	public List<Post> searchPosts(
-			@RequestParam(value = "contentType", required = false) String contentType,
+	public List<Post> searchPosts(@RequestParam(value = "contentType", required = false) String contentType,
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		return postService.searchPostsByTypeAndKeyword(contentType, keyword);
 	}
 	// TODO: 要改成只有一個參數時也可搜尋，無參數時就findAll
 	// P.S.這邊我改成靠前端綁定來處理即可
-	
-	//首頁輪播圖 前9篇文章的照片
-    @GetMapping("/latest")
-    public List<PostDTO> getLatestPosts(@RequestParam(defaultValue = "9") int limit) {
-        return postService.findLatestPosts(limit);
-    }
-    
-    //用戶 ID 查詢該用戶的所有文章
-    @GetMapping("/user/{userId}")
-    public List<PostDTO> findPostsByUserId(@PathVariable("userId") Integer userId) {
-        return postService.findPostsByUserId(userId);
-    }
+
+	// 用戶 ID 查詢該用戶的所有文章
+	@GetMapping("/user/{userId}")
+	public List<PostDTO> findPostsByUserId(@PathVariable("userId") Integer userId) {
+		return postService.findPostsByUserId(userId);
+	}
+
+	// 只取分享區的 資料
+	@GetMapping("/latest-share")
+	public List<PostDTO> getLatestSharePosts(@RequestParam(defaultValue = "17") int limit) {
+		return postService.findLatestSharePosts(limit);
+	}
+
+	//只取前9筆資料
+	@GetMapping("/most-liked")
+	public List<PostDTO> getMostLikedPosts(@RequestParam(defaultValue = "9") int limit) {
+		return postService.findMostLikedPosts(limit);
+	}
 
 }
