@@ -24,7 +24,7 @@ public class ProductDTO {
 
 	private String subcategoryName; // 只包含子分類Name，而不是整個Subcategory對象
 
-	private String categoryName;
+	// private String categoryName;
 	
 	private List<ProductDetailsDTO> productDetails;
 
@@ -39,7 +39,7 @@ public class ProductDTO {
 		this.subcategoryId = product.getSubcategoryId().getSubcategoryId();
 		this.subcategoryName = product.getSubcategoryId().getSubcategoryName();
 		
-		this.categoryName = product.getSubcategoryId().getCategory().getCategoryName();
+		// this.categoryName = product.getSubcategoryId().getCategory().getCategoryName();
 		
 		
 		if(product.getProductDetails() != null) {
