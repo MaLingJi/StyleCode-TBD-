@@ -67,7 +67,7 @@ public class CollectionsController {
 		if (collections == null) {
 			return ResponseEntity.notFound().build();
 		}
-		collectservice.deletecollectsById(postId, userId);
+		collectservice.deletecollectsById(userId, postId);
 		return ResponseEntity.ok("取消收藏");
 	}
 
