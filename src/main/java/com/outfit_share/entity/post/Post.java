@@ -63,7 +63,7 @@ public class Post {
     @Column(name = "content_type")
     private String contentType;
 
-    @Column(name = "post_title", unique = true, nullable = false) // 標題不能重複?
+    @Column(name = "post_title", nullable = false)
     private String postTitle;
 
     @Column(name = "content_text")
