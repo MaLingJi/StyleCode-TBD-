@@ -2,10 +2,10 @@ package com.outfit_share.controller.orders;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +28,12 @@ public class OrderController {
 	private OrdersService ordersService;
 	@Autowired
 	private OrdersDetailsService odService;
+	
+	 @PostMapping("/order/ecpay")
+	    public ResponseEntity<String> createECPayOrder(@RequestBody OrdersDTO ordersDTO) {
+	        String htmlForm = ordersService.createECPayOrder(ordersDTO);
+	        return ResponseEntity.ok(htmlForm);
+	    }
 
 	@PostMapping("/order/add") // 待測試
 	// 新增訂單
@@ -35,6 +41,16 @@ public class OrderController {
 		OrdersDTO order = ordersService.addOrder(ordersRequest);
 		if (order != null) {
 			return order;
+		}
+		return null;
+	}
+	
+	@PostMapping("/order/addec") // 待測試
+	// 新增訂單
+	public OrdersDTO addOrderec(@RequestBody OrdersDTO ordersRequest) {
+		OrdersDTO order = ordersService.addOrder(ordersRequest);
+		if (order != null) {
+			return order;//這邊要跳傳
 		}
 		return null;
 	}
