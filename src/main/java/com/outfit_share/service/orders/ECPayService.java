@@ -18,10 +18,12 @@ public class ECPayService {
 	
 	@Value("${domain.url}")
 	private String domainURL;
+	@Value("${domain.url2}")
+	private String domainURL2;
 	
     public String genAioCheckOutALL(OrdersDTO order){
     	
-    	System.out.println("start"+order);
+    
     	AllInOne allInOne = new AllInOne("");
     	
 		AioCheckOutALL obj = new AioCheckOutALL();
@@ -37,10 +39,13 @@ public class ECPayService {
 		obj.setTradeDesc("商品描述");
 		obj.setItemName("商品1 x 1");
 		obj.setReturnURL("1|OK");
-		obj.setClientBackURL(domainURL + "checkPaying2?orderId="+obj.getMerchantTradeNo()+"&totalAmounts="+obj.getTotalAmount()); //controller 
-		System.out.println("backurl"+obj.getClientBackURL());
+		//綠界會回傳一個POST 指定後端產生訂單API
+		obj.setOrderResultURL(domainURL2 + "pay/ecPaytoOrder");
+		//使用者按了回到首頁會回到他的清單
+		obj.setClientBackURL(domainURL+"/order");
 		obj.setNeedExtraPaidInfo("N");
-		System.out.println("final"+obj);
+		obj.setCustomField1(order.getUserId().toString());
+		
 		String form = allInOne.aioCheckOut(obj, null);
 		return form;
 		

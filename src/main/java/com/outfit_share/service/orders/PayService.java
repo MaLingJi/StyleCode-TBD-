@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -223,17 +224,30 @@ public class PayService {
 		return "cant find order";
 	}
 	
-	public String ecPaytoOrder(OrdersDTO orderId) {
-		OrdersDTO ordersDTO = new OrdersDTO();
-		ordersDTO.setOrderId(orderId.getOrderId());
-		ordersDTO.setTotalAmounts(orderId.getTotalAmounts());
-		ordersDTO.setStatus(1);
-		ordersDTO.setUserId(orderId.getUserId());
-		OrdersDTO order2 = odService.addOrder(ordersDTO);
-		if(order2!=null) {
-			return "ok";
-		}
-		return null;
+	public String ecPaytoOrder(Map<String, String> allParams) {
+
+        String merchantTradeNo = allParams.get("MerchantTradeNo");
+        String rtnCode = allParams.get("RtnCode");
+        String tradeAmt = allParams.get("TradeAmt");
+        String userId = allParams.get("CustomField1");
+
+        // 創建 OrdersDTO 對象
+        OrdersDTO order = new OrdersDTO();
+        order.setOrderId(merchantTradeNo);
+        order.setTotalAmounts(Integer.parseInt(tradeAmt));
+        order.setStatus(1);
+        order.setUserId(Integer.parseInt(userId));
+
+        // 使用 addOrder 方法創建訂單
+        OrdersDTO createdOrder = odService.addOrder(order);
+
+        if (createdOrder != null) {
+            // 訂單創建成功
+            return "ok";
+        } else {
+            // 訂單創建失敗
+            return null;
+        }
 	}
 	
 	
