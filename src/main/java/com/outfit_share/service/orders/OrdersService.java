@@ -49,6 +49,15 @@ public class OrdersService {
 	private ProductDetailsRepository pdDetailRepo;
 	@Autowired
 	private NotificationsRepository notiRepo;
+	
+	@Autowired
+    private ECPayService ecPayService;
+
+	
+	public String createECPayOrder(OrdersDTO ordersDTO) {
+        // 然後創建 ECPay 支付
+        return ecPayService.genAioCheckOutALL(ordersDTO);
+    }
 
 	public OrdersDTO addOrder(OrdersDTO ordersRequest) {
 		List<Cart> cartList = cartRepo.findByUserId(ordersRequest.getUserId());
@@ -70,7 +79,6 @@ public class OrdersService {
 
 		for (Cart cart : cartList) {
 			// save orderDetails
-			// save orderDetails
 			OrdersDetails ordersDetails = new OrdersDetails();
 			ordersDetails.setOrders(orders);
 			ordersDetails.setProductDetails(cart.getProductDetails());// need to update
@@ -81,6 +89,7 @@ public class OrdersService {
 			pd.setStock(pd.getStock() - cart.getVol());
 			pdDetailRepo.save(pd);
 		}
+		
 		cartRepo.deleteByUsers(ordersRequest.getUserId());
 
 		// 創建新通知

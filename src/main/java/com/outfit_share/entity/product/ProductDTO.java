@@ -38,7 +38,6 @@ public class ProductDTO {
 		this.subcategoryName = product.getSubcategoryId().getSubcategoryName();
 		
 		
-		
 		if(product.getProductDetails() != null) {
 			this.productDetails = new ArrayList<>();
 			

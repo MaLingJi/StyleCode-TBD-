@@ -93,11 +93,30 @@
 			<version>0.12.6</version>
 			<scope>runtime</scope>
 		</dependency>
-		
+
 		<dependency><!--密碼加密-->
-   	 		<groupId>org.springframework.security</groupId>
-    		<artifactId>spring-security-crypto</artifactId>
-    		<version>6.2.5</version>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+			<version>6.2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.17.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.17.1</version>
 		</dependency>
 	</dependencies>
 
