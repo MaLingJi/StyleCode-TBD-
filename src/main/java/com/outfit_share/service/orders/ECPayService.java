@@ -37,7 +37,7 @@ public class ECPayService {
 		obj.setTradeDesc("商品描述");
 		obj.setItemName("商品1 x 1");
 		obj.setReturnURL("1|OK");
-		obj.setClientBackURL(domainURL + "checkPaying2?orderId=" + obj.getMerchantTradeNo()+"&totalAmounts="+obj.getTotalAmount()); //controller 
+		obj.setClientBackURL(domainURL + "checkPaying2?orderId="+obj.getMerchantTradeNo()+"&totalAmounts="+obj.getTotalAmount()); //controller 
 		System.out.println("backurl"+obj.getClientBackURL());
 		obj.setNeedExtraPaidInfo("N");
 		System.out.println("final"+obj);
