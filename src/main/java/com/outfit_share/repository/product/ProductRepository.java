@@ -45,7 +45,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	List<Product> findBySubcategoryIdOrderByPriceDesc(@Param("subcategoryId") Integer subcategoryId);
 	
 	
-	
 	// 模糊搜尋 && 價格由高到低||由低到高 && 全部商品
 	@Query("SELECT p FROM Product p WHERE (:name IS NULL OR p.productName LIKE %:name%) ORDER BY "
 			+ "CASE WHEN :sort = 'priceAsc' THEN p.price END ASC, "

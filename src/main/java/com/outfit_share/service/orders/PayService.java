@@ -222,7 +222,21 @@ public class PayService {
 		}
 		return "cant find order";
 	}
-
+	
+	public String ecPaytoOrder(OrdersDTO orderId) {
+		OrdersDTO ordersDTO = new OrdersDTO();
+		ordersDTO.setOrderId(orderId.getOrderId());
+		ordersDTO.setTotalAmounts(orderId.getTotalAmounts());
+		ordersDTO.setStatus(1);
+		ordersDTO.setUserId(orderId.getUserId());
+		OrdersDTO order2 = odService.addOrder(ordersDTO);
+		if(order2!=null) {
+			return "ok";
+		}
+		return null;
+	}
+	
+	
 	public String refund(OrdersDTO refundRequest) {
 		String orderId = refundRequest.getOrderId();
 		String transactionId = transLPRepo.findByOrderId(orderId).getTransactionId();

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.outfit_share.entity.orders.OrdersDTO;
+import com.outfit_share.entity.orders.OrdersDetailsDTO;
 import com.outfit_share.entity.orders.pay.LinePayDTO;
 import com.outfit_share.service.orders.PayService;
 
@@ -47,6 +48,16 @@ public class PayController {
 
 		return ResponseEntity.ok(response);
 	}
+	@GetMapping("/pay/ecPaytoOrder")
+	public ResponseEntity<?> ecPaytoOrder(@RequestBody OrdersDTO ordersDTO)
+			throws JsonProcessingException {
+		String returnCode = payService.ecPaytoOrder(ordersDTO);
+		if(returnCode!=null) {
+			return ResponseEntity.ok(returnCode);
+		}
+		return null;
+	}
+	
 
 	@PostMapping("/admin/agreeRefund")
 	public String agreeRefund(@RequestBody OrdersDTO refundRequest) {
