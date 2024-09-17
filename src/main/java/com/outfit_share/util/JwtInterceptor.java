@@ -48,7 +48,7 @@ public class JwtInterceptor implements HandlerInterceptor {
     private JSONObject authorizationHeader(String auth) {
 
         if (auth != null && auth.length() != 0) {
-            System.out.println("auth = " + auth);
+            // System.out.println("auth = " + auth);
             String data = jwtUtil.validateEncryptedToken(auth);
             System.out.println("data = " + data);
             if (data != null && data.length() != 0) {
