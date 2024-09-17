@@ -23,5 +23,6 @@ public class JwtConfig implements WebMvcConfigurer {
         reg.addPathPatterns("**/**/admin/**")
                 .addPathPatterns("/member/**");
         reg.excludePathPatterns("/pay/linePayConfirm");
+        reg.excludePathPatterns("/pay/ecPaytoOrder");
     }
 }

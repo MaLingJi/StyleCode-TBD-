@@ -48,16 +48,15 @@ public class PayController {
 
 		return ResponseEntity.ok(response);
 	}
-	@GetMapping("/pay/ecPaytoOrder")
-	public ResponseEntity<?> ecPaytoOrder(@RequestBody OrdersDTO ordersDTO)
-			throws JsonProcessingException {
-		String returnCode = payService.ecPaytoOrder(ordersDTO);
-		if(returnCode!=null) {
-			return ResponseEntity.ok(returnCode);
+
+	@PostMapping("/pay/ecPaytoOrder")
+	public ResponseEntity<String> ecPaytoOrder(@RequestParam Map<String, String> allParams) {
+		String returnCode = payService.ecPaytoOrder(allParams);
+		if (returnCode != null) {
+			return ResponseEntity.ok("1|OK");
 		}
-		return null;
+		return ResponseEntity.badRequest().body("0|Failed");
 	}
-	
 
 	@PostMapping("/admin/agreeRefund")
 	public String agreeRefund(@RequestBody OrdersDTO refundRequest) {
