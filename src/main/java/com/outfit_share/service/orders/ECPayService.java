@@ -27,18 +27,17 @@ public class ECPayService {
     	AllInOne allInOne = new AllInOne("");
     	
 		AioCheckOutALL obj = new AioCheckOutALL();
-//		obj.setMerchantTradeNo(order.getOrderId());
+		
 		obj.setMerchantTradeNo(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10));
 		
 		obj.setMerchantTradeDate(order.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
-//		obj.setMerchantTradeDate(order.getOrderDate());
 		
 		obj.setTotalAmount(order.getTotalAmounts().toString());
-//		obj.setTotalAmount(order.toString());
 		
 		obj.setTradeDesc("商品描述");
 		obj.setItemName("商品1 x 1");
 		obj.setReturnURL("1|OK");
+		
 		//綠界會回傳一個POST 指定後端產生訂單API
 		obj.setOrderResultURL(domainURL2 + "pay/ecPaytoOrder");
 		//使用者按了回到首頁會回到他的清單
